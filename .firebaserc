@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "markpaving-8bf66": {
+      "hosting": {
+        "markPaving": [
+          "markpaving-8bf66"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "markpaving-8bf66"
+  }
+}

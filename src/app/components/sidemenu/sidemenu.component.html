@@ -1,0 +1,79 @@
+<style>
+    .sidemenuWrapper{
+        z-index: 999;
+        display: block;
+        background: #333;
+        max-width: 200px;
+        /* height: 100vh; */
+        position: fixed;
+        top:50px;
+    }
+    .menuBtnCont{
+        color:white;
+        padding:15px;
+        cursor:pointer;
+    }
+    .showOpenedMenu{
+        height: 100vh;
+        padding-right:20px;
+        padding-left:20px;
+        display: block;
+    }
+    .hideOpenedMenu{
+        display: none;
+    }
+    .showClosedMenu{
+        display: block;
+    }
+    .hideClosedMenu{
+        display: none;
+    }
+    .closedMenu{
+        /* height: 100vh; */
+        /* display: none; */
+    }
+</style>
+<div class="sidemenuWrapper">
+    <div #closedMenu class="closedMenu"
+        [class.hideClosedMenu] = "navOpened==true"
+        [class.showClosedMenu] = "navOpened==false"
+        >
+        <div (click)="openMenu()" class="menuBtnCont">
+            =>
+        </div>
+    </div>
+    <div  #openedMenu class="openedMenu"
+        [class.hideOpenedMenu] = "navOpened==false"
+        [class.showOpenedMenu] = "navOpened==true"
+        >
+        <div (click)="closeMenu()" class="menuBtnCont" style="text-align: right;">
+            X
+        </div>
+        <div *ngIf="dashboard">
+            <div (click)="createInvoice()" class="menuBtnCont">
+                Create Invoice
+            </div>
+            <!-- <div class="menuBtnCont">
+                Home
+            </div>
+            <div class="menuBtnCont">
+                About Us
+            </div>
+            <div class="menuBtnCont">
+                Contact Us
+            </div> -->
+        </div>
+        <div  *ngIf="!dashboard" (click)="goToLoginPage()" class="menuBtnCont">
+            Login
+        </div>
+        <div  (click)="goToHomePage()" class="menuBtnCont">
+            Home
+        </div>
+        <div class="menuBtnCont">
+            About Us
+        </div>
+        <div class="menuBtnCont">
+            Contact Us
+        </div>
+    </div>
+</div>

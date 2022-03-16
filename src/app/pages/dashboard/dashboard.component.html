@@ -1,0 +1,60 @@
+<style>
+    .pageWrapper{
+      margin: 0 auto;
+      background:#1976d2;
+      color:white;
+      height: 100vh;
+    }
+    .toolbar{
+      background:#333;
+      padding:20px 10px;
+    }
+  
+    .toolbar span{
+      padding-left:10px;
+    }
+    .content{
+      margin: 0 auto;
+      text-align: center;
+    }
+    .homeTitle{
+      padding:100px 0px;
+      font-size:60px;
+      text-shadow: #333 3px 3px 3px;
+    }
+    .homeSubtitle{
+      font-size: 20px;
+      padding-bottom: 10px;
+      text-shadow: #333 3px 3px 3px;
+    }
+    .inputCont{
+      display: block;
+      padding:10px;
+    }
+    .inputCont input{
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      width: 250px;
+      box-shadow: #333 2px 2px 2px;
+    }
+    .loginBtn{
+      border: none;
+      background-color: #1d1d1d;
+      color: white;
+      margin-top:30px;
+      border-radius: 5px;
+      padding: 10px 20px;
+      box-shadow: #333 2px 2px 2px;
+      cursor: pointer;
+    }
+  </style>
+  <!-- Toolbar -->
+  <div class="pageWrapper">
+    
+    <app-navbar></app-navbar>
+    <app-sidemenu [dashboardData]="dashboardData"></app-sidemenu>
+    <app-createinvoice></app-createinvoice>
+    <div>THIS IS THE DASHBOARD</div>
+    
+  </div>

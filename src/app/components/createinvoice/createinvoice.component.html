@@ -1,0 +1,310 @@
+<style>
+  .createInvoiceWrapper {
+    margin: 0 auto;
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 100px;
+    background: #1976d2;
+  }
+
+  .invoiceCont {
+    margin: 0 auto;
+    max-width: 1200px;
+    justify-content: center;
+    padding-top: 100px;
+  }
+
+  .invoiceCont {
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .titleInput {
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: block;
+    width: 100%;
+  }
+
+  .block-input-medium {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 5px;
+    padding: 10px 8px;
+    border: none;
+  }
+  .block-input-smedium {
+    width: 100%;
+    max-width: 150px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 5px;
+    padding: 10px 8px;
+    border: none;
+  }
+  .block-input-mlarge {
+    /* width: 100%; */
+    max-width: 180px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 5px;
+    padding: 10px 8px;
+    border: none;
+  }
+  .block-input-smaller {
+    width: 100%;
+    max-width: 100px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 5px;
+    padding: 10px 8px;
+    border: none;
+  }
+  .block-input-smallest {
+    width: 100%;
+    max-width: 80px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 5px;
+    padding: 10px 8px;
+    border: none;
+  }
+  .block-input-small {
+    width: 100%;
+    max-width: 120px;
+    text-align: center;
+    margin: 5px;
+    border-radius: 5px;
+    padding: 10px 8px;
+    border: none;
+  }
+  .hideElement{
+    margin-bottom:0;
+    height:0px;
+    padding-top:0;
+    padding-bottom:0;
+    transition: 1s all;
+  }
+  .slideBlockUp{
+    transform: top('-50px');
+  }
+  @keyframes slideUp {
+  from {
+    height: 100%;
+  }
+
+  to {
+    height: 0;
+    display: none;
+  }
+}
+  .formLine {
+    margin: 10px;
+    justify-content: space-around;
+  }
+
+  .invoiceDateLine {
+    justify-content: space-evenly;
+  }
+
+  .workDayLine {
+    justify-content: space-evenly;
+  }
+  .workDayHeader{
+    position:relative;
+
+  }
+  .timeInOut-col div{
+    margin-top:20px;
+  }
+  .labelInput {
+    color: white;
+    text-align: center;
+  }
+  .buttonStyle{
+    height: 40px;
+    width:40px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+  }
+  .circleButton{
+    padding:10px;
+    border:none;
+    border-radius:25px;
+    cursor:pointer;
+    box-shadow: #2d2d2d 2px 2px 2px;
+  }
+  .workDayBlock{
+    margin-top:30px;
+    background:#65a3e1;
+    border-radius: 5px;
+    padding-bottom: 30px;;
+  }
+
+  .formEndBlock{
+    background:#65a3e1;
+    border-radius: 5px;
+    padding-left:30px;
+    padding-bottom:30px;
+    padding-top:10px;
+    margin-top:50px;
+  }
+  .formEndBlock input{
+    margin-right: 20px;
+  }
+  .formEndBlock .labelInput{
+    margin-top: 20px;
+  }
+
+  .labelInput :required{
+    border-left: red solid 1px;
+  }
+
+  .buttonStyle{
+    margin-top:30px;
+    cursor:pointer;
+    border:none;
+    box-shadow: #2d2d2d 2px 2px 2px;
+    color:white;
+    font-size: 15px;
+    padding:10px 12px;
+    border-radius: 5px;
+    width: auto;
+  }
+  .labelBox{
+    max-width: 180px;
+  }
+  .buttonStyle[disabled]{
+    /* border: 1px solid #999999; */
+    background-color: #cccccc !important;
+    color: #666666;
+  }
+  .ng-pristine{
+    /* border:none  !important; */
+  }
+  .labelInput .ng-invalid{
+    border-left:3px solid red;
+  }
+</style>
+
+<div class="createInvoiceWrapper">
+  <div class="invoiceCont">
+    <form [formGroup]="invoiceForm"  (ngSubmit)="onSubmit()">
+
+      <div class="formEndBlock">
+        <div class="invoiceDateLine" style="display: flex;flex-wrap: wrap;">
+          <div class="labelInput labelBox">
+            <label>Invoice Number</label>
+            <input class="block-input-mlarge" id="first-name" type="text" formControlName="invoice_number">
+          </div>
+          <div class="labelInput labelBox">
+            <label>Invoice Date</label>
+            <input class="block-input-mlarge" placeholder="Invoice Number" type="date"
+              formControlName="date">
+          </div>
+          <div class="labelInput labelBox">
+            <label>Week Start Date</label>
+            <input class="block-input-mlarge" placeholder="Invoice Number" id="last-name" type="date"
+              formControlName="date_start">
+          </div>
+          <div class="labelInput labelBox">
+            <label>Week End Date</label>
+            <input class="block-input-mlarge" placeholder="Invoice Number" id="last-name" type="date"
+              formControlName="date_end">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="workDays" class="workDayHeader">
+        <div class="workDayBlock" *ngFor="let day of workDays().controls;let i=index" formArrayName="workDays">
+          <!-- <input type ="text" [formControlName]="i"> -->
+          <div class="workDayLine" style="display: flex;" [formGroupName]="i">
+
+            <!-- // WORK TRIP// -->
+            <button class="buttonStyle" style="margin-top:35px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addTrip(i)">
+              Add Trip
+            </button>
+            <div style="width: 65%;padding-top:30px;" >
+
+              <div style="padding-top:10px;display: block;" *ngFor="let trip of workDayTrips(i).controls;let j=index" formArrayName="trips">
+                <div class="workDayRow" style="display: flex; justify-content: space-evenly;" [formGroupName]="j">
+                  <div class="labelInput">
+                    <!-- <label *ngIf="j==0">Ticket No.</label> -->
+                    <input class="block-input-small" placeholder="Ticket Number" id="last-name" type="text" formControlName="ticket_no">
+                  </div>
+                  <div class="labelInput">
+                    <!-- <label *ngIf="j==0">Customer</label> -->
+                    <input class="block-input-small" placeholder="Customer" id="last-name" type="text" formControlName="customer">
+                  </div>
+                  <div class="labelInput">
+                    <!-- <label *ngIf="j==0">Destination</label> -->
+                    <input class="block-input-small" placeholder="Destination" id="last-name" type="text" formControlName="destination">
+                  </div>
+                  <div class="labelInput">
+                    <!-- <label *ngIf="j==0">City</label> -->
+                    <input class="block-input-small" placeholder="City" id="last-name" type="text" formControlName="city">
+                  </div>
+                  <button *ngIf="workDayTrips(i).length>1" class="buttonStyle" style="margin-top:0px;background: red;color:white;font-size: 15px;;" (click)="removeTrip(i,j)">
+                    Remove
+                  </button>
+                </div>
+              </div>
+              
+            </div>
+            
+            <div class="timeInOut-col" style="justify-content:right;padding-top:0px;">
+              <div class="labelInput">
+                <div><label>Date</label></div><input class="block-input-smedium" type="date" formControlName="date">
+              </div>
+              <div class="labelInput">
+                <div><label>Time In</label></div><input class="block-input-smedium" type="time" (change)="timeChange(i)" formControlName="time_in">
+              </div>
+              <div class="labelInput">
+                <div><label>Time Out</label></div><input class="block-input-smedium" id="last-name"  (change)="timeChange(i)" type="time" formControlName="time_out">
+              </div>
+              <div class="labelInput">
+                <div><label>Total Hours</label></div><input [readonly]=true class="block-input-smedium" placeholder="Total Hours" id="last-name" type="number" formControlName="total_hours">
+              </div>
+              <button *ngIf="workDays().length>1" style="margin-top:30px;cursor:pointer;border:none; box-shadow: #2d2d2d 2px 2px 2px;background:red;color:white;font-size: 15px;padding:10px 12px;border-radius: 5px;;" (click)="removeWorkDay($event,i)">
+                Remove Work Day
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <button style="margin-top:30px;cursor:pointer;border:none; box-shadow: #2d2d2d 2px 2px 2px;background:green;color:white;font-size: 15px;padding:10px 12px;border-radius: 5px;;" (click)="addWorkDay()">
+          Add Work Day
+        </button>
+      </div>
+
+      <div class="formEndBlock">
+        <div style="display:flex;justify-content: start;">
+          <div class="labelInput">
+            <div><label>Total Hours</label></div><input class="block-input-smedium" [readonly]=true  type="number" formControlName="total_hours">
+          </div>
+          <div class="labelInput">
+            <div><label>Charge Per Hour</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium" type="number" formControlName="charge_per_hour">
+          </div>
+          <div class="labelInput">
+            <div><label>Total Charged</label></div><input class="block-input-smedium"  [readonly]=true  type="number" formControlName="total_charged">
+          </div>
+        </div>
+        <div style="display:flex;" >
+          <div class="labelInput">
+            <div><label>Bill To</label></div><input class="block-input-smedium" type="text" formControlName="bill_to">
+          </div>
+          <div class="labelInput">
+            <div><label>Total Billed</label></div><input class="block-input-smedium" type="number" formControlName="total_billed">
+          </div>
+        </div>
+      </div>
+    </form>
+    <div>
+      <button [disabled]=invoiceForm.invalid (click)="generatePDF()" style='background-color: green;'class="buttonStyle">Generate PDF</button>
+    </div>
+  </div>
+</div>
