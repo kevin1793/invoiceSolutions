@@ -1,0 +1,32 @@
+<style>
+    .pageWrapper{
+      background-color: #1976d2;
+      height: 100vh;
+      padding-top:100px;
+    }
+    .mainCont{
+      padding-top:100px;
+    }
+    .addItemBtn{
+      background:white;
+      padding:10px 20px;
+      width: 200px;
+      border-radius:5px;
+      cursor:pointer;
+      color: black;
+    }
+  </style>
+  
+  <div class="pageWrapper">
+      
+    <app-navbar></app-navbar>
+    <app-sidemenu [dashboardData]="dashboardData"></app-sidemenu>
+    <div *ngFor="let invoice of invoices" class='mainCont'>
+      {{invoice.name}}
+    </div>
+    <div class="addItemBtn" (click)="addItem()">
+      ADD ITEM
+    </div>
+    <input  type="text" name="value" (keyup)='updateName($event)'  [value]="invoiceName">
+    <!-- <div [ngModel]='invoiceName'></div> -->
+  </div>

@@ -21,11 +21,12 @@ export class LoginComponent implements OnInit {
   
 
   ngOnInit(): void {
+    
     console.log('LOGIN PAGE',this.elementRef.nativeElement);
   }
 
   login(){
-
+    console.log('loggin in');
     const auth = getAuth();
     var email =this.email.value;
     var pass = this.password.value;

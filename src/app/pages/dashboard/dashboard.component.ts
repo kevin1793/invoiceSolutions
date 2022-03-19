@@ -1,7 +1,4 @@
-import { Component, OnInit,Input } from '@angular/core';
-import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
-import { SidemenuComponent } from 'src/app/components/sidemenu/sidemenu.component';
-import { Router } from '@angular/router';
+import { Component, OnInit,Output ,Input } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +7,7 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   dashboard = true;
+  currentFeature = '';
   dashboardData = 'Y';
   constructor() { }
 
@@ -18,4 +16,12 @@ export class DashboardComponent implements OnInit {
     console.log('DASHBOARD PAGE',history.state);
   }
 
+  test(){
+    console.log(this.currentFeature);
+  }
+
+  currentFeatureChanged(x:any){
+    console.log('currentFeatureChange parent',x);
+    this.currentFeature = x;
+  }
 }

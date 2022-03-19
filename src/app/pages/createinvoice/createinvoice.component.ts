@@ -10,6 +10,9 @@ import { CellConfig, jsPDF } from 'jspdf';
 export class CreateinvoiceComponent implements OnInit {
 
   constructor(private fb:FormBuilder) { }
+  dashboard = true;
+  dashboardData = 'Y';
+  invoiceName = 'asddf';
 
   lastDataLine: number = 0;
 

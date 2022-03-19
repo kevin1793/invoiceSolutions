@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +16,9 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 
+// import { initializeApp } from "firebase/app";
+// import { getFirestore } from "firebase/firestore";
+
 import * as firebase from 'firebase/app';
 import { HomeComponent } from './pages/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -22,7 +26,10 @@ import { SidemenuComponent } from './components/sidemenu/sidemenu.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { CreateinvoiceComponent } from './components/createinvoice/createinvoice.component';
+import { InvoicetrackerComponent } from './pages/invoicetracker/invoicetracker.component';
+import { CreateinvoiceComponent } from './pages/createinvoice/createinvoice.component';
+import { TestComponent } from './components/test/test.component';
+// import { InvoicetrackerComponent } from './components/invoicetracker/invoicetracker.component';
 
 firebase.initializeApp(environment.firebase);
 @NgModule({
@@ -34,7 +41,9 @@ firebase.initializeApp(environment.firebase);
     FooterComponent,
     LoginComponent,
     DashboardComponent,
-    CreateinvoiceComponent
+    CreateinvoiceComponent,
+    InvoicetrackerComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,

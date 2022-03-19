@@ -48,13 +48,23 @@
       box-shadow: #333 2px 2px 2px;
       cursor: pointer;
     }
-  </style>
-  <!-- Toolbar -->
-  <div class="pageWrapper">
-    
-    <app-navbar></app-navbar>
-    <app-sidemenu [dashboardData]="dashboardData"></app-sidemenu>
-    <app-createinvoice></app-createinvoice>
-    <div>THIS IS THE DASHBOARD</div>
-    
-  </div>
+</style>
+<!-- Toolbar -->
+<div class="pageWrapper">
+  
+  <app-navbar></app-navbar>
+  <app-sidemenu  (currentFeature)="currentFeatureChanged($event)" [dashboardData]="dashboardData"></app-sidemenu>
+  <div style ='padding-top:100px' (click)='test()'>THIS IS THE DASHBOARD</div>
+
+  <!-- <div class="mainCont" [ngSwitch]="currentFeature">
+    <app-invoicetracker *ngSwitchCase="'invoicetracker'"></app-invoicetracker>
+    <app-createinvoice *ngSwitchCase="'createinvoice'"></app-createinvoice>
+  </div> -->
+
+  
+  
+  <!-- <div class="mainCont" [ngSwitch]="currentFeature">
+    <div *ngSwitchCase="'invoicetracker'">1243</div>
+    <div *ngSwitchCase="'createinvoice'">124asdfsfa3</div>
+  </div> -->
+</div>

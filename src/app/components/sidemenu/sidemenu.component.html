@@ -3,18 +3,29 @@
         z-index: 999;
         display: block;
         background: #333;
-        max-width: 200px;
+        max-width: 300px;
         /* height: 100vh; */
         position: fixed;
-        top:50px;
+        top:55px;
     }
     .menuBtnCont{
         color:white;
-        padding:15px;
-        cursor:pointer;
+        padding:5px;
+        padding-top: 20px;
+        /* cursor:pointer; */
+    }
+    .menuBtnCont rect{
+        stroke: white;
+        background-color: white;
+        fill:white;
+    }
+    .menuBtnCont svg{
+        cursor:pointer
     }
     .showOpenedMenu{
         height: 100vh;
+        min-width: 215px;
+        width: auto;
         padding-right:20px;
         padding-left:20px;
         display: block;
@@ -28,6 +39,9 @@
     .hideClosedMenu{
         display: none;
     }
+    .menuLink{
+        cursor:pointer;
+    }
     .closedMenu{
         /* height: 100vh; */
         /* display: none; */
@@ -39,19 +53,32 @@
         [class.showClosedMenu] = "navOpened==false"
         >
         <div (click)="openMenu()" class="menuBtnCont">
-            =>
+            <!-- <img src="../../../assets/images/menu_white_50.png" style="height: 40px;"> -->
+            <svg viewBox="0 0 100 80" width="40" height="20">
+                <rect width="100" height="5"></rect>
+                <rect y="25" width="100" height="5"></rect>
+                <rect y="50" width="100" height="5" color='white'></rect>
+              </svg>
         </div>
     </div>
     <div  #openedMenu class="openedMenu"
         [class.hideOpenedMenu] = "navOpened==false"
         [class.showOpenedMenu] = "navOpened==true"
         >
-        <div (click)="closeMenu()" class="menuBtnCont" style="text-align: right;">
-            X
+        <div class="menuBtnCont" style="text-align: right;">
+            <div style="margin-left: auto;cursor: pointer;width: 20px;height: 20px;" (click)="closeMenu()">
+                X
+            </div>
         </div>
         <div *ngIf="dashboard">
-            <div (click)="createInvoice()" class="menuBtnCont">
+            <div (click)="toDashboard()" class="menuBtnCont menuLink">
+                Dashboard
+            </div>
+            <div (click)="createInvoice()" class="menuBtnCont menuLink">
                 Create Invoice
+            </div>
+            <div (click)="invoiceTracker()" class="menuBtnCont menuLink">
+                Invoice Tracker
             </div>
             <!-- <div class="menuBtnCont">
                 Home
@@ -63,17 +90,17 @@
                 Contact Us
             </div> -->
         </div>
-        <div  *ngIf="!dashboard" (click)="goToLoginPage()" class="menuBtnCont">
+        <div  *ngIf="!dashboard" (click)="goToLoginPage()" class="menuBtnCont menuLink">
             Login
         </div>
-        <div  (click)="goToHomePage()" class="menuBtnCont">
+        <div  (click)="goToHomePage()" class="menuBtnCont menuLink">
             Home
         </div>
-        <div class="menuBtnCont">
+        <!-- <div class="menuBtnCont">
             About Us
         </div>
         <div class="menuBtnCont">
             Contact Us
-        </div>
+        </div> -->
     </div>
 </div>
