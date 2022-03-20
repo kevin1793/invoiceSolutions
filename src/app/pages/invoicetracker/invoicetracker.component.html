@@ -3,6 +3,7 @@
     margin: 0 auto;
     background:#1976d2;
     color:white;
+    justify-content: center;
     height: 100vh;
   }
   .toolbar{
@@ -48,21 +49,161 @@
     box-shadow: #333 2px 2px 2px;
     cursor: pointer;
   }
+  .mainCont{
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+  .pageTitle{
+    padding-top:100px;
+    padding-bottom:20px;
+    font-size: 60px;;
+  }
+  .listHeaderCont{
+    display: flex;
+    justify-content: space-around;
+    padding:10px 20px;
+    background-color: white;
+    border-radius: 5px;
+    min-width: 50px;
+    color:#1976d2;
+    font-weight: bold;
+    text-align: center;
+    padding-right:85px;
+  }
+  .listItemCont{
+    justify-content: space-around;
+    padding:10px 20px;
+    font-weight: bold;
+    display: flex;
+    border-bottom: 1px solid white;
+    text-align: center;
+  }
+  .headerItem, .listItem{
+    text-align: center;
+    max-width: 200px;
+    min-width: 200px;
+
+  }
+  .addInvoice{
+    background:green;
+    color:white;
+    padding: 10px 20px;
+    width: auto;
+    border-radius: 5px;
+    border:none;
+    box-shadow: 2px 2px 2px #222;
+    margin-bottom:20px;
+    /* font-weight: bold;; */
+  }
+  .addInvoiceCont{
+    padding:15px;
+    background: #65a3e1;
+    margin-bottom: 30px;
+    border-radius: 5px;
+  }
+  .addInvoiceInputBox{
+    display: flex;
+  }
+  .addInvoiceInputBox input{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+  }
+  .addInvoiceInputItem{
+    width: auto;
+  }
+  .addInvoiceInputItem label{
+    margin-left: 10px;
+  }
+  .modalBox{
+    background-color: white;
+    padding:20px;
+    position: absolute;
+    top:50%;
+    left:40%;
+    /* height: 400px;
+    width: 400px; */
+    box-shadow: 2px 2px 2px #222;
+    border:none;
+    border-radius: 5px;
+  }
+  .modalTitle{
+    color: black;
+    padding-bottom: 30px;;
+  }
 </style>
 <!-- Toolbar -->
 <div class="pageWrapper">
 
-<app-navbar></app-navbar>
-<app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
-<div style ='padding-top:100px'>THIS IS THE DASHBOARD</div>
-
-<!-- <app-sidemenu [dashboardData]="dashboardData"></app-sidemenu> -->
-    <div *ngFor="let invoice of invoices" class='mainCont'>
-      {{invoice.name}}
+  <app-navbar></app-navbar>
+  <app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
+  <!-- MAIN CONTENT -->
+  <div class="mainCont">
+    <div *ngIf='showModal' class="modalBox"  [formGroup]='paidItem'>
+      <div class="modalTitle">
+        Set Invoice paid Date
+      </div>
+      <input type="date" formControlName='paidDate'>
+      <div style="margin-top:30px;">
+        <button (click)='setInvoicePaidDate()' style="margin-right: 20px;" class="greenBtn">Update</button>
+        <button (click)="showModal = !showModal" class="redBtn">Cancel</button>
+      </div>
     </div>
-    <div class="addItemBtn" (click)="addItem()">
-      ADD ITEM
+    <div class="pageTitle">
+      Invoice History
     </div>
-    <input  type="text" name="value" (keyup)='updateName($event)'  [value]="invoiceName">
-    <!-- <div [ngModel]='invoiceName'></div> -->
+    <button  *ngIf='!showAddInvoiceBox' class="greenBtn width150 mb20" (click)="showAddInvoiceBox = !showAddInvoiceBox">
+      Add Invoice
+    </button>
+    <div class="addInvoiceCont" *ngIf='showAddInvoiceBox'>
+      <form (ngSubmit)="onSubmit()" class="addInvoiceInputBox" [formGroup]='invoiceItem'>
+        <div class="addInvoiceInputItem">
+          <label>Invoice Number</label>
+          <input type='text' formControlName='invoiceNumber' placeholder="Invoice Number">
+        </div>
+        <div class="addInvoiceInputItem"><label>Invoice Date</label>
+          <input type='date' name='invoiceDate' placeholder="Invoice Date" formControlName='invoiceDate'>
+        </div>
+        <div class="addInvoiceInputItem"><label>Billed To</label>
+          <input type='text' formControlName='billedTo' placeholder="Billed To">
+        </div>
+        <div class="addInvoiceInputItem"><label>Total Billed</label>
+          <input type='text' formControlName='totalBilled' placeholder="Total Billed">
+        </div>
+        <div class="addInvoiceInputItem"><label>Paid Date</label>
+          <input type='date' formControlName='paidDate' placeholder="Paid Date">
+        </div>
+      </form>
+      <div>
+        <button (click)="addItem()" [disabled]=invoiceItem.invalid class="greenBtn margin10  width100">Add</button>
+        <button (click)="showAddInvoiceBox = !showAddInvoiceBox" class="redBtn margin10 width100">Cancel</button>
+      </div>
+    </div>
+    <div class="listHeaderCont">
+      <div class="headerItem">Invoice #</div>
+      <div class="headerItem">Invoice Date</div>
+      <div class="headerItem">Billed To</div>
+      <div class="headerItem">Total Billed</div>
+      <div class="headerItem">Paid Date</div>
+      <div class="headerItem">Invoice Paid</div>
+    </div>
+    <div *ngFor="let invoice of invoices">
+      <div class="listItemCont">
+        <div class="listItem">{{invoice.invoiceNumber}}</div>
+        <div class="listItem">{{invoice.invoiceDate | date: 'mediumDate' }}</div>
+        <div class="listItem">{{invoice.billedTo}}</div>
+        <div class="listItem">{{invoice.totalBilled | currency}}</div>
+        <div class="listItem">{{invoice.paidDate?(invoice.paidDate | date: 'mediumDate'):'-'  }}</div>
+        <div *ngIf='invoice.paidDate'  style='background:#2E7D32' class="listItem">{{invoice.paidDate?'Yes':'No'}}</div>
+        <div *ngIf='!invoice.paidDate' style='background:red' class="listItem">{{invoice.paidDate?'Yes':'No'}}</div>
+        <div *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div>
+        <div *ngIf='invoice.paidDate' style='cursor:pointer;width: 20px;'></div>
+        <div (click)='deleteInvoice(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         // Signed in 
         const user = userCredential.user;
         console.log('Login Successful');
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard'], { state: { loggedIn: true  } });
         this.elementRef.nativeElement.parent.destroy();
         // ...
         this.loggedIn = true;

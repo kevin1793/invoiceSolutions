@@ -19,11 +19,17 @@ export class SidemenuComponent implements OnInit {
     
 
   ngOnInit(): void {
-    // console.log('On init',window,this.router,history.state);
+    console.log('SIDE MENU ONINIT',window,this.router,history.state);
     // console.log('RECIEVED',this.dashboardData);
     if(this.dashboardData && this.dashboardData == 'Y'){
       this.dashboard = true;
     }
+    // if(window.location.pathname == '/dashboard'){
+    //   if(!history.state.loggedIn){
+    //     this.router.navigate(['/login']);
+    //   }
+    // }
+    
   }
 
   currentFeatureChange(value:string){

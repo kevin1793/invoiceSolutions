@@ -8,12 +8,14 @@ import { Component, OnInit,Output ,Input } from '@angular/core';
 export class DashboardComponent implements OnInit {
   dashboard = true;
   currentFeature = '';
+  loggedIn = false;
   dashboardData = 'Y';
   constructor() { }
 
 
   ngOnInit(): void {
     console.log('DASHBOARD PAGE',history.state);
+    
   }
 
   test(){

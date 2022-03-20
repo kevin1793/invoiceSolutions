@@ -78,17 +78,8 @@
                 Create Invoice
             </div>
             <div (click)="invoiceTracker()" class="menuBtnCont menuLink">
-                Invoice Tracker
+                Invoice History
             </div>
-            <!-- <div class="menuBtnCont">
-                Home
-            </div>
-            <div class="menuBtnCont">
-                About Us
-            </div>
-            <div class="menuBtnCont">
-                Contact Us
-            </div> -->
         </div>
         <div  *ngIf="!dashboard" (click)="goToLoginPage()" class="menuBtnCont menuLink">
             Login
@@ -96,11 +87,5 @@
         <div  (click)="goToHomePage()" class="menuBtnCont menuLink">
             Home
         </div>
-        <!-- <div class="menuBtnCont">
-            About Us
-        </div>
-        <div class="menuBtnCont">
-            Contact Us
-        </div> -->
     </div>
 </div>

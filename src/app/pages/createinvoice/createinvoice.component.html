@@ -10,9 +10,9 @@
   
     .invoiceCont {
       margin: 0 auto;
-      max-width: 1200px;
+      max-width: 1401px;
       justify-content: center;
-      padding-top: 100px;
+      /* padding-top: 100px; */
     }
   
     .invoiceCont {
@@ -152,7 +152,7 @@
       padding-left:30px;
       padding-bottom:30px;
       padding-top:10px;
-      margin-top:50px;
+      /* margin-top:50px; */
     }
     .formEndBlock input{
       margin-right: 20px;
@@ -198,6 +198,9 @@
     <app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
 
     <div class="invoiceCont">
+      <div class="pageTitle">
+        Create Invoice
+      </div>
       <form [formGroup]="invoiceForm"  (ngSubmit)="onSubmit()">
   
         <div class="formEndBlock">
@@ -286,7 +289,7 @@
           </button>
         </div>
   
-        <div class="formEndBlock">
+        <div class="formEndBlock" style="margin-top:30px;">
           <div style="display:flex;justify-content: start;">
             <div class="labelInput">
               <div><label>Total Hours</label></div><input class="block-input-smedium" [readonly]=true  type="number" formControlName="total_hours">

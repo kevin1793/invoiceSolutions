@@ -54,7 +54,13 @@
   
   <app-navbar></app-navbar>
   <app-sidemenu  (currentFeature)="currentFeatureChanged($event)" [dashboardData]="dashboardData"></app-sidemenu>
-  <div style ='padding-top:100px' (click)='test()'>THIS IS THE DASHBOARD</div>
+  <div class="mainCont">
+    <div class="pageTitle">
+      Dashboard
+    </div>
+  </div>
+  
+  <div style ='padding-top:100px;padding-left:100px;'>THIS IS THE DASHBOARD. ANALYTICS COMING SOON.</div>
 
   <!-- <div class="mainCont" [ngSwitch]="currentFeature">
     <app-invoicetracker *ngSwitchCase="'invoicetracker'"></app-invoicetracker>
