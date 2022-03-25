@@ -1,0 +1,47 @@
+<style>
+    .logWrapper{
+        min-height: 100vh;
+        background:#1e1e1e;
+        margin: 0 auto;
+        justify-content: center;
+    }
+    .logCont{
+        max-width: 1400px;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+    }
+    .updateBox{
+        padding:20px;
+        background: #252525;
+        border-radius: 5px;
+    }
+    .updateTitle{
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="logWrapper">
+
+    <app-navbar></app-navbar>
+    <app-sidemenu  [dashboardData]="dashboardData" ></app-sidemenu>
+
+    <div class="logCont">
+        <div class="pageTitle">
+            Update Log
+          </div>
+        <div class="updateBox">
+            <div class="updateTitle">3/25/2022</div>
+            <div class="updateText">
+                - User can see update logs from Update Log page in side menu<br>
+                - User can now rearrange Invoice workday trips<br>
+                - User can now rearrange Invoice workdays<br>
+                - User can now generate an Invoice from Invoice History record, if it has invoice data in record<br>
+                - User can now add Invoices to Invoice History Page from Create Invoice Page<br>
+            </div>
+        </div>
+    </div>
+
+</div>

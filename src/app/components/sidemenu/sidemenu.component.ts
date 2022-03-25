@@ -76,6 +76,15 @@ export class SidemenuComponent implements OnInit {
     this.closeMenu();
   }
 
+  toUpdateLog(){
+    console.log('go to update Log',this);
+    if(window.location.pathname != '/updatelog'){
+      this.elementRef.nativeElement.parentElement.remove();
+    }
+    this.router.navigate(['/updatelog'],{state:{data:'updatelog'}});
+    this.closeMenu();
+  }
+
   invoiceTracker(){
     // if(this.dashboard){
     //   this.currentFeatureChange('invoicetracker');

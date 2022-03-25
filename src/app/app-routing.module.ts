@@ -6,12 +6,14 @@ import { InvoicetrackerComponent } from './pages/invoicetracker/invoicetracker.c
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 
 const routes:Routes=[
   { path : 'home',component:LoginComponent },
   { path : 'login',component:LoginComponent },
   { path : 'invoicetracker',component:InvoicetrackerComponent },
   { path : 'createinvoice',component:CreateinvoiceComponent },
+  { path : 'updatelog',component:UpdatelogComponent },
   { path : '',component:HomeComponent },
   { path : 'dashboard' ,component:DashboardComponent }
 ];

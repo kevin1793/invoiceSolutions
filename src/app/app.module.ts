@@ -29,6 +29,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { InvoicetrackerComponent } from './pages/invoicetracker/invoicetracker.component';
 import { CreateinvoiceComponent } from './pages/createinvoice/createinvoice.component';
 import { TestComponent } from './components/test/test.component';
+import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 // import { InvoicetrackerComponent } from './components/invoicetracker/invoicetracker.component';
 
 firebase.initializeApp(environment.firebase);
@@ -43,7 +44,8 @@ firebase.initializeApp(environment.firebase);
     DashboardComponent,
     CreateinvoiceComponent,
     InvoicetrackerComponent,
-    TestComponent
+    TestComponent,
+    UpdatelogComponent
   ],
   imports: [
     BrowserModule,

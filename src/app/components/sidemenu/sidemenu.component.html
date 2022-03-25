@@ -80,6 +80,9 @@
             <div (click)="invoiceTracker()" class="menuBtnCont menuLink">
                 Invoice History
             </div>
+            <div (click)="toUpdateLog()" class="menuBtnCont menuLink">
+                Update Log
+            </div>
         </div>
         <div  *ngIf="!dashboard" (click)="goToLoginPage()" class="menuBtnCont menuLink">
             Login
