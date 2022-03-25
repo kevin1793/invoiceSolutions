@@ -3,7 +3,9 @@
       margin: 0 auto;
       background:#1976d2;
       color:white;
-      height: 100vh;
+      /* height: 100vh; */
+      min-height: 100vh;
+      padding-bottom: 200px;
     }
     .toolbar{
       background:#333;
@@ -45,8 +47,31 @@
       margin-top:30px;
       border-radius: 5px;
       padding: 10px 20px;
-      box-shadow: #333 2px 2px 2px;
+      box-shadow: #424242 2px 2px 2px;
       cursor: pointer;
+    }
+    .cardBox{
+      background:#65a3e1;
+      border:none;
+      border-radius: 5px;
+      width:300px;
+      height:125px;
+      padding:20px 40px;
+      text-align: center;
+      margin-right: 20px;
+      box-shadow: #333 2px 2px 2px;
+    }
+    .cardTitle{
+      font-size: 20px;
+      padding-bottom:30px;
+      font-weight: 700;
+    }
+    .cardInfo{
+      font-size: 50px;
+    }
+    .cardsRow{
+      display: flex;
+      margin-bottom: 20px;;
     }
 </style>
 <!-- Toolbar -->
@@ -58,19 +83,28 @@
     <div class="pageTitle">
       Dashboard
     </div>
+    <div class="cardsCont">
+      <div class="cardsRow">
+        <div class="cardBox">
+          <div class="cardTitle">Revenue Last Year</div>
+          <div class="cardInfo">{{revenueLastYear?(revenueLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Revenue Last Month</div>
+          <div class="cardInfo">{{revenueLastMonth?(revenueLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Revenue This Month</div>
+          <div class="cardInfo">{{revenueThisMonth?(revenueThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+      </div>
+
+      <div class="cardsRow">
+        <div class="cardBox">
+          <div class="cardTitle">Invoices Paid This Month</div>
+          <div class="cardInfo">{{invoicesPaidThisMonth}}/{{invoicesThisMonth}}</div>
+        </div>
+      </div>
+    </div>
   </div>
-  
-  <div style ='padding-top:100px;padding-left:100px;'>THIS IS THE DASHBOARD. ANALYTICS COMING SOON.</div>
-
-  <!-- <div class="mainCont" [ngSwitch]="currentFeature">
-    <app-invoicetracker *ngSwitchCase="'invoicetracker'"></app-invoicetracker>
-    <app-createinvoice *ngSwitchCase="'createinvoice'"></app-createinvoice>
-  </div> -->
-
-  
-  
-  <!-- <div class="mainCont" [ngSwitch]="currentFeature">
-    <div *ngSwitchCase="'invoicetracker'">1243</div>
-    <div *ngSwitchCase="'createinvoice'">124asdfsfa3</div>
-  </div> -->
 </div>

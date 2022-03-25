@@ -1,6 +1,16 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, FormBuilder, FormArray, NgControl, Validators } from '@angular/forms';
 import { CellConfig, jsPDF } from 'jspdf';
+
+
+interface Item {
+  id: string,
+  invoiceDate:string,
+  totalBilled:number
+  // ...
+};
+
 
 @Component({
   selector: 'app-createinvoice',
@@ -9,7 +19,7 @@ import { CellConfig, jsPDF } from 'jspdf';
 })
 export class CreateinvoiceComponent implements OnInit {
 
-  constructor(private fb:FormBuilder) { }
+  constructor(private fb:FormBuilder,public afs:AngularFirestore) { }
   dashboard = true;
   dashboardData = 'Y';
   invoiceName = 'asddf';
@@ -30,11 +40,38 @@ export class CreateinvoiceComponent implements OnInit {
     workDays:this.fb.array([this.newWorkDay()])
   });
 
+  invoiceItem: FormGroup = this.fb.group({
+    invoiceNumber: ['',Validators.required],
+    invoiceDate: ['',Validators.required],
+    paidDate: [''],
+    billedTo: ['',Validators.required],
+    totalBilled:[null,Validators.required],
+    invoiceData:['']
+  });
+
   pdfDoc = new jsPDF;
   dateToday = new Date();
   pageAdded = false;
     
   ngOnInit(): void {
+  }
+
+  addInvoice(){
+    var invoiceData = this.invoiceForm.value;
+    const invoiceCollection = this.afs.collection<Item>('Invoices');
+    // var invoiceItem = this.invoiceItem.value;
+    this.invoiceItem.get('invoiceNumber')?.setValue(this.invoiceForm.value.invoice_number);
+    this.invoiceItem.get('invoiceDate')?.setValue(this.invoiceForm.value.date);
+    this.invoiceItem.get('paidDate')?.setValue(null);
+    this.invoiceItem.get('billedTo')?.setValue(this.invoiceForm.value.bill_to);
+    this.invoiceItem.get('totalBilled')?.setValue(this.invoiceForm.value.total_billed);
+    this.invoiceItem.get('invoiceData')?.setValue(invoiceData);
+    var addInv = confirm('Are you sure you want to add invoice '+this.invoiceForm.value.invoice_number+'?');
+
+    if(addInv){
+      invoiceCollection.add(this.invoiceItem.value);
+    }
+
   }
 
   formatDateString(d:string){
@@ -50,7 +87,6 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
   buildFormHeader(){
-    console.log('buildFormHeader',this.invoiceForm.value);
     var startingY = 30;
     var ySpacing = 6;
     var startingX = 75;
@@ -72,9 +108,6 @@ export class CreateinvoiceComponent implements OnInit {
     this.pdfDoc.setFont("helvetica", "bold");
     this.pdfDoc.text('$'+ (typeof this.invoiceForm.value.total_billed == 'number'?this.invoiceForm.value.total_billed.toFixed(2):this.invoiceForm.value.total_billed),200,startingY+(ySpacing*4), {align:"right"});
 
-    //
-    console.log('',this.invoiceForm);
-    console.log(this.invoiceForm.get('workDays'));
     this.pdfDoc.setFont("helvetica", "bold");
     this.pdfDoc.text(this.formatDateString(this.invoiceForm.value.date_start)+' - '+this.formatDateString(this.invoiceForm.value.date_end),105,startingY+(ySpacing*7),{align:"center"});
   }
@@ -93,6 +126,32 @@ export class CreateinvoiceComponent implements OnInit {
 
   onSubmit(){
     console.log('1');
+  }
+
+  moveTrip(shift: any, wdInd:any, currentIndex: any){
+    var trip = this.workDays().at(wdInd).get('trips') as FormArray;
+    let newIndex: number = currentIndex + shift;
+    if(newIndex === -1) {
+      newIndex = trip.length - 1;
+    } else if(newIndex == trip.length) {
+      newIndex = 0;
+    }
+    const currentGroup = trip.at(currentIndex);
+    trip.removeAt(currentIndex);
+    trip.insert(newIndex, currentGroup);
+  }
+
+  moveWorkDay(shift: any,currentIndex: any){
+    var wd = this.workDays() as FormArray;
+    let newIndex: number = currentIndex + shift;
+    if(newIndex === -1) {
+      newIndex = wd.length - 1;
+    } else if(newIndex == wd.length) {
+      newIndex = 0;
+    }
+    const currentGroup = wd.at(currentIndex);
+    wd.removeAt(currentIndex);
+    wd.insert(newIndex, currentGroup);
   }
 
   addNewPage(){

@@ -4,7 +4,8 @@
     background:#1976d2;
     color:white;
     justify-content: center;
-    height: 100vh;
+    padding-bottom: 200px;
+    min-height: 100vh;
   }
   .toolbar{
     background:#333;
@@ -70,7 +71,7 @@
     color:#1976d2;
     font-weight: bold;
     text-align: center;
-    padding-right:85px;
+    padding-right:110px;
   }
   .listItemCont{
     justify-content: space-around;
@@ -203,6 +204,8 @@
         <div *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div>
         <div *ngIf='invoice.paidDate' style='cursor:pointer;width: 20px;'></div>
         <div (click)='deleteInvoice(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
+        <div *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+        <div *ngIf='!invoice.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
       </div>
     </div>
   </div>

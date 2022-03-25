@@ -1,11 +1,18 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
+    body{
+      background: #1976d2;
+    }
     .createInvoiceWrapper {
       margin: 0 auto;
       justify-content: center;
       width: 100%;
-      padding-bottom: 100px;
       background: #1976d2;
-      height: 100vh;
+      position: relative;
+      min-height: 100vh;
+      padding-bottom: 200px;
+
     }
   
     .invoiceCont {
@@ -188,7 +195,7 @@
       /* border:none  !important; */
     }
     .labelInput .ng-invalid{
-      border-left:3px solid red;
+      border-left:5px solid red;
     }
   </style>
   
@@ -202,7 +209,6 @@
         Create Invoice
       </div>
       <form [formGroup]="invoiceForm"  (ngSubmit)="onSubmit()">
-  
         <div class="formEndBlock">
           <div class="invoiceDateLine" style="display: flex;flex-wrap: wrap;">
             <div class="labelInput labelBox">
@@ -230,8 +236,11 @@
         <div *ngIf="workDays" class="workDayHeader">
           <div class="workDayBlock" *ngFor="let day of workDays().controls;let i=index" formArrayName="workDays">
             <!-- <input type ="text" [formControlName]="i"> -->
-            <div class="workDayLine" style="display: flex;" [formGroupName]="i">
-  
+            <div style='position: relative;' class="workDayLine" style="display: flex;" [formGroupName]="i">
+              <div  *ngIf="workDays().length>1" style="margin-top:30px;">
+                <span  (click)="moveWorkDay(-1, i)" style="color: white;cursor: pointer;margin-right: 5px;font-size: 20px;" class="fa fa-arrow-up"></span>
+                <span  (click)="moveWorkDay(1, i)" style="color: white;cursor: pointer;font-size: 20px;"  class="fa fa-arrow-down"></span>
+              </div>
               <!-- // WORK TRIP// -->
               <button class="buttonStyle" style="margin-top:35px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addTrip(i)">
                 Add Trip
@@ -256,7 +265,11 @@
                       <!-- <label *ngIf="j==0">City</label> -->
                       <input class="block-input-small" placeholder="City" id="last-name" type="text" formControlName="city">
                     </div>
-                    <button *ngIf="workDayTrips(i).length>1" class="buttonStyle" style="margin-top:0px;background: red;color:white;font-size: 15px;;" (click)="removeTrip(i,j)">
+                    <div  *ngIf="workDayTrips(i).length>1" style="margin-top: 10px;">
+                      <span  (click)="moveTrip(-1, i,j)" style="color: white;cursor: pointer;margin-right: 5px;font-size: 20px;" class="fa fa-arrow-up"></span>
+                      <span  (click)="moveTrip(1, i,j)" style="color: white;cursor: pointer;font-size: 20px;"  class="fa fa-arrow-down"></span>
+                    </div>
+                    <button *ngIf="workDayTrips(i).length>1" class="buttonStyle" style="margin-top:0px;background: red;color:white;font-size: 15px;" (click)="removeTrip(i,j)">
                       Remove
                     </button>
                   </div>
@@ -312,7 +325,9 @@
         </div>
       </form>
       <div>
-        <button [disabled]=invoiceForm.invalid (click)="generatePDF()" style='background-color: green;'class="buttonStyle">Generate PDF</button>
+        <button [disabled]=invoiceForm.invalid (click)="generatePDF()" style='margin-right:10px;background-color: green;'class="buttonStyle">Generate PDF</button>
+        <button [disabled]=invoiceForm.invalid (click)="addInvoice()" style='background-color: green;'class="buttonStyle">Add Invoice</button>
       </div>
     </div>
+    <!-- <app-footer></app-footer> -->
   </div>
