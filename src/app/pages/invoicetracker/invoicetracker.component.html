@@ -202,10 +202,12 @@
         <div *ngIf='invoice.paidDate'  style='background:#2E7D32' class="listItem">{{invoice.paidDate?'Yes':'No'}}</div>
         <div *ngIf='!invoice.paidDate' style='background:red' class="listItem">{{invoice.paidDate?'Yes':'No'}}</div>
         <div *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div>
-        <div *ngIf='invoice.paidDate' style='cursor:pointer;width: 20px;'></div>
+        <div *ngIf='invoice.paidDate' style='width: 20px;'></div>
         <div (click)='deleteInvoice(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
         <div *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
         <div *ngIf='!invoice.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
+        <div *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+        <div *ngIf='!invoice.invoiceData'  style='width: 20px;'></div>
       </div>
     </div>
   </div>

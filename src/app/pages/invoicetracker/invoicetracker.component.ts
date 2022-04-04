@@ -4,6 +4,7 @@ import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import jsPDF from 'jspdf';
+import { Router } from '@angular/router';
 
 interface Item {
   id: string,
@@ -32,7 +33,7 @@ export class InvoicetrackerComponent implements OnInit {
   lastDataLine: number = 0;
 
   // item$: Observable<Item[]>;
-  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore) {
+  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) {
     const Collection = collection(firestore, 'items');
     // this.item$ = collectionData(Collection);
   }
@@ -51,16 +52,12 @@ export class InvoicetrackerComponent implements OnInit {
   });
 
   pdfDoc = new jsPDF;
-  
   invoices:any;
   invoicesSub:any;
   db = getFirestore()
   colRef = collection(this.db,'Invoices')
   q = query(this.colRef,orderBy('invoiceDate','desc'))
 
-  onSubmit(){
-     
-  }
 
   ngOnInit(): void {
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
@@ -71,6 +68,19 @@ export class InvoicetrackerComponent implements OnInit {
       console.log(this.invoices);
     })
     return;
+  }
+
+  onSubmit(){
+    //
+  }
+  
+  editInvoice(data:any){
+    console.log('edit invoice',data);
+    var conf = confirm('Are you sure you want to edit invoice '+data.invoiceNumber+'? (Michelle, you mess up???)');
+
+    if(conf){
+      this.router.navigate(['/createinvoice'],{state:{invoiceData:data.invoiceData}});
+    }
   }
 
   formatDateString(d:string){
@@ -110,6 +120,7 @@ export class InvoicetrackerComponent implements OnInit {
     this.pdfDoc.setFont("helvetica", "bold");
     this.pdfDoc.text(this.formatDateString(invoice.date_start)+' - '+this.formatDateString(invoice.date_end),105,startingY+(ySpacing*7),{align:"center"});
   }
+
 
   buildFormDays(invoice:any){
     this.pdfDoc.setFontSize(12);

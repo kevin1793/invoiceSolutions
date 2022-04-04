@@ -35,7 +35,7 @@ export class CreateinvoiceComponent implements OnInit {
     total_charged:[0],
     total_billed:[0],
     bill_to:['Preferred Materials, LLC'],
-    charge_per_hour:[100,Validators.required],
+    charge_per_hour:['',Validators.required],
 
     workDays:this.fb.array([this.newWorkDay()])
   });
@@ -54,6 +54,44 @@ export class CreateinvoiceComponent implements OnInit {
   pageAdded = false;
     
   ngOnInit(): void {
+    if(history.state.invoiceData){
+      this.loadInvoice(history.state.invoiceData);
+      console.log('create invoice: EDIT DATA',history.state.invoiceData);
+    }
+  }
+
+  loadInvoice(data:any){
+    this.invoiceForm.get('invoice_number')?.setValue(data.invoice_number);
+    this.invoiceForm.get('date')?.setValue(data.date);
+    this.invoiceForm.get('date_start')?.setValue(data.date_start);
+    this.invoiceForm.get('date_end')?.setValue(data.date_end);
+    this.invoiceForm.get('total_hours')?.setValue(data.total_hours);
+    this.invoiceForm.get('total_charged')?.setValue(data.total_charged);
+    this.invoiceForm.get('total_billed')?.setValue(data.total_billed);
+    this.invoiceForm.get('bill_to')?.setValue(data.bill_to);
+    this.invoiceForm.get('charge_per_hour')?.setValue(data.charge_per_hour);
+
+    for(var i=0; i<data.workDays.length;i++){
+      if(i !=0){
+        this.addWorkDay();
+      }
+      var wd = this.invoiceForm.get('workDays') as FormArray;
+      wd.at(i).get('time_in')?.setValue(data.workDays[i].time_in);
+      wd.at(i).get('time_out')?.setValue(data.workDays[i].time_out);
+      wd.at(i).get('date')?.setValue(data.workDays[i].date);
+      wd.at(i).get('total_hours')?.setValue(data.workDays[i].total_hours);
+
+      for(var j=0; j<data.workDays[i].trips.length;j++){
+        if(j !=0){
+          this.addTrip(i);
+        }
+        var trip = wd.at(i).get('trips') as FormArray;
+        trip.at(j).get('city')?.setValue(data.workDays[i].trips[j].city);
+        trip.at(j).get('customer')?.setValue(data.workDays[i].trips[j].customer);
+        trip.at(j).get('destination')?.setValue(data.workDays[i].trips[j].destination);
+        trip.at(j).get('ticket_no')?.setValue(data.workDays[i].trips[j].ticket_no);
+      }
+    }
   }
 
   addInvoice(){
@@ -70,6 +108,7 @@ export class CreateinvoiceComponent implements OnInit {
 
     if(addInv){
       invoiceCollection.add(this.invoiceItem.value);
+      alert('Invoice was added.');
     }
 
   }
