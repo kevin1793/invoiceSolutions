@@ -1,7 +1,7 @@
-import { Component, OnInit,Injectable } from '@angular/core';
-import { AngularFirestore,AngularFirestoreDocument} from '@angular/fire/compat/firestore';
-import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/firestore';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AngularFirestore} from '@angular/fire/compat/firestore';
+import { Firestore, collection } from '@angular/fire/firestore';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
@@ -21,8 +21,6 @@ interface Item {
 })
 export class InvoicetrackerComponent implements OnInit {
 
-  
-
   dashboard = true;
   dashboardData = 'Y';
   invoiceName = 'asddf';
@@ -32,16 +30,13 @@ export class InvoicetrackerComponent implements OnInit {
   pageAdded = false;
   lastDataLine: number = 0;
 
-  // item$: Observable<Item[]>;
   constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) {
-    const Collection = collection(firestore, 'items');
-    // this.item$ = collectionData(Collection);
+    //...
   }
 
   paidItem: FormGroup = this.fb.group({
     paidDate: ['2022-03-19',Validators.required],
   });
-  // paidDate = new FormControl(['2022-03-19',Validators.required]);
 
   invoiceItem: FormGroup = this.fb.group({
     invoiceNumber: ['',Validators.required],

@@ -71,7 +71,6 @@
     color:#1976d2;
     font-weight: bold;
     text-align: center;
-    padding-right:110px;
   }
   .listItemCont{
     justify-content: space-around;
@@ -85,7 +84,11 @@
     text-align: center;
     max-width: 200px;
     min-width: 200px;
-
+  }
+  .actionItems{
+    display: flex;
+    text-align: center;
+    justify-content: space-evenly;
   }
   .addInvoice{
     background:green;
@@ -139,7 +142,6 @@
 </style>
 <!-- Toolbar -->
 <div class="pageWrapper">
-
   <app-navbar></app-navbar>
   <app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
   <!-- MAIN CONTENT -->
@@ -155,7 +157,7 @@
       </div>
     </div>
     <div class="pageTitle">
-      Invoice History
+      Invoices
     </div>
     <button  *ngIf='!showAddInvoiceBox' class="greenBtn width150 mb20" (click)="showAddInvoiceBox = !showAddInvoiceBox">
       Add Invoice
@@ -191,6 +193,7 @@
       <div class="headerItem">Total Billed</div>
       <div class="headerItem">Paid Date</div>
       <div class="headerItem">Invoice Paid</div>
+      <div class="headerItem">Actions</div>
     </div>
     <div *ngFor="let invoice of invoices">
       <div class="listItemCont">
@@ -199,15 +202,20 @@
         <div class="listItem">{{invoice.billedTo}}</div>
         <div class="listItem">{{invoice.totalBilled | currency}}</div>
         <div class="listItem">{{invoice.paidDate?(invoice.paidDate | date: 'mediumDate'):'-'  }}</div>
-        <div *ngIf='invoice.paidDate'  style='background:#2E7D32' class="listItem">{{invoice.paidDate?'Yes':'No'}}</div>
-        <div *ngIf='!invoice.paidDate' style='background:red' class="listItem">{{invoice.paidDate?'Yes':'No'}}</div>
-        <div *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div>
-        <div *ngIf='invoice.paidDate' style='width: 20px;'></div>
-        <div (click)='deleteInvoice(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-        <div *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-        <div *ngIf='!invoice.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
-        <div *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-        <div *ngIf='!invoice.invoiceData'  style='width: 20px;'></div>
+        <div class="listItem">
+          <div *ngIf='invoice.paidDate'  style='background:#2E7D32' >{{invoice.paidDate?'Yes':'No'}}</div>
+          <div *ngIf='!invoice.paidDate' style='background:red' >{{invoice.paidDate?'Yes':'No'}}</div>
+        </div>
+        <div  class="listItem actionItems">
+          
+          <div *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div>
+          <div *ngIf='invoice.paidDate' style='width: 20px;'></div>
+          <div (click)='deleteInvoice(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
+          <div *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+          <div *ngIf='!invoice.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
+          <div *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+          <div *ngIf='!invoice.invoiceData'  style='width: 20px;'></div>
+        </div>
       </div>
     </div>
   </div>

@@ -85,10 +85,10 @@
     </div>
     <div class="cardsCont">
       <div class="cardsRow">
-        <div class="cardBox">
+        <!-- <div class="cardBox">
           <div class="cardTitle">Revenue Last Year</div>
           <div class="cardInfo">{{revenueLastYear?(revenueLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
+        </div> -->
         <div class="cardBox">
           <div class="cardTitle">Revenue Last Month</div>
           <div class="cardInfo">{{revenueLastMonth?(revenueLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
@@ -97,12 +97,16 @@
           <div class="cardTitle">Revenue This Month</div>
           <div class="cardInfo">{{revenueThisMonth?(revenueThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
+        <div class="cardBox">
+          <div class="cardTitle">Invoices Paid This Month</div>
+          <div class="cardInfo">{{invoicesPaidThisMonth}}/{{invoicesThisMonth}}</div>
+        </div>
       </div>
 
       <div class="cardsRow">
         <div class="cardBox">
-          <div class="cardTitle">Invoices Paid This Month</div>
-          <div class="cardInfo">{{invoicesPaidThisMonth}}/{{invoicesThisMonth}}</div>
+          <div class="cardTitle">Expenses This Month</div>
+          <div class="cardInfo">{{revenueThisMonth?(revenueThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
       </div>
     </div>

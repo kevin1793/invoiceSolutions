@@ -20,16 +20,18 @@ export class SidemenuComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('SIDE MENU ONINIT',window,this.router,history.state);
-    // console.log('RECIEVED',this.dashboardData);
     if(this.dashboardData && this.dashboardData == 'Y'){
       this.dashboard = true;
     }
-    // if(window.location.pathname == '/dashboard'){
-    //   if(!history.state.loggedIn){
-    //     this.router.navigate(['/login']);
-    //   }
-    // }
-    
+    //TODO: add verification here to see in user has logged in
+  }
+
+  toExpenses(){
+    if(window.location.pathname != '/expenses'){
+      this.elementRef.nativeElement.parentElement.remove();
+    }
+    this.router.navigate(['/expenses'],{state:{data:'expenses'}});
+    this.closeMenu();
   }
 
   currentFeatureChange(value:string){
@@ -50,7 +52,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   goToLoginPage(){
-    console.log('goToLoginPage',this);
     if(window.location.pathname != '/login'){
       this.elementRef.nativeElement.parentElement.remove();
     }
@@ -59,7 +60,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   goToHomePage(){
-    console.log('goToHomePage',this);
     if(window.location.pathname != '/'){
       this.elementRef.nativeElement.parentElement.remove();
     }
@@ -68,7 +68,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   toDashboard(){
-    console.log('go to dashboard',this);
     if(window.location.pathname != '/dashboard'){
       this.elementRef.nativeElement.parentElement.remove();
     }

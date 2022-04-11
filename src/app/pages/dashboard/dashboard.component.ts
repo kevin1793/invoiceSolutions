@@ -16,12 +16,17 @@ export class DashboardComponent implements OnInit {
   constructor(firestore: Firestore,public afs:AngularFirestore) { }
 
   invoices:any;
+  expenses:any;
   db = getFirestore()
-  colRef = collection(this.db,'Invoices')
+  colRef = collection(this.db,'Invoices');
   q = query(this.colRef,orderBy('invoiceDate','desc'));
   revenueLastYear = 0;
   revenueLastMonth = 0;
   revenueThisMonth = 0;
+
+  expensesThisMonth = 0;
+  expensesLastMonth = 0;
+
   invoicesPaidThisMonth = 0;
   invoicesThisMonth = 0;
 
@@ -39,6 +44,56 @@ export class DashboardComponent implements OnInit {
       this.getRevenueThisMonth();
     });
 
+    onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
+      this.invoices = []
+      snapshot.docs.forEach( (doc) => {
+        this.invoices.push({...doc.data(), id:doc.id})
+      });
+      this.getExpensesLastMonth();
+      this.getExpensesThisMonth();
+    });
+  }
+
+  getExpensesThisMonth(){
+    var thisYear = new Date().getFullYear();
+    var thisMonth = new Date().getMonth()+1;
+    var strMonth = '';
+    if(thisMonth<10){
+      strMonth = '0'+thisMonth.toString();
+    }else{
+      strMonth = thisMonth.toString();
+    }
+    var dateSearch = thisYear+'-'+strMonth;
+    this.invoices.forEach((x: any) => {
+      console.log(x.invoiceDate);
+      if(x.invoiceDate.includes(dateSearch)){
+        this.revenueThisMonth+=parseInt(x.totalBilled);
+      }
+    });
+  }
+  
+  getExpensesLastMonth(){
+    var thisYear = new Date().getFullYear();
+    var thisMonth = new Date().getMonth()+1;
+    var strMonth = '';
+    if(thisMonth == 1){
+      thisYear--;
+      thisMonth = 12;
+    }else{
+      thisMonth--;
+    }
+    if(thisMonth<10){
+      strMonth = '0'+thisMonth.toString();
+    }else{
+      strMonth = thisMonth.toString();
+    }
+    var dateSearch = thisYear+'-'+strMonth;
+    this.invoices.forEach((x: any) => {
+      console.log(x.invoiceDate);
+      if(x.invoiceDate.includes(dateSearch)){
+        this.revenueLastMonth+=parseInt(x.totalBilled);
+      }
+    });
   }
 
   getInvoicesPaidThisMonth(){
@@ -79,6 +134,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
   getRevenueLastMonth(){
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;

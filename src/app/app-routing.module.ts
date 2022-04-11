@@ -7,6 +7,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
+import { ExpensesComponent } from './pages/expenses/expenses.component';
 
 const routes:Routes=[
   { path : 'home',component:LoginComponent },
@@ -14,6 +15,7 @@ const routes:Routes=[
   { path : 'invoicetracker',component:InvoicetrackerComponent },
   { path : 'createinvoice',component:CreateinvoiceComponent },
   { path : 'updatelog',component:UpdatelogComponent },
+  { path : 'expenses',component:ExpensesComponent },
   { path : '',component:HomeComponent },
   { path : 'dashboard' ,component:DashboardComponent }
 ];
