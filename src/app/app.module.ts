@@ -31,6 +31,7 @@ import { CreateinvoiceComponent } from './pages/createinvoice/createinvoice.comp
 import { TestComponent } from './components/test/test.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
+import { NotfoundComponent } from './pages/notfound/notfound.component';
 // import { InvoicetrackerComponent } from './components/invoicetracker/invoicetracker.component';
 
 firebase.initializeApp(environment.firebase);
@@ -47,7 +48,8 @@ firebase.initializeApp(environment.firebase);
     InvoicetrackerComponent,
     TestComponent,
     UpdatelogComponent,
-    ExpensesComponent
+    ExpensesComponent,
+    NotfoundComponent
   ],
   imports: [
     BrowserModule,

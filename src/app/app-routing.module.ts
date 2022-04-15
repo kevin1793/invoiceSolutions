@@ -8,6 +8,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
+import { NotfoundComponent } from './pages/notfound/notfound.component';
 
 const routes:Routes=[
   { path : 'home',component:LoginComponent },
@@ -17,7 +18,10 @@ const routes:Routes=[
   { path : 'updatelog',component:UpdatelogComponent },
   { path : 'expenses',component:ExpensesComponent },
   { path : '',component:HomeComponent },
-  { path : 'dashboard' ,component:DashboardComponent }
+  { path : 'dashboard' ,component:DashboardComponent },
+  { path : '404', component: NotfoundComponent },
+  { path : '**', redirectTo: '/404' }
+  
 ];
 
 @NgModule({

@@ -20,15 +20,29 @@ export class DashboardComponent implements OnInit {
   db = getFirestore()
   colRef = collection(this.db,'Invoices');
   q = query(this.colRef,orderBy('invoiceDate','desc'));
+
+  colRefExpenses = collection(this.db,'Expenses');
+  expensesQuery = query(this.colRefExpenses,orderBy('date','desc'));
+
   revenueLastYear = 0;
   revenueLastMonth = 0;
   revenueThisMonth = 0;
+  revenueThisYear = 0;
 
   expensesThisMonth = 0;
   expensesLastMonth = 0;
+  expensesThisYear = 0;
+
+  gasExpenseThisMonth = 0;
+  gasExpenseLastMonth = 0;
+  gasExpenseThisYear = 0;
 
   invoicesPaidThisMonth = 0;
   invoicesThisMonth = 0;
+
+  invoicesPaidLastMonth = 0;
+  invoicesLastMonth = 0;
+  invoicesThisYear = 0;
 
   ngOnInit(): void {
     console.log('DASHBOARD PAGE',this.invoices);
@@ -40,17 +54,25 @@ export class DashboardComponent implements OnInit {
       console.log('DASHBOARD PAGE',this.invoices);
       this.getRevenueLastYear();
       this.getInvoicesPaidThisMonth();
+      this.getInvoicesPaidLastMonth();
+      this.getInvoicesThisYear();
       this.getRevenueLastMonth();
       this.getRevenueThisMonth();
+      this.getRevenueThisYear();
     });
 
-    onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
-      this.invoices = []
+    onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
+      this.expenses = []
       snapshot.docs.forEach( (doc) => {
-        this.invoices.push({...doc.data(), id:doc.id})
+        this.expenses.push({...doc.data(), id:doc.id})
       });
       this.getExpensesLastMonth();
       this.getExpensesThisMonth();
+      this.getExpensesThisYear();
+
+      this.getGasExpenseLastMonth();
+      this.getGasExpenseThisMonth();
+      this.getGasExpenseThisYear();
     });
   }
 
@@ -64,10 +86,75 @@ export class DashboardComponent implements OnInit {
       strMonth = thisMonth.toString();
     }
     var dateSearch = thisYear+'-'+strMonth;
-    this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
-      if(x.invoiceDate.includes(dateSearch)){
-        this.revenueThisMonth+=parseInt(x.totalBilled);
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
+        this.expensesThisMonth+=parseInt(x.total);
+      }
+    });
+  }
+
+  getGasExpenseThisYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear;
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch) && x.category.includes('Gas')){
+        this.gasExpenseThisYear+=parseInt(x.total);
+      }
+    });
+  }
+
+  getGasExpenseLastMonth(){
+    var thisYear = new Date().getFullYear();
+    var thisMonth = new Date().getMonth()+1;
+    var strMonth = '';
+    if(thisMonth == 1){
+      thisYear--;
+      thisMonth = 12;
+    }else{
+      thisMonth--;
+    }
+    if(thisMonth<10){
+      strMonth = '0'+thisMonth.toString();
+    }else{
+      strMonth = thisMonth.toString();
+    }
+    var dateSearch = thisYear+'-'+strMonth;
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch) && x.category.includes('Gas')){
+        this.gasExpenseLastMonth+=parseInt(x.total);
+      }
+    });
+  }
+
+  getGasExpenseThisMonth(){
+    var thisYear = new Date().getFullYear();
+    var thisMonth = new Date().getMonth()+1;
+    var strMonth = '';
+    var dateSearch = thisYear;
+    if(thisMonth == 1){
+      thisYear--;
+      thisMonth = 12;
+    }else{
+      thisMonth--;
+    }
+    if(thisMonth<10){
+      strMonth = '0'+thisMonth.toString();
+    }else{
+      strMonth = thisMonth.toString();
+    }
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch) && x.category.includes('Gas')){
+        this.gasExpenseThisMonth+=parseInt(x.total);
+      }
+    });
+  }
+
+  getExpensesThisYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear;
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
+        this.expensesThisYear+=parseInt(x.total);
       }
     });
   }
@@ -88,15 +175,14 @@ export class DashboardComponent implements OnInit {
       strMonth = thisMonth.toString();
     }
     var dateSearch = thisYear+'-'+strMonth;
-    this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
-      if(x.invoiceDate.includes(dateSearch)){
-        this.revenueLastMonth+=parseInt(x.totalBilled);
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
+        this.expensesLastMonth+=parseInt(x.total);
       }
     });
   }
 
-  getInvoicesPaidThisMonth(){
+  getInvoicesPaidLastMonth(){
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -117,6 +203,43 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getInvoicesPaidThisMonth(){
+    var thisYear = new Date().getFullYear();
+    var thisMonth = new Date().getMonth()+1;
+    var strMonth = '';
+    if(thisMonth == 1){
+      thisYear--;
+      thisMonth = 12;
+    }else{
+      thisMonth--;
+    }
+    if(thisMonth<10){
+      strMonth = '0'+thisMonth.toString();
+    }else{
+      strMonth = thisMonth.toString();
+    }
+    var dateSearch = thisYear+'-'+strMonth;
+    this.invoices.forEach((x: any) => {
+      console.log(x.invoiceDate);
+      if(x.invoiceDate.includes(dateSearch)){
+        this.invoicesLastMonth++;
+        if(x.paidDate){
+          this.invoicesPaidLastMonth++;
+        }
+      }
+    });
+  }
+
+  getInvoicesThisYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear;
+    this.invoices.forEach((x: any) => {
+      if(x.invoiceDate.includes(dateSearch)){
+        this.invoicesThisYear++;
+      }
+    });
+  }
+
   getRevenueThisMonth(){
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
@@ -131,6 +254,17 @@ export class DashboardComponent implements OnInit {
       console.log(x.invoiceDate);
       if(x.invoiceDate.includes(dateSearch)){
         this.revenueThisMonth+=parseInt(x.totalBilled);
+      }
+    });
+  }
+
+  getRevenueThisYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear;
+    this.invoices.forEach((x: any) => {
+      console.log(x.invoiceDate);
+      if(x.invoiceDate.includes(dateSearch)){
+        this.revenueThisYear+=parseInt(x.totalBilled);
       }
     });
   }
