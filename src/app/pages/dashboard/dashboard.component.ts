@@ -168,7 +168,6 @@ export class DashboardComponent implements OnInit {
   getGasExpenseThisMonth(){
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
-    var dateSearch = thisYear;
     var strMonth = '';
     if(thisMonth == 1){
       thisYear--;
@@ -181,6 +180,7 @@ export class DashboardComponent implements OnInit {
     }else{
       strMonth = thisMonth.toString();
     }
+    var dateSearch = thisYear+'-'+strMonth;
     this.fuel.forEach((x: any) => {
       if(x.date.includes(dateSearch) ){
         this.gasExpenseThisMonth+=parseInt(x.total);

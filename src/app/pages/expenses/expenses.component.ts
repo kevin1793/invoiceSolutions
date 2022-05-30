@@ -9,7 +9,6 @@ interface Item {
   item: string,
   category:string,
   date:string,
-  description:string,
   total:number,
   quantity:number
   // ...
@@ -32,7 +31,6 @@ export class ExpensesComponent implements OnInit {
     item: ['',Validators.required],
     category: ['',Validators.required],
     date: ['',Validators.required],
-    description:[''],
     quantity:[null,Validators.required],
     total:[null,Validators.required],
   });
