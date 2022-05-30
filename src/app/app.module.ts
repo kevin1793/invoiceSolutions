@@ -32,6 +32,8 @@ import { TestComponent } from './components/test/test.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
+import { TrucksComponent } from './pages/trucks/trucks.component';
+import { FuelComponent } from './pages/fuel/fuel.component';
 // import { InvoicetrackerComponent } from './components/invoicetracker/invoicetracker.component';
 
 firebase.initializeApp(environment.firebase);
@@ -49,7 +51,9 @@ firebase.initializeApp(environment.firebase);
     TestComponent,
     UpdatelogComponent,
     ExpensesComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    TrucksComponent,
+    FuelComponent
   ],
   imports: [
     BrowserModule,

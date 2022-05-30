@@ -82,3 +82,116 @@ body{
 .mb20{
     margin-bottom: 20px;
 }
+.pageWrapper{
+    margin: 0 auto;
+    background:#1976d2;
+    color:white;
+    justify-content: center;
+    padding-bottom: 200px;
+    min-height: 100vh;
+  }
+  .mainCont{
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+  .listHeaderCont{
+    display: flex;
+    justify-content: space-around;
+    padding:10px 20px;
+    background-color: white;
+    border-radius: 5px;
+    min-width: 50px;
+    color:#1976d2;
+    font-weight: bold;
+    text-align: center;
+  }
+  .listItemCont{
+    justify-content: space-around;
+    padding:10px 20px;
+    font-weight: bold;
+    display: flex;
+    border-bottom: 1px solid white;
+    text-align: center;
+  }
+  .headerItem, .listItem{
+    text-align: center;
+    max-width: 170px;
+    min-width: 120px;
+  }
+  .btnRow button{
+    margin-right:10px;
+  }
+  .addItemCont{
+    padding:15px;
+    background: #65a3e1;
+    margin-bottom: 30px;
+    border-radius: 5px;
+  }
+  .formRow{
+    margin-bottom: 20px;;
+    display: flex;
+  }
+  .formRow div{
+    margin-right: 10px;;
+  }
+  .addItemInputBox input{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+  }
+
+  .addItemInputBox select{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+  }
+
+  .addItemInputBox option{
+    border:none;
+    padding: 10px;
+    /* margin: 10px; */
+    border-radius: 5px;
+    width: auto;
+  }
+
+  .addItemInputBox textarea{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+    width: 400px;
+    height: 100px;
+  }
+  .addItemInputItem{
+    display: inline-grid;
+    width: auto;
+  }
+  .addItemInputItem label{
+    margin-left: 10px;
+  }
+  .modalBox{
+    background-color: white;
+    padding:20px;
+    position: absolute;
+    top:50%;
+    left:40%;
+    box-shadow: 2px 2px 2px #222;
+    border:none;
+    border-radius: 5px;
+  }
+  .modalTitle{
+    color: black;
+    padding-bottom: 30px;;
+  }
+  .actionItems{
+    display: flex;
+    text-align: center;
+    justify-content: space-evenly;
+  }

@@ -9,6 +9,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
+import { TrucksComponent } from './pages/trucks/trucks.component';
+import { FuelComponent } from './pages/fuel/fuel.component';
 
 const routes:Routes=[
   { path : 'home',component:LoginComponent },
@@ -17,6 +19,8 @@ const routes:Routes=[
   { path : 'createinvoice',component:CreateinvoiceComponent },
   { path : 'updatelog',component:UpdatelogComponent },
   { path : 'expenses',component:ExpensesComponent },
+  { path : 'fuel',component:FuelComponent },
+  { path : 'trucks',component:TrucksComponent },
   { path : '',component:HomeComponent },
   { path : 'dashboard' ,component:DashboardComponent },
   { path : '404', component: NotfoundComponent },

@@ -1,0 +1,185 @@
+<style>
+  .pageWrapper{
+    margin: 0 auto;
+    background:#1976d2;
+    color:white;
+    justify-content: center;
+    padding-bottom: 200px;
+    min-height: 100vh;
+  }
+  .mainCont{
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+  .listHeaderCont{
+    display: flex;
+    justify-content: space-around;
+    padding:10px 20px;
+    background-color: white;
+    border-radius: 5px;
+    min-width: 50px;
+    color:#1976d2;
+    font-weight: bold;
+    text-align: center;
+  }
+  .listItemCont{
+    justify-content: space-around;
+    padding:10px 20px;
+    font-weight: bold;
+    display: flex;
+    border-bottom: 1px solid white;
+    text-align: center;
+  }
+  .headerItem, .listItem{
+    text-align: center;
+    max-width: 170px;
+    min-width: 120px;
+  }
+  .btnRow button{
+    margin-right:10px;
+  }
+  .addFuelCont{
+    padding:15px;
+    background: #65a3e1;
+    margin-bottom: 30px;
+    border-radius: 5px;
+  }
+  .formRow{
+    margin-bottom: 20px;;
+    display: flex;
+  }
+  .formRow div{
+    margin-right: 10px;;
+  }
+  .addFuelInputBox input{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+  }
+
+  .addFuelInputBox select{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+  }
+
+  .addFuelInputBox option{
+    border:none;
+    padding: 10px;
+    /* margin: 10px; */
+    border-radius: 5px;
+    width: auto;
+  }
+
+  .addFuelInputBox textarea{
+    border:none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    width: auto;
+    width: 400px;
+    height: 100px;
+  }
+  .addFuelInputItem{
+    display: inline-grid;
+    width: auto;
+  }
+  .addFuelInputItem label{
+    margin-left: 10px;
+  }
+  .modalBox{
+    background-color: white;
+    padding:20px;
+    position: absolute;
+    top:50%;
+    left:40%;
+    box-shadow: 2px 2px 2px #222;
+    border:none;
+    border-radius: 5px;
+  }
+  .modalTitle{
+    color: black;
+    padding-bottom: 30px;;
+  }
+</style>
+
+<div class="pageWrapper">
+  <app-navbar></app-navbar>
+  <app-sidemenu [dashboardData]="dashboardData" ></app-sidemenu>
+  <div class="mainCont">
+    <div class="pageTitle">
+      Fuel
+    </div>
+    <div class="addFuelCont" *ngIf='showAddFuelBox'>
+      <form (ngSubmit)="onSubmit()" class="addFuelInputBox" [formGroup]='fuelItem'>
+        <div class="formRow">
+          <div class="addFuelInputItem"><label>Truck Number</label>
+            <select type='text' formControlName='truck_number' placeholder="Category">
+              <option></option>
+              <option *ngFor="let truck of trucks;">{{truck.truck_number}}</option>
+            </select>
+          </div>
+          <div class="addFuelInputItem"><label>Mileage</label>
+            <input  type='number' formControlName='mileage' placeholder="Mileage">
+          </div>
+          <div class="addFuelInputItem"><label>Gallons</label>
+            <input  type='number' (change)="calculateTotal()" formControlName='gallons' placeholder="Gallons">
+          </div>
+          <div class="addFuelInputItem"><label>Cost Per Gallon</label>
+            <input  type='number' (change)="calculateTotal()" formControlName='cost_per_gallon' placeholder="Cost Per Gallon">
+          </div>
+          <div class="addFuelInputItem"><label>Total</label>
+            <input type='number' readonly="true" formControlName='total' placeholder="Total">
+          </div>
+          <div class="addFuelInputItem"><label>Date</label>
+            <input type='date' formControlName='date' placeholder="Paid Date">
+          </div>
+        </div>
+      </form>
+      <div>
+        <button (click)="addFuel()" [disabled]=fuelItem.invalid class="greenBtn margin10  width100">Add</button>
+        <button (click)="showAddFuelBox = !showAddFuelBox" class="redBtn margin10 width100">Cancel</button>
+      </div>
+    </div>
+    <div class="btnRow">
+      <button  *ngIf='!showAddFuelBox' class="greenBtn width200 mb20" (click)="showAddFuelBox = !showAddFuelBox">
+        Add Fuel Purchase
+      </button>
+    </div>
+    <!-- START fuel LIST -->
+    <div class="listHeaderCont">
+      <div class="headerItem">Truck Number</div>
+      <div class="headerItem">Mileage</div>
+      <div class="headerItem">Gallons</div>
+      <div class="headerItem">Cost Per Gallon</div>
+      <div class="headerItem">Total</div>
+      <div class="headerItem">Date</div>
+      <div class="headerItem">Actions</div>
+    </div>
+    <div *ngFor="let fuel of fuels">
+      <div class="listItemCont">
+        <div class="listItem">{{fuel.truck_number}}</div>
+        <div class="listItem">{{fuel.mileage }}</div>
+        <div class="listItem">{{fuel.gallons}}</div>
+        <div class="listItem">{{fuel.cost_per_gallon}}</div>
+        <div class="listItem">{{fuel.total | currency}}</div>
+        <div class="listItem">{{fuel.date |date: 'mediumDate'  }}</div>
+        <div  class="listItem actionItems">
+          <!-- <div *ngIf='!fuel.paidDate' (click)='editPaidDate(fuel)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div> -->
+          <div *ngIf='fuel.paidDate' style='width: 20px;'></div>
+          <div (click)='deleteFuel(fuel)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
+          <!-- <div *ngIf='fuel.invoiceData' (click)='downloadInvoice(fuel.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div> -->
+          <div *ngIf='!fuel.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
+          <div *ngIf='fuel.invoiceData' (click)='editFuel(fuel)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+          <div *ngIf='!fuel.invoiceData'  style='width: 20px;'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

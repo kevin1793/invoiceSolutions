@@ -31,6 +31,12 @@
     .cardInfo{
       font-size: 50px;
     }
+    .cardInfo2{
+      padding-left:20px;
+      text-align: center;
+      margin-bottom: 5px;;
+      font-size: 20px;
+    }
     .cardsRow{
       display: flex;
       margin-bottom: 30px;;
@@ -64,6 +70,10 @@
           <div class="cardTitle">Invoices This Year</div>
           <div class="cardInfo">{{invoicesThisYear}}</div>
         </div>
+        <div class="cardBox">
+          <div class="cardTitle">Invoices Last Year</div>
+          <div class="cardInfo">{{invoicesLastYear}}</div>
+        </div>
       </div>
       <div class="rowTitle">Revenue</div>
 
@@ -80,9 +90,13 @@
           <div class="cardTitle">Revenue This Year</div>
           <div class="cardInfo">{{revenueThisYear?(revenueThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
+        <div class="cardBox">
+          <div class="cardTitle">Revenue Last Year</div>
+          <div class="cardInfo">{{revenueLastYear?(revenueLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
       </div>
-      <div class="rowTitle">All Expenses</div>
 
+      <div class="rowTitle">Expenses</div>
       <div class="cardsRow">
         <div class="cardBox">
           <div class="cardTitle">Expenses This Month</div>
@@ -96,23 +110,47 @@
           <div class="cardTitle">Expenses This Year</div>
           <div class="cardInfo">{{expensesThisYear?(expensesThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
+        <div class="cardBox">
+          <div class="cardTitle">Expenses Last Year</div>
+          <div class="cardInfo">{{expensesLastYear?(expensesLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
       </div>
-      <div class="rowTitle">Gas Expenses</div>
 
+      <!-- GAS -->
+      <div class="rowTitle">Fuel Expenses</div>
       <div class="cardsRow">
         <div class="cardBox">
-          <div class="cardTitle">Gas Expense This Month</div>
-          <div class="cardInfo">{{expensesThisMonth?(expensesThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
+          <div class="cardTitle">Fuel Expense This Month</div>
+          <div class="cardInfo">{{gasExpenseThisMonth?(gasExpenseThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
         <div class="cardBox">
-          <div class="cardTitle">Gas Expense Last Month</div>
+          <div class="cardTitle">Fuel Expense Last Month</div>
           <div class="cardInfo">{{gasExpenseLastMonth?(gasExpenseLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
         <div class="cardBox">
-          <div class="cardTitle">Gas Expense This Year</div>
+          <div class="cardTitle">Fuel Expense This Year</div>
           <div class="cardInfo">{{gasExpenseThisYear?(gasExpenseThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Fuel Expense Last Year</div>
+          <div class="cardInfo">{{gasExpenseLastYear?(gasExpenseLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
         </div>
       </div>
     </div>
+
+      <div class="rowTitle">Trucks</div>
+      <div class="cardsRow" *ngFor="let truck of trucks" >
+        <div class="cardBox">
+          <div class="cardTitle">Truck Number: {{truck.truck_number}}</div>
+          <div class="cardInfo2">
+            {{truck.status}}
+          </div>
+          <div class="cardInfo2">
+            {{truck.mileage | number}} Miles
+          </div>
+        </div>
+      </div>
+
+      
   </div>
 </div>

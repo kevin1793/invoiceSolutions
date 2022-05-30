@@ -1,0 +1,77 @@
+<style>
+</style>
+
+<div class="pageWrapper">
+  <app-navbar></app-navbar>
+  <app-sidemenu [dashboardData]="dashboardData" ></app-sidemenu>
+  <div class="mainCont">
+    <div class="pageTitle">
+      Trucks
+    </div>
+    <div class="addItemCont" *ngIf='showAddItemBox'>
+      <form (ngSubmit)="onSubmit()" class="addItemInputBox" [formGroup]='truckItem'>
+        <div class="formRow">
+          <div class="addItemInputItem">
+            <label>Truck Number</label>
+            <input type='text' required="true" formControlName='truck_number' placeholder="Truck Number">
+          </div>
+          <div class="addItemInputItem">
+            <label>Nickname</label>
+            <input type='text' required="true" formControlName='nickname' placeholder="Nickname">
+          </div>
+          <div class="addItemInputItem"><label>Vin</label>
+            <input type='text' formControlName='vin' placeholder="Vin">
+          </div>
+          <div class="addItemInputItem"><label>Mileage</label>
+            <input  type='number' formControlName='mileage' placeholder="Mileage">
+          </div>
+          <div class="addItemInputItem"><label>Status</label>
+            <select type='number' formControlName='status' placeholder="Status">
+              <option>Operational</option>
+              <option>At Mechanic/Repair Shop</option>
+              <option>Under Maintenance</option>
+              <option>Down</option>
+            </select>
+          </div>
+        </div>
+        <div class="formRow">
+          <div class="addItemInputItem"><label>Notes</label>
+            <textarea type='text' formControlName='notes' placeholder="Notes"></textarea>
+          </div>
+        </div>
+  
+      </form>
+      <div>
+        <button (click)="addTruck()" [disabled]=truckItem.invalid class="greenBtn margin10  width100">Save</button>
+        <button (click)="resetForm();showAddItemBox = !showAddItemBox" class="redBtn margin10 width100">Cancel</button>
+      </div>
+    </div>
+    <div class="btnRow">
+      <button  *ngIf='!showAddItemBox' class="greenBtn width150 mb20" (click)="showAddItemBox = !showAddItemBox">
+        Add Truck
+      </button>
+    </div>
+    <!-- START EXPENSE LIST -->
+    <div class="listHeaderCont">
+      <div class="headerItem">Truck Number</div>
+      <div class="headerItem">Status</div>
+      <div class="headerItem">Mileage</div>
+      <div class="headerItem">Vin #</div>
+      <div class="headerItem">Nickname</div>
+      <div class="headerItem">Actions</div>
+    </div>
+    <div *ngFor="let truck of trucks">
+      <div class="listItemCont">
+        <div class="listItem">{{truck.truck_number}}</div>
+        <div class="listItem">{{truck.status }}</div>
+        <div class="listItem">{{(truck.mileage | number) || '-'}}</div>
+        <div class="listItem">{{truck.vin || '-'}}</div>
+        <div class="listItem">{{truck.nickname || '-'}}</div>
+        <div  class="listItem actionItems">
+          <div (click)='deleteTruck(truck)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
+          <div (click)='editTruck(truck)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

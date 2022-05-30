@@ -99,8 +99,6 @@
     position: absolute;
     top:50%;
     left:40%;
-    /* height: 400px;
-    width: 400px; */
     box-shadow: 2px 2px 2px #222;
     border:none;
     border-radius: 5px;
@@ -115,7 +113,6 @@
   <app-navbar></app-navbar>
   <app-sidemenu [dashboardData]="dashboardData" ></app-sidemenu>
   <div class="mainCont">
-    
     <div class="pageTitle">
       Expenses
     </div>
@@ -127,26 +124,17 @@
             <input type='text' formControlName='item' placeholder="Item">
           </div>
           <div class="addExpenseInputItem"><label>Categroy</label>
-            <input type='text' formControlName='category' placeholder="Unit">
+            <input type='text' formControlName='category' placeholder="Category">
           </div>
-          
+          <div class="addExpenseInputItem"><label>Quantity</label>
+            <input  type='number' formControlName='quantity' placeholder="Quantity">
+          </div>
+          <div class="addExpenseInputItem"><label>Total</label>
+            <input type='number' formControlName='total' placeholder="Total">
+          </div>
           
           <div class="addExpenseInputItem"><label>Date</label>
             <input type='date' formControlName='date' placeholder="Paid Date">
-          </div>
-        </div>
-        <div class="formRow">
-          <div class="addExpenseInputItem"><label>Unit</label>
-            <input type='text' formControlName='unit' placeholder="Unit">
-          </div>
-          <div class="addExpenseInputItem"><label>Cost Per Unit</label>
-            <input (change)="calculateTotal()" type='number' formControlName='cost_per_unit' placeholder="Cost Per Unit">
-          </div>
-          <div class="addExpenseInputItem"><label>Quantity</label>
-            <input  (change)="calculateTotal()"  type='number' formControlName='quantity' placeholder="Quantity">
-          </div>
-          <div class="addExpenseInputItem"><label>Total</label>
-            <input [readonly]=true type='number' formControlName='total' placeholder="Total">
           </div>
         </div>
         <div class="formRow">
@@ -165,23 +153,14 @@
       <button  *ngIf='!showAddExpenseBox' class="greenBtn width150 mb20" (click)="showAddExpenseBox = !showAddExpenseBox">
         Add Expense
       </button>
-      <!-- <button  *ngIf='!showAddExpenseBox' class="greenBtn width150 mb20" (click)="showAddExpenseBox = !showAddExpenseBox">
-        Add Category
-      </button>
-      <button  *ngIf='!showAddExpenseBox' class="greenBtn width150 mb20" (click)="showAddExpenseBox = !showAddExpenseBox">
-        Add Unit
-      </button> -->
     </div>
     <!-- START EXPENSE LIST -->
     <div class="listHeaderCont">
       <div class="headerItem">Item</div>
       <div class="headerItem">Category</div>
       <div class="headerItem">Quantity</div>
-      <div class="headerItem">Cost Per Unit</div>
-      <!-- <div class="headerItem">Unit</div> -->
       <div class="headerItem">Total</div>
       <div class="headerItem">Date</div>
-      <!-- <div class="headerItem">Invoice Paid</div> -->
       <div class="headerItem">Actions</div>
     </div>
     <div *ngFor="let expense of expenses">
@@ -189,12 +168,9 @@
         <div class="listItem">{{expense.item}}</div>
         <div class="listItem">{{expense.category }}</div>
         <div class="listItem">{{expense.quantity}}</div>
-        <div class="listItem">{{expense.cost_per_unit | currency}} / {{expense.unit}}</div>
-        <!-- <div class="listItem">{{expense.unit}}</div> -->
         <div class="listItem">{{expense.total | currency}}</div>
         <div class="listItem">{{expense.date |date: 'mediumDate'  }}</div>
         <div  class="listItem actionItems">
-          
           <!-- <div *ngIf='!expense.paidDate' (click)='editPaidDate(expense)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div> -->
           <div *ngIf='expense.paidDate' style='width: 20px;'></div>
           <div (click)='deleteExpense(expense)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>

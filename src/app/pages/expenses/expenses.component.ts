@@ -8,8 +8,6 @@ import { Router } from '@angular/router';
 interface Item {
   item: string,
   category:string,
-  cost_per_unit:number,
-  unit:string,
   date:string,
   description:string,
   total:number,
@@ -33,11 +31,9 @@ export class ExpensesComponent implements OnInit {
   expenseItem: FormGroup = this.fb.group({
     item: ['',Validators.required],
     category: ['',Validators.required],
-    cost_per_unit: [''],
     date: ['',Validators.required],
     description:[''],
     quantity:[null,Validators.required],
-    unit:[null,Validators.required],
     total:[null,Validators.required],
   });
   
@@ -68,16 +64,6 @@ export class ExpensesComponent implements OnInit {
 
     if(del){
       invoiceCollection.doc(item.id).delete();
-    }
-  }
-
-  calculateTotal(){
-    var quantity = parseFloat(this.expenseItem.get('quantity')?.value);
-    var costPerUnit = parseFloat(this.expenseItem.get('cost_per_unit')?.value);
-    if(costPerUnit && quantity){
-      var totalCost = (costPerUnit*quantity).toFixed(2);
-      this.expenseItem.get('total')?.setValue(totalCost);
-      console.log('hi',costPerUnit*quantity);
     }
   }
 

@@ -34,6 +34,21 @@ export class SidemenuComponent implements OnInit {
     this.closeMenu();
   }
 
+  toTrucks(){
+    if(window.location.pathname != '/trucks'){
+      this.elementRef.nativeElement.parentElement.remove();
+    }
+    this.router.navigate(['/trucks'],{state:{data:'trucks'}});
+    this.closeMenu();
+  }
+  toFuel(){
+    if(window.location.pathname != '/fuel'){
+      this.elementRef.nativeElement.parentElement.remove();
+    }
+    this.router.navigate(['/fuel'],{state:{data:'fuel'}});
+    this.closeMenu();
+  }
+
   currentFeatureChange(value:string){
     console.log('before from child currentFeatureChange',value);
     this.currentFeature.emit(value);

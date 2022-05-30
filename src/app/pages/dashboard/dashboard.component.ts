@@ -17,32 +17,45 @@ export class DashboardComponent implements OnInit {
 
   invoices:any;
   expenses:any;
-  db = getFirestore()
+  fuel:any;
+  db = getFirestore();
+  
   colRef = collection(this.db,'Invoices');
   q = query(this.colRef,orderBy('invoiceDate','desc'));
 
   colRefExpenses = collection(this.db,'Expenses');
   expensesQuery = query(this.colRefExpenses,orderBy('date','desc'));
 
+  colRefTrucks = collection(this.db,'Trucks');
+  trucksQuery = query(this.colRefTrucks,orderBy('truck_number','desc'));
+
+  colRefFuel = collection(this.db,'Fuels');
+  fuelQuery = query(this.colRefFuel,orderBy('date','desc'));
+
   revenueLastYear = 0;
   revenueLastMonth = 0;
   revenueThisMonth = 0;
   revenueThisYear = 0;
 
+  trucks:any;
+
   expensesThisMonth = 0;
   expensesLastMonth = 0;
+  expensesLastYear = 0;
   expensesThisYear = 0;
 
   gasExpenseThisMonth = 0;
   gasExpenseLastMonth = 0;
   gasExpenseThisYear = 0;
+  gasExpenseLastYear: number = 0;
 
   invoicesPaidThisMonth = 0;
-  invoicesThisMonth = 0;
-
   invoicesPaidLastMonth = 0;
+
   invoicesLastMonth = 0;
+  invoicesThisMonth = 0;
   invoicesThisYear = 0;
+  invoicesLastYear = 0;
 
   ngOnInit(): void {
     console.log('DASHBOARD PAGE',this.invoices);
@@ -52,13 +65,14 @@ export class DashboardComponent implements OnInit {
         this.invoices.push({...doc.data(), id:doc.id})
       })
       console.log('DASHBOARD PAGE',this.invoices);
-      this.getRevenueLastYear();
       this.getInvoicesPaidThisMonth();
       this.getInvoicesPaidLastMonth();
+      this.getInvoicesLastYear();
       this.getInvoicesThisYear();
       this.getRevenueLastMonth();
       this.getRevenueThisMonth();
       this.getRevenueThisYear();
+      this.getRevenueLastYear();
     });
 
     onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
@@ -69,10 +83,25 @@ export class DashboardComponent implements OnInit {
       this.getExpensesLastMonth();
       this.getExpensesThisMonth();
       this.getExpensesThisYear();
+      this.getExpensesLastYear();
+    });
 
+    onSnapshot(this.fuelQuery,(snapshot: { docs: any[]; }) => {
+      this.fuel = []
+      snapshot.docs.forEach( (doc) => {
+        this.fuel.push({...doc.data(), id:doc.id})
+      });
       this.getGasExpenseLastMonth();
       this.getGasExpenseThisMonth();
       this.getGasExpenseThisYear();
+      this.getGasExpenseLastYear();
+    });
+
+    onSnapshot(this.trucksQuery,(snapshot: { docs: any[]; }) => {
+      this.trucks = []
+      snapshot.docs.forEach( (doc) => {
+        this.trucks.push({...doc.data(), id:doc.id})
+      });
     });
   }
 
@@ -93,11 +122,21 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getGasExpenseLastYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear-1;
+    this.fuel.forEach((x: any) => {
+      if(x.date.includes(dateSearch) ){
+        this.gasExpenseLastYear+=parseInt(x.total);
+      }
+    });
+  }
+
   getGasExpenseThisYear(){
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch) && x.category.includes('Gas')){
+    this.fuel.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
         this.gasExpenseThisYear+=parseInt(x.total);
       }
     });
@@ -119,8 +158,8 @@ export class DashboardComponent implements OnInit {
       strMonth = thisMonth.toString();
     }
     var dateSearch = thisYear+'-'+strMonth;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch) && x.category.includes('Gas')){
+    this.fuel.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
         this.gasExpenseLastMonth+=parseInt(x.total);
       }
     });
@@ -129,8 +168,8 @@ export class DashboardComponent implements OnInit {
   getGasExpenseThisMonth(){
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
     var dateSearch = thisYear;
+    var strMonth = '';
     if(thisMonth == 1){
       thisYear--;
       thisMonth = 12;
@@ -142,8 +181,8 @@ export class DashboardComponent implements OnInit {
     }else{
       strMonth = thisMonth.toString();
     }
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch) && x.category.includes('Gas')){
+    this.fuel.forEach((x: any) => {
+      if(x.date.includes(dateSearch) ){
         this.gasExpenseThisMonth+=parseInt(x.total);
       }
     });
@@ -155,6 +194,16 @@ export class DashboardComponent implements OnInit {
     this.expenses.forEach((x: any) => {
       if(x.date.includes(dateSearch)){
         this.expensesThisYear+=parseInt(x.total);
+      }
+    });
+  }
+
+  getExpensesLastYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear-1;
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
+        this.expensesLastYear+=parseInt(x.total);
       }
     });
   }
@@ -236,6 +285,16 @@ export class DashboardComponent implements OnInit {
     this.invoices.forEach((x: any) => {
       if(x.invoiceDate.includes(dateSearch)){
         this.invoicesThisYear++;
+      }
+    });
+  }
+
+  getInvoicesLastYear(){
+    var thisYear = new Date().getFullYear();
+    var dateSearch = thisYear-1;
+    this.invoices.forEach((x: any) => {
+      if(x.invoiceDate.includes(dateSearch)){
+        this.invoicesLastYear++;
       }
     });
   }
