@@ -105,22 +105,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getExpensesThisMonth(){
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.expensesThisMonth+=parseInt(x.total);
-      }
-    });
-  }
+  
 
   getGasExpenseLastYear(){
     var thisYear = new Date().getFullYear();
@@ -138,6 +123,23 @@ export class DashboardComponent implements OnInit {
     this.fuel.forEach((x: any) => {
       if(x.date.includes(dateSearch)){
         this.gasExpenseThisYear+=parseInt(x.total);
+      }
+    });
+  }
+
+  getExpensesThisMonth(){
+    var thisYear = new Date().getFullYear();
+    var thisMonth = new Date().getMonth()+1;
+    var strMonth = '';
+    if(thisMonth<10){
+      strMonth = '0'+thisMonth.toString();
+    }else{
+      strMonth = thisMonth.toString();
+    }
+    var dateSearch = thisYear+'-'+strMonth;
+    this.expenses.forEach((x: any) => {
+      if(x.date.includes(dateSearch)){
+        this.expensesThisMonth+=parseInt(x.total);
       }
     });
   }
@@ -169,12 +171,6 @@ export class DashboardComponent implements OnInit {
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
-    if(thisMonth == 1){
-      thisYear--;
-      thisMonth = 12;
-    }else{
-      thisMonth--;
-    }
     if(thisMonth<10){
       strMonth = '0'+thisMonth.toString();
     }else{

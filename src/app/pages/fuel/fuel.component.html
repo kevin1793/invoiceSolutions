@@ -129,13 +129,13 @@
             <input  type='number' formControlName='mileage' placeholder="Mileage">
           </div>
           <div class="addFuelInputItem"><label>Gallons</label>
-            <input  type='number' (change)="calculateTotal()" formControlName='gallons' placeholder="Gallons">
+            <input  type='number' formControlName='gallons' placeholder="Gallons">
           </div>
-          <div class="addFuelInputItem"><label>Cost Per Gallon</label>
+          <!-- <div class="addFuelInputItem"><label>Cost Per Gallon</label>
             <input  type='number' (change)="calculateTotal()" formControlName='cost_per_gallon' placeholder="Cost Per Gallon">
-          </div>
+          </div> -->
           <div class="addFuelInputItem"><label>Total</label>
-            <input type='number' readonly="true" formControlName='total' placeholder="Total">
+            <input type='number' formControlName='total' placeholder="Total">
           </div>
           <div class="addFuelInputItem"><label>Date</label>
             <input type='date' formControlName='date' placeholder="Paid Date">
@@ -157,7 +157,7 @@
       <div class="headerItem">Truck Number</div>
       <div class="headerItem">Mileage</div>
       <div class="headerItem">Gallons</div>
-      <div class="headerItem">Cost Per Gallon</div>
+      <!-- <div class="headerItem">Cost Per Gallon</div> -->
       <div class="headerItem">Total</div>
       <div class="headerItem">Date</div>
       <div class="headerItem">Actions</div>
@@ -167,7 +167,7 @@
         <div class="listItem">{{fuel.truck_number}}</div>
         <div class="listItem">{{fuel.mileage }}</div>
         <div class="listItem">{{fuel.gallons}}</div>
-        <div class="listItem">{{fuel.cost_per_gallon}}</div>
+        <!-- <div class="listItem">{{fuel.cost_per_gallon}}</div> -->
         <div class="listItem">{{fuel.total | currency}}</div>
         <div class="listItem">{{fuel.date |date: 'mediumDate'  }}</div>
         <div  class="listItem actionItems">

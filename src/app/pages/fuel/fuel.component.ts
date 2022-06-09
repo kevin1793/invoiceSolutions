@@ -33,7 +33,7 @@ export class FuelComponent implements OnInit {
     date: ['',Validators.required],
     mileage:[null,Validators.required],
     gallons:[null,Validators.required],
-    cost_per_gallon:[null,Validators.required],
+    // cost_per_gallon:[null,Validators.required],
     total:[null,Validators.required],
   });
   
