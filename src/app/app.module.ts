@@ -4,10 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
 
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
@@ -15,9 +13,6 @@ import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
-
-// import { initializeApp } from "firebase/app";
-// import { getFirestore } from "firebase/firestore";
 
 import * as firebase from 'firebase/app';
 import { HomeComponent } from './pages/home/home.component';
@@ -34,7 +29,6 @@ import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
-// import { InvoicetrackerComponent } from './components/invoicetracker/invoicetracker.component';
 
 firebase.initializeApp(environment.firebase);
 @NgModule({

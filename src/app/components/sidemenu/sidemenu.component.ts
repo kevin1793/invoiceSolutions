@@ -12,9 +12,9 @@ export class SidemenuComponent implements OnInit {
   @Output() currentFeature = new EventEmitter<string>();
   @Input() dashboardData: any;
 
-  constructor(private router:Router,
-    private elementRef: ElementRef) {
-    }
+  constructor(private router:Router, private elementRef: ElementRef) {
+
+  }
 
     
 
