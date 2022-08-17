@@ -1,7 +1,6 @@
 <style>
   .pageWrapper{
     margin: 0 auto;
-    background:#1976d2;
     color:white;
     justify-content: center;
     padding-bottom: 200px;
@@ -77,7 +76,7 @@
     padding:10px 20px;
     font-weight: bold;
     display: flex;
-    border-bottom: 1px solid white;
+    /* border-bottom: 1px solid white; */
     text-align: center;
   }
   .headerItem, .listItem{
@@ -159,7 +158,10 @@
     <div class="pageTitle">
       Invoices
     </div>
-    <button  *ngIf='!showAddInvoiceBox' class="greenBtn width150 mb20" (click)="showAddInvoiceBox = !showAddInvoiceBox">
+    <button style="margin-right: 15px;" class="greenBtn width200 mb20" (click)="createInvoice()">
+      Create Full Invoice
+    </button>
+    <button  *ngIf='!showAddInvoiceBox' class="greenBtn width200 mb20" (click)="showAddInvoiceBox = !showAddInvoiceBox">
       Add Invoice
     </button>
     <div class="addInvoiceCont" *ngIf='showAddInvoiceBox'>

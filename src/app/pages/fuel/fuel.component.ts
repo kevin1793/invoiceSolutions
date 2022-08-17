@@ -54,14 +54,12 @@ export class FuelComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.fuels.push({...doc.data(), id:doc.id})
       })
-      console.log('fuel list',this.fuels);
     });
     onSnapshot(this.qTrucks,(snapshot: { docs: any[]; }) => {
       this.trucks = []
       snapshot.docs.forEach( (doc) => {
         this.trucks.push({...doc.data(), id:doc.id})
       })
-      console.log('trucks list',this.trucks);
     })
     return;
   }
@@ -70,7 +68,6 @@ export class FuelComponent implements OnInit {
 
   async deleteFuel(item:any){
     const invoiceCollection = this.afs.collection<Item>('Fuels');
-    console.log(item);
     var del = confirm('Are you sure you want to delete fuel '+item.item+' from '+item.date+'?');
 
     if(del){
@@ -83,7 +80,7 @@ export class FuelComponent implements OnInit {
   }
 
   calculateTotal(){
-    console.log(this.fuelItem.value);
+    (this.fuelItem.value);
     if(this.fuelItem.get('gallons')?.value && this.fuelItem.get('cost_per_gallon')?.value ){
       var total = (parseFloat(this.fuelItem.get('gallons')?.value)*parseFloat(this.fuelItem.get('cost_per_gallon')?.value)).toFixed(2);
       this.fuelItem.get('total')?.setValue(total); 
@@ -91,7 +88,7 @@ export class FuelComponent implements OnInit {
   }
 
   addFuel(){
-    console.log(this.fuelItem,this.fuelItem.value);
+    (this.fuelItem,this.fuelItem.value);
     const invoiceCollection = this.afs.collection<Item>('Fuels');
     var fuelItem = this.fuelItem.value;
     var t = invoiceCollection.add(fuelItem);

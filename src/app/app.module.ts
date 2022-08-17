@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
+import { NgChartsModule } from 'ng2-charts';
 
 firebase.initializeApp(environment.firebase);
 @NgModule({
@@ -51,11 +52,13 @@ firebase.initializeApp(environment.firebase);
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([
       {path: 'dashboard', component: HomeComponent},
     ]),
     AppRoutingModule,
     ReactiveFormsModule,
+    NgChartsModule,
     AngularFireModule.initializeApp(environment.firebase),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),

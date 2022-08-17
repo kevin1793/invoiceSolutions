@@ -2,6 +2,8 @@ import { Component, OnInit,Output ,Input } from '@angular/core';
 import { AngularFirestore,AngularFirestoreDocument} from '@angular/fire/compat/firestore';
 import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/firestore';
+import { ChartConfiguration, ChartData, ChartOptions, ScatterDataPoint } from 'chart.js';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -57,14 +59,44 @@ export class DashboardComponent implements OnInit {
   invoicesThisYear = 0;
   invoicesLastYear = 0;
 
+  
+
+  public lineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: ['white'],
+    datasets: [
+      {
+        data: [],
+        label: 'All Revenue',
+        fill: true,
+        tension: 0.5,
+        borderColor: 'white',
+      }
+    ]
+  };
+  public lineChartOptions: ChartOptions<'line'> = {
+    responsive: false,
+    color:'#222',
+    scales: {
+      y: {
+        ticks: { color: '#222'},
+        grid:{display:false}
+      },
+      x: {
+        ticks: { color: '#22'},
+        grid:{display:false}
+      }
+    }
+  };
+  public lineChartLegend = true;
+
   ngOnInit(): void {
-    console.log('DASHBOARD PAGE',this.invoices);
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.invoices = []
       snapshot.docs.forEach( (doc) => {
-        this.invoices.push({...doc.data(), id:doc.id})
+        this.invoices.push({...doc.data(), id:doc.id});
+        this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => x.invoiceDate).reverse();
+        this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
       })
-      console.log('DASHBOARD PAGE',this.invoices);
       this.getInvoicesPaidThisMonth();
       this.getInvoicesPaidLastMonth();
       this.getInvoicesLastYear();
@@ -74,6 +106,7 @@ export class DashboardComponent implements OnInit {
       this.getRevenueThisYear();
       this.getRevenueLastYear();
     });
+    
 
     onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
       this.expenses = []
@@ -105,7 +138,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  
+  reloadChart(chart:any){
+    chart.datasets[0].data.push(1);
+    setTimeout(() => {
+      chart.datasets[0].data.pop();
+    },1100);
+  }
 
   getGasExpenseLastYear(){
     var thisYear = new Date().getFullYear();
@@ -238,7 +276,6 @@ export class DashboardComponent implements OnInit {
     }
     var dateSearch = thisYear+'-'+strMonth;
     this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
       if(x.invoiceDate.includes(dateSearch)){
         this.invoicesThisMonth++;
         if(x.paidDate){
@@ -265,7 +302,6 @@ export class DashboardComponent implements OnInit {
     }
     var dateSearch = thisYear+'-'+strMonth;
     this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
       if(x.invoiceDate.includes(dateSearch)){
         this.invoicesLastMonth++;
         if(x.paidDate){
@@ -306,7 +342,6 @@ export class DashboardComponent implements OnInit {
     }
     var dateSearch = thisYear+'-'+strMonth;
     this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
       if(x.invoiceDate.includes(dateSearch)){
         this.revenueThisMonth+=parseInt(x.totalBilled);
       }
@@ -317,7 +352,6 @@ export class DashboardComponent implements OnInit {
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear;
     this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
       if(x.invoiceDate.includes(dateSearch)){
         this.revenueThisYear+=parseInt(x.totalBilled);
       }
@@ -341,7 +375,6 @@ export class DashboardComponent implements OnInit {
     }
     var dateSearch = thisYear+'-'+strMonth;
     this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
       if(x.invoiceDate.includes(dateSearch)){
         this.revenueLastMonth+=parseInt(x.totalBilled);
       }
@@ -351,20 +384,16 @@ export class DashboardComponent implements OnInit {
   getRevenueLastYear(){
     var thisYear = new Date().getFullYear();
     this.invoices.forEach((x: any) => {
-      console.log(x.invoiceDate);
       if(x.invoiceDate.includes((thisYear-1).toString())){
         this.revenueLastYear+=parseInt(x.totalBilled);
       }
     });
-    console.log('revenue last year',(thisYear-1).toString(),this.revenueLastYear);
   }
 
   test(){
-    console.log(this.currentFeature);
   }
 
   currentFeatureChanged(x:any){
-    console.log('currentFeatureChange parent',x);
     this.currentFeature = x;
   }
 }

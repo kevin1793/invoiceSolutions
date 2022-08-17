@@ -56,20 +56,21 @@ export class CreateinvoiceComponent implements OnInit {
   ngOnInit(): void {
     if(history.state.invoiceData){
       this.loadInvoice(history.state.invoiceData);
-      console.log('create invoice: EDIT DATA',history.state.invoiceData);
     }
   }
 
   loadInvoice(data:any){
-    this.invoiceForm.get('invoice_number')?.setValue(data.invoice_number);
-    this.invoiceForm.get('date')?.setValue(data.date);
-    this.invoiceForm.get('date_start')?.setValue(data.date_start);
-    this.invoiceForm.get('date_end')?.setValue(data.date_end);
-    this.invoiceForm.get('total_hours')?.setValue(data.total_hours);
-    this.invoiceForm.get('total_charged')?.setValue(data.total_charged);
-    this.invoiceForm.get('total_billed')?.setValue(data.total_billed);
-    this.invoiceForm.get('bill_to')?.setValue(data.bill_to);
-    this.invoiceForm.get('charge_per_hour')?.setValue(data.charge_per_hour);
+    if(data){
+      this.invoiceForm.get('invoice_number')?.setValue(data.invoice_number);
+      this.invoiceForm.get('date')?.setValue(data.date);
+      this.invoiceForm.get('date_start')?.setValue(data.date_start);
+      this.invoiceForm.get('date_end')?.setValue(data.date_end);
+      this.invoiceForm.get('total_hours')?.setValue(data.total_hours);
+      this.invoiceForm.get('total_charged')?.setValue(data.total_charged);
+      this.invoiceForm.get('total_billed')?.setValue(data.total_billed);
+      this.invoiceForm.get('bill_to')?.setValue(data.bill_to);
+      this.invoiceForm.get('charge_per_hour')?.setValue(data.charge_per_hour);
+    }
 
     for(var i=0; i<data.workDays.length;i++){
       if(i !=0){
@@ -115,13 +116,10 @@ export class CreateinvoiceComponent implements OnInit {
 
   formatDateString(d:string){
     var dateArr = d.split('-');
-    console.log('date arr',dateArr);
-
     var cutOff = dateArr.splice(0,1);
     dateArr = dateArr.concat(cutOff);
     dateArr.join('-');
     var newDateArr = dateArr.join('/');
-    console.log('date arr',newDateArr);
     return newDateArr;
   }
 
@@ -164,7 +162,6 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log('1');
   }
 
   moveTrip(shift: any, wdInd:any, currentIndex: any){
@@ -200,14 +197,12 @@ export class CreateinvoiceComponent implements OnInit {
   buildFormDays(){
     this.pdfDoc.setFontSize(12);
     var workDays = this.invoiceForm.get('workDays')?.value;
-    console.log('buildFormDays',workDays);
 
     var startingY = 80;
     var ySpacing = 5;
 
     var line = 1;
     workDays.forEach( (x: any) => {
-      console.log('Workday start',line);
       if(this.pageAdded == false && line>30){
         this.pdfDoc.addPage();
         startingY = 15;
@@ -248,7 +243,6 @@ export class CreateinvoiceComponent implements OnInit {
       this.pdfDoc.text("City",startingX+(xSpacing*3),startingY+(ySpacing*line));
       line++;
       x.trips.forEach( (t:  any ) => {
-        console.log('Trip start start',line);
         this.pdfDoc.setFont("helvetica", "normal");
         this.pdfDoc.text(t.ticket_no,startingX+(xSpacing*0),startingY+(ySpacing*line));
         this.pdfDoc.text(t.customer,startingX+(xSpacing*1),startingY+(ySpacing*line));
@@ -269,7 +263,6 @@ export class CreateinvoiceComponent implements OnInit {
 
   buildFormTotals(){
     this.pdfDoc.setFontSize(11);
-    console.log('build form totals',this.invoiceForm.value);
     var startingY = this.lastDataLine;
     var ySpacing = 5;
 
@@ -331,13 +324,10 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
   calculateAllHours(){
-    console.log('calculateAllHours');
     var totalHours = 0;
     this.workDays().controls.forEach(x => {
-      console.log(x);
       totalHours += parseFloat(x.value.total_hours);
     });
-    console.log('total_hours',totalHours);
     this.invoiceForm.get('total_hours')?.setValue(totalHours.toFixed(2));
     this.calculateTotalCharged();
   }
@@ -370,7 +360,6 @@ export class CreateinvoiceComponent implements OnInit {
 
   removeWorkDay(ele:any,i:number){
     var thisAll = this;
-    console.log(ele);
     setTimeout(function(){
       thisAll.workDays().removeAt(i);
     },200);

@@ -1,9 +1,7 @@
 <style>
     .pageWrapper{
       margin: 0 auto;
-      background:#1976d2;
       color:white;
-      /* height: 100vh; */
       min-height: 100vh;
       padding-bottom: 200px;
     }
@@ -12,7 +10,7 @@
       text-align: center;
     }
     .cardBox{
-      background:#65a3e1;
+      background:#3d70fc;
       border:none;
       border-radius: 5px;
       min-width:300px;
@@ -20,7 +18,18 @@
       padding:15px 10px;
       text-align: center;
       margin-right: 20px;
-      box-shadow: #333 2px 2px 2px;
+      /* box-shadow: #333 2px 2px 2px; */
+    }
+    .graphBox{
+      background:#fff;
+      border:none;
+      border-radius: 5px;
+      width:1320px;
+      height:325px;
+      padding:15px 10px;
+      text-align: center;
+      margin-right: 20px;
+      /* box-shadow: #333 2px 2px 2px; */
     }
     .cardTitle{
       font-size: 20px;
@@ -43,6 +52,7 @@
     }
     .rowTitle{
       font-size:25px;
+      color:#222;
       margin-bottom: 10px;;
     }
 </style>
@@ -75,6 +85,7 @@
           <div class="cardInfo">{{invoicesLastYear}}</div>
         </div>
       </div>
+      
       <div class="rowTitle">Revenue</div>
 
       <div class="cardsRow">
@@ -93,6 +104,15 @@
         <div class="cardBox">
           <div class="cardTitle">Revenue Last Year</div>
           <div class="cardInfo">{{revenueLastYear?(revenueLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+      </div>
+      <div class="cardsRow">
+        <!-- <ngx-charts-area-chart></ngx-charts-area-chart> -->
+        <div  *ngIf="lineChartData.datasets[0].data.length > 1" class="graphBox"><canvas width="1290" height="320" baseChart
+          [data]="lineChartData"
+          [options]="lineChartOptions"
+          [type]="'line'">
+          </canvas>
         </div>
       </div>
 

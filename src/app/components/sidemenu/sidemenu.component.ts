@@ -1,8 +1,31 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit ,Input, ElementRef,Output,EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
+const fadeInOut = trigger('fadeInOut',[
+  state(
+    'open',style({
+      opacity:1,
+      width:'auto',
+      height:'100%',
+    })
+  ),
+  state(
+    'close',style({
+      width:'40px',
+      opacity:0,
+      height:'50px',
+      visibility:'hidden',
+    })
+  ),
+  transition('open => close',[animate('.5s ease-in')]),
+  transition('close => open',[animate('.5s  ease-out')]),
+])
+
+
 @Component({
   selector: 'app-sidemenu',
+  animations:[fadeInOut],
   templateUrl: './sidemenu.component.html',
   styleUrls: ['./sidemenu.component.css']
 })
@@ -19,9 +42,11 @@ export class SidemenuComponent implements OnInit {
     
 
   ngOnInit(): void {
-    console.log('SIDE MENU ONINIT',window,this.router,history.state);
     if(this.dashboardData && this.dashboardData == 'Y'){
       this.dashboard = true;
+    }
+    if(window.location.pathname == '/create-invoice'){
+      this.closeMenu();
     }
     //TODO: add verification here to see in user has logged in
   }
@@ -50,7 +75,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   currentFeatureChange(value:string){
-    console.log('before from child currentFeatureChange',value);
     this.currentFeature.emit(value);
   }
 
@@ -58,7 +82,7 @@ export class SidemenuComponent implements OnInit {
     this.navOpened = false;
   }
 
-  openMenu(){
+  openMenu(ele: any){
     this.navOpened = true;
   }
 
@@ -91,7 +115,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   toUpdateLog(){
-    console.log('go to update Log',this);
     if(window.location.pathname != '/updatelog'){
       this.elementRef.nativeElement.parentElement.remove();
     }
@@ -100,12 +123,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   invoiceTracker(){
-    // if(this.dashboard){
-    //   this.currentFeatureChange('invoicetracker');
-    //   this.closeMenu();
-    //   return;
-    // }
-    console.log('go to invoice tracker',this);
     if(window.location.pathname != '/invoicetracker'){
       this.elementRef.nativeElement.parentElement.remove();
     }
@@ -114,13 +131,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   createInvoice(){
-    // if(this.dashboard){
-    //   this.currentFeatureChange('createinvoice');
-    //   this.closeMenu();
-    //   // console.log(this.currentFeature);
-    //   return;
-    // }
-    console.log('go to createinvoice',this);
     if(window.location.pathname != '/createinvoice'){
       this.elementRef.nativeElement.parentElement.remove();
     }

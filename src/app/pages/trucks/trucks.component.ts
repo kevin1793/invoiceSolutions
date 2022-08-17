@@ -53,7 +53,6 @@ export class TrucksComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.trucks.push({...doc.data(), id:doc.id})
       })
-      console.log(this.trucks);
     })
     return;
   }
@@ -62,7 +61,6 @@ export class TrucksComponent implements OnInit {
 
   async deleteTruck(item:any){
     const invoiceCollection = this.afs.collection<item>('Trucks');
-    console.log(item);
     var del = confirm('Are you sure you want to delete Truck '+item.truck_number+'?');
 
     if(del){
@@ -75,7 +73,6 @@ export class TrucksComponent implements OnInit {
   }
 
   addTruck(){
-    console.log(this.truckItem,this.truckItem.value);
     const invoiceCollection = this.afs.collection<item>('Trucks');
     var truckItem = this.truckItem.value;
     var t = invoiceCollection.add(truckItem);
@@ -87,14 +84,12 @@ export class TrucksComponent implements OnInit {
 
   async quickDeleteTruck(item:any){
     const invoiceCollection = this.afs.collection<item>('Trucks');
-    console.log(item);
     invoiceCollection.doc(item.id).delete();
     this.showAddItemBox = !this.showAddItemBox;
   }
 
   editTruck(e:any){
     var thisAll =this;
-    console.log('edit invoice',e);
     this.truckItem.get('truck_number')?.setValue(e.truck_number);
     this.truckItem.get('notes')?.setValue(e.notes);
     this.truckItem.get('vin')?.setValue(e.vin);

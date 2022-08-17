@@ -21,21 +21,16 @@ export class LoginComponent implements OnInit {
   
 
   ngOnInit(): void {
-    
-    console.log('LOGIN PAGE',this.elementRef.nativeElement);
   }
 
   login(){
-    console.log('loggin in');
     const auth = getAuth();
     var email =this.email.value;
     var pass = this.password.value;
-    console.log(this.email,this.password);
     signInWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        console.log('Login Successful');
         this.router.navigate(['/dashboard'], { state: { loggedIn: true  } });
         this.elementRef.nativeElement.parent.destroy();
         // ...
@@ -44,7 +39,6 @@ export class LoginComponent implements OnInit {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log('Login Failed');
         this.loginMessage = 'Incorrect credentials'
       });
   }

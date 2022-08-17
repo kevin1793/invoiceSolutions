@@ -44,12 +44,23 @@ body{
     width: auto;
 }
 
+.updateBox{
+  box-shadow: 3px 3px 6px #333;
+}
+.cardBox{
+  box-shadow: 3px 3px 6px #333;
+}
+.graphBox{
+  box-shadow: 3px 3px 6px #333;
+}
+
+
 .pageTitle{
-    padding-top:100px;
+    padding-top:150px;
     padding-bottom:20px;
     font-size: 60px;;
-    color:white;
-
+    color:#222;
+    text-shadow: #333 1px 1px 3px;
   }
 
   .mainCont{
@@ -75,6 +86,10 @@ body{
     width: 150px;
 }
 
+.width200{
+  width: 200px;
+}
+
 .mb10{
     margin-bottom: 10px;
 }
@@ -84,7 +99,8 @@ body{
 }
 .pageWrapper{
     margin: 0 auto;
-    background:#1976d2;
+    background-color: #8BC6EC;
+    background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
     color:white;
     justify-content: center;
     padding-bottom: 200px;
@@ -101,31 +117,35 @@ body{
     justify-content: space-around;
     padding:10px 20px;
     background-color: white;
+    box-shadow: #222 2px 2px 2px;
     border-radius: 5px;
     min-width: 50px;
     color:#1976d2;
     font-weight: bold;
     text-align: center;
+    margin-bottom: 10px;
   }
   .listItemCont{
     justify-content: space-around;
     padding:10px 20px;
     font-weight: bold;
     display: flex;
-    border-bottom: 1px solid white;
+    color:#222;
+    border-bottom: 1px solid #222;
     text-align: center;
   }
   .headerItem, .listItem{
     text-align: center;
     max-width: 170px;
     min-width: 120px;
+    color:#222;
   }
   .btnRow button{
     margin-right:10px;
   }
   .addItemCont{
     padding:15px;
-    background: #65a3e1;
+    background: #3d70fc;
     margin-bottom: 30px;
     border-radius: 5px;
   }

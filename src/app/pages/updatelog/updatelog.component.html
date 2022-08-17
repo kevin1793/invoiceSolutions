@@ -1,7 +1,7 @@
 <style>
-    .logWrapper{
+    .pageWrapper{
         min-height: 100vh;
-        background:#1e1e1e;
+        /* background:#1e1e1e; */
         margin: 0 auto;
         justify-content: center;
     }
@@ -14,7 +14,9 @@
     }
     .updateBox{
         padding:20px;
-        background: #252525;
+        margin-bottom: 30px;
+        background: #3d70fc;
+        /* box-shadow: #222 2px 2px 2px; */
         border-radius: 5px;
     }
     .updateTitle{
@@ -22,16 +24,27 @@
         font-weight: bold;
         margin-bottom: 10px;
     }
+    .updateText{
+        line-height:22px;
+    }
 </style>
 
-<div class="logWrapper">
-
+<div class="pageWrapper">
     <app-navbar></app-navbar>
     <app-sidemenu  [dashboardData]="dashboardData" ></app-sidemenu>
 
     <div class="logCont">
         <div class="pageTitle">
             Update Log
+        </div>
+        <div class="updateBox">
+            <div class="updateTitle">8/17/2022</div>
+            <div class="updateText">
+                - UI overhaul<br>
+                - Text style changes<br>
+                - Side Menu animation<br>
+                - Added Graph top Dashboard<br>
+            </div>
         </div>
         <div class="updateBox">
             <div class="updateTitle">5/30/2022</div>

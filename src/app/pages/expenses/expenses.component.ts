@@ -48,7 +48,6 @@ export class ExpensesComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.expenses.push({...doc.data(), id:doc.id})
       })
-      console.log(this.expenses);
     })
     return;
   }
@@ -57,7 +56,6 @@ export class ExpensesComponent implements OnInit {
 
   async deleteExpense(item:any){
     const invoiceCollection = this.afs.collection<Item>('Expenses');
-    console.log(item);
     var del = confirm('Are you sure you want to delete expense '+item.item+' from '+item.date+'?');
 
     if(del){
@@ -70,7 +68,6 @@ export class ExpensesComponent implements OnInit {
   }
 
   addExpense(){
-    console.log(this.expenseItem,this.expenseItem.value);
     const invoiceCollection = this.afs.collection<Item>('Expenses');
     var expenseItem = this.expenseItem.value;
     var t = invoiceCollection.add(expenseItem);

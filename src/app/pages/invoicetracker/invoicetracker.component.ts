@@ -60,7 +60,6 @@ export class InvoicetrackerComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id})
       })
-      console.log(this.invoices);
     })
     return;
   }
@@ -70,7 +69,6 @@ export class InvoicetrackerComponent implements OnInit {
   }
   
   editInvoice(data:any){
-    console.log('edit invoice',data);
     var conf = confirm('Are you sure you want to edit invoice '+data.invoiceNumber+'? (Michelle, you mess up???)');
 
     if(conf){
@@ -78,15 +76,18 @@ export class InvoicetrackerComponent implements OnInit {
     }
   }
 
+  createInvoice(){
+    this.router.navigate(['/createinvoice']);
+    this.router.navigate(['/createinvoice'],{state:{data:'createinvoice'}});
+  }
+
   formatDateString(d:string){
     var dateArr = d.split('-');
-    console.log('date arr',dateArr);
 
     var cutOff = dateArr.splice(0,1);
     dateArr = dateArr.concat(cutOff);
     dateArr.join('-');
     var newDateArr = dateArr.join('/');
-    console.log('date arr',newDateArr);
     return newDateArr;
   }
 
@@ -120,14 +121,12 @@ export class InvoicetrackerComponent implements OnInit {
   buildFormDays(invoice:any){
     this.pdfDoc.setFontSize(12);
     var workDays = invoice.workDays;
-    console.log('buildFormDays',workDays);
 
     var startingY = 80;
     var ySpacing = 5;
 
     var line = 1;
     workDays.forEach( (x: any) => {
-      console.log('Workday start',line);
       if(this.pageAdded == false && line>30){
         this.pdfDoc.addPage();
         startingY = 15;
@@ -138,7 +137,6 @@ export class InvoicetrackerComponent implements OnInit {
         startingY = 15;
         line = 1;
       }
-      // header
       var startingX = 15;
       var xSpacing = 50;
       var startLine =startingY+(ySpacing*line);
@@ -168,7 +166,6 @@ export class InvoicetrackerComponent implements OnInit {
       this.pdfDoc.text("City",startingX+(xSpacing*3),startingY+(ySpacing*line));
       line++;
       x.trips.forEach( (t:  any ) => {
-        console.log('Trip start start',line);
         this.pdfDoc.setFont("helvetica", "normal");
         this.pdfDoc.text(t.ticket_no,startingX+(xSpacing*0),startingY+(ySpacing*line));
         this.pdfDoc.text(t.customer,startingX+(xSpacing*1),startingY+(ySpacing*line));
@@ -189,7 +186,6 @@ export class InvoicetrackerComponent implements OnInit {
 
   buildFormTotals(invoice:any){
     this.pdfDoc.setFontSize(11);
-    // console.log('build form totals',this.invoiceForm.value);
     var startingY = this.lastDataLine;
     var ySpacing = 5;
 
@@ -237,7 +233,6 @@ export class InvoicetrackerComponent implements OnInit {
   editPaidDate(invoice: any){
     this.pendingInvoiceItem = invoice;
     this.showModal = !this.showModal;
-    console.log('edit paid',invoice);
   }
 
   setInvoicePaidDate(){
@@ -254,7 +249,6 @@ export class InvoicetrackerComponent implements OnInit {
 
   async deleteInvoice(item:any){
     const invoiceCollection = this.afs.collection<Item>('Invoices');
-    console.log(item);
     var del = confirm('Are you sure you want to delete invoice '+item.invoiceNumber+'?');
 
     if(del){
@@ -263,7 +257,6 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   addItem(){
-    console.log(this.invoiceItem,this.invoiceItem.value);
     const invoiceCollection = this.afs.collection<Item>('Invoices');
     var invoiceItem = this.invoiceItem.value;
     var t = invoiceCollection.add(invoiceItem);
