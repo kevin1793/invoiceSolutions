@@ -119,9 +119,9 @@
       <form (ngSubmit)="onSubmit()" class="addFuelInputBox" [formGroup]='fuelItem'>
         <div class="formRow">
           <div class="addFuelInputItem"><label>Truck Number</label>
-            <select type='text' formControlName='truck_number' placeholder="Category">
+            <select formControlName='truck_number' placeholder="Category">
               <option></option>
-              <option *ngFor="let truck of trucks;">{{truck.truck_number}}</option>
+              <option *ngFor="let truck of trucks;" value="{{truck.truck_number}}">{{truck.truck_number}}</option>
             </select>
           </div>
           <div class="addFuelInputItem"><label>Mileage</label>
@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="btnRow">
-      <button  *ngIf='!showAddFuelBox' class="greenBtn width200 mb20" (click)="showAddFuelBox = !showAddFuelBox">
+      <button  *ngIf='!showAddFuelBox' class="greenBtn width200 mb20" (click)="addFuelClicked();showAddFuelBox = !showAddFuelBox">
         Add Fuel Purchase
       </button>
     </div>
@@ -173,10 +173,7 @@
           <!-- <div *ngIf='!fuel.paidDate' (click)='editPaidDate(fuel)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div> -->
           <div *ngIf='fuel.paidDate' style='width: 20px;'></div>
           <div (click)='deleteFuel(fuel)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-          <!-- <div *ngIf='fuel.invoiceData' (click)='downloadInvoice(fuel.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div> -->
-          <div *ngIf='!fuel.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
-          <div *ngIf='fuel.invoiceData' (click)='editFuel(fuel)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-          <div *ngIf='!fuel.invoiceData'  style='width: 20px;'></div>
+          <div (click)='editFuel(fuel)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
         </div>
       </div>
     </div>

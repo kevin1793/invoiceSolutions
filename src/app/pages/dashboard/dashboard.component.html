@@ -85,6 +85,26 @@
           <div class="cardInfo">{{invoicesLastYear}}</div>
         </div>
       </div>
+
+      <div class="rowTitle">Profit</div>
+      <div class="cardsRow">
+        <div class="cardBox">
+          <div class="cardTitle">Profit This Month</div>
+          <div class="cardInfo">{{profitThisMonth?(profitThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Profit Last Month</div>
+          <div class="cardInfo">{{profitLastMonth?(profitLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Profit This Year</div>
+          <div class="cardInfo">{{profitThisYear?(profitThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Profit Last Year</div>
+          <div class="cardInfo">{{profitLastYear?(profitLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
+        </div>
+      </div>
       
       <div class="rowTitle">Revenue</div>
 
@@ -107,7 +127,6 @@
         </div>
       </div>
       <div class="cardsRow">
-        <!-- <ngx-charts-area-chart></ngx-charts-area-chart> -->
         <div  *ngIf="lineChartData.datasets[0].data.length > 1" class="graphBox"><canvas width="1290" height="320" baseChart
           [data]="lineChartData"
           [options]="lineChartOptions"

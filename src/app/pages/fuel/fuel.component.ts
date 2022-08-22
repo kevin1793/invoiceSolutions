@@ -25,6 +25,9 @@ export class FuelComponent implements OnInit {
   dashboardData = 'Y';
   showAddFuelBox = false;
   showModal = false;
+  showAddItemBox  = false;
+  // truckNumber = '';
+
 
   constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) { }
 
@@ -33,12 +36,12 @@ export class FuelComponent implements OnInit {
     date: ['',Validators.required],
     mileage:[null,Validators.required],
     gallons:[null,Validators.required],
-    // cost_per_gallon:[null,Validators.required],
     total:[null,Validators.required],
   });
   
   fuels:any;
   trucks:any;
+  fuelEdit = null;
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
@@ -93,10 +96,35 @@ export class FuelComponent implements OnInit {
     var fuelItem = this.fuelItem.value;
     var t = invoiceCollection.add(fuelItem);
     this.fuelItem.reset();
+    if(this.fuelEdit){
+      this.quickDeleteFuel(this.fuelEdit);
+    }
   }
 
-  editFuel(e:any){
+  async quickDeleteFuel(fuel:any){
+    const invoiceCollection = this.afs.collection<Item>('Fuels');
+    invoiceCollection.doc(fuel.id).delete();
+    this.showAddItemBox = !this.showAddItemBox;
+  }
 
+  addFuelClicked(){
+    this.fuelItem.reset();
+  }
+  
+  editFuel(e:any){
+    var thisAll =this;
+    this.fuelItem.get('truck_number')?.setValue(e.truck_number);
+    this.fuelItem.get('date')?.setValue(e.date);
+    this.fuelItem.get('mileage')?.setValue(e.mileage);
+    this.fuelItem.get('gallons')?.setValue(e.gallons);
+    this.fuelItem.get('total')?.setValue(e.total);
+    this.fuelEdit = e;
+    console.log(this.fuelItem.get('truck_number'),e);
+    thisAll.showAddFuelBox = true;
+  }
+
+  resetForm(){
+    this.fuelItem.reset();
   }
 
 }

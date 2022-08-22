@@ -39,6 +39,9 @@
     align-items: center;
     justify-content: center;
   }
+  .listItem{
+    justify-content: space-evenly;
+  }
   .btnRow button{
     margin-right:10px;
   }
@@ -125,11 +128,13 @@
             <label>Item</label>
             <input type='text' formControlName='item' placeholder="Item">
           </div>
-          <div class="addExpenseInputItem"><label>Categroy</label>
-            <!-- <input type='text' formControlName='category' placeholder="Category"> -->
+          <div class="addExpenseInputItem"><label>Category</label>
             <select  formControlName='category' placeholder="Category">
               <option value="Parts">Parts</option>
               <option  value="Repair">Repair</option>
+              <option  value="Food">Food</option>
+              <option  value="Insurance">Insurance</option>
+              <option  value="Other">Other</option>
             </select>
           </div>
           <div class="addExpenseInputItem"><label>Quantity</label>
@@ -156,7 +161,7 @@
       </div>
     </div>
     <div class="btnRow">
-      <button  *ngIf='!showAddExpenseBox' class="greenBtn width150 mb20" (click)="showAddExpenseBox = !showAddExpenseBox">
+      <button  *ngIf='!showAddExpenseBox' class="greenBtn width150 mb20" (click)="addItemClicked();showAddExpenseBox = !showAddExpenseBox">
         Add Expense
       </button>
     </div>
@@ -178,11 +183,13 @@
         <td class="listItem">{{expense.date |date: 'mediumDate'  }}</td>
         <td class="listItem actionItems">
           <!-- <td *ngIf='!expense.paidDate' (click)='editPaidDate(expense)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</td> -->
-          <div *ngIf='expense.paidDate' style='width: 20px;'></div>
+          <!-- <div *ngIf='expense.paidDate' style='width: 20px;'></div> -->
           <div (click)='deleteExpense(expense)' style='cursor:pointer;height: 20px;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-          <div *ngIf='!expense.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
-          <div *ngIf='expense.invoiceData' (click)='editExpense(expense)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-          <div *ngIf='!expense.invoiceData'  style='width: 20px;'></div>
+          <div (click)='editExpense(expense)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+
+          <!-- <div *ngIf='!expense.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div> -->
+          <!-- <div *ngIf='expense.invoiceData' (click)='editExpense(expense)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div> -->
+          <!-- <div *ngIf='!expense.invoiceData'  style='width: 20px;'></div> -->
         </td>
     </table>
   </div>

@@ -39,6 +39,11 @@ export class DashboardComponent implements OnInit {
   revenueThisMonth = 0;
   revenueThisYear = 0;
 
+  profitLastYear = 0;
+  profitLastMonth = 0;
+  profitThisMonth = 0;
+  profitThisYear = 0;
+
   trucks:any;
 
   expensesThisMonth = 0;
@@ -106,7 +111,6 @@ export class DashboardComponent implements OnInit {
       this.getRevenueThisYear();
       this.getRevenueLastYear();
     });
-    
 
     onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
       this.expenses = []
@@ -128,6 +132,8 @@ export class DashboardComponent implements OnInit {
       this.getGasExpenseThisMonth();
       this.getGasExpenseThisYear();
       this.getGasExpenseLastYear();
+      this.getProfitData();
+
     });
 
     onSnapshot(this.trucksQuery,(snapshot: { docs: any[]; }) => {
@@ -136,6 +142,14 @@ export class DashboardComponent implements OnInit {
         this.trucks.push({...doc.data(), id:doc.id})
       });
     });
+  }
+
+  getProfitData(){
+    this.profitThisYear = this.revenueThisYear - (this.gasExpenseThisYear+this.expensesThisYear);
+    this.profitThisMonth = this.revenueThisMonth - (this.gasExpenseThisMonth+this.expensesThisMonth);
+    console.log(this.revenueThisMonth , (this.gasExpenseThisMonth+this.expensesThisMonth))
+    this.profitLastMonth = this.revenueLastMonth - (this.gasExpenseLastMonth+this.expensesLastMonth);
+    this.profitLastYear = this.revenueLastYear - (this.gasExpenseLastYear+this.expensesLastYear);
   }
 
   reloadChart(chart:any){

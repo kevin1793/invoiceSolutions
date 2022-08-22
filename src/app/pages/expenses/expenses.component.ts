@@ -24,6 +24,7 @@ export class ExpensesComponent implements OnInit {
   dashboardData = 'Y';
   showAddExpenseBox = false;
   showModal = false;
+  expenseEdit = '';
 
   constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) { }
 
@@ -42,7 +43,6 @@ export class ExpensesComponent implements OnInit {
   q = query(this.colRef,orderBy('date','desc'));
 
   ngOnInit(): void {
-    //load in previous expenses
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.expenses = []
       snapshot.docs.forEach( (doc) => {
@@ -51,8 +51,6 @@ export class ExpensesComponent implements OnInit {
     })
     return;
   }
-
-  //NEW FUNCTIONs DOWN BELOW
 
   async deleteExpense(item:any){
     const invoiceCollection = this.afs.collection<Item>('Expenses');
@@ -67,15 +65,44 @@ export class ExpensesComponent implements OnInit {
     //
   }
 
+  async quickDeleteFuel(fuel:any){
+    const invoiceCollection = this.afs.collection<Item>('Expenses');
+    invoiceCollection.doc(fuel.id).delete();
+    this.showAddExpenseBox = !this.showAddExpenseBox;
+  }
+
+  addFuelClicked(){
+    this.expenseItem.reset();
+  }
+
   addExpense(){
     const invoiceCollection = this.afs.collection<Item>('Expenses');
     var expenseItem = this.expenseItem.value;
     var t = invoiceCollection.add(expenseItem);
     this.expenseItem.reset();
+    if(this.expenseEdit){
+      this.quickDeleteFuel(this.expenseEdit);
+    }
   }
 
-  editExpense(e:any){
+  addItemClicked(){
+    this.expenseItem.reset();
+  }
 
+  // item: ['',Validators.required],
+  //   category: ['',Validators.required],
+  //   date: ['',Validators.required],
+  //   quantity:[null,Validators.required],
+  //   total:[null,Validators.required],
+  editExpense(e:any){
+    var thisAll =this;
+    this.expenseItem.get('item')?.setValue(e.item);
+    this.expenseItem.get('date')?.setValue(e.date);
+    this.expenseItem.get('category')?.setValue(e.category);
+    this.expenseItem.get('quantity')?.setValue(e.quantity);
+    this.expenseItem.get('total')?.setValue(e.total);
+    this.expenseEdit = e;
+    thisAll.showAddExpenseBox = true;
   }
 
 }
