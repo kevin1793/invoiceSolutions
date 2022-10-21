@@ -13,7 +13,7 @@
       background:#3d70fc;
       border:none;
       border-radius: 5px;
-      min-width:300px;
+      min-width:315px;
       height:125px;
       padding:15px 10px;
       text-align: center;
@@ -64,6 +64,10 @@
   <div class="mainCont">
     <div class="pageTitle">
       Dashboard
+      
+    </div>
+    <div *ngIf="cachedData" style="background:white;border-radius:5px;height: 35px; width:50px;text-align: center;padding-top:5px;margin-left: auto; box-shadow: #222 2px 2px 2px; cursor:pointer;">
+      <img (click)="refreshClicked();" style="height:30px;width: auto;" src='../../../assets/images/refresh.png'>
     </div>
     <div class="cardsCont">
       <div class="rowTitle">Invoices</div>

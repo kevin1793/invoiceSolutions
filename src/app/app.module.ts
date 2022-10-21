@@ -23,6 +23,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { InvoicetrackerComponent } from './pages/invoicetracker/invoicetracker.component';
 import { CreateinvoiceComponent } from './pages/createinvoice/createinvoice.component';
+import { CreateinvoiceloadComponent } from './pages/createinvoiceload/createinvoiceload.component';
 import { TestComponent } from './components/test/test.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
@@ -42,6 +43,7 @@ firebase.initializeApp(environment.firebase);
     LoginComponent,
     DashboardComponent,
     CreateinvoiceComponent,
+    CreateinvoiceloadComponent,
     InvoicetrackerComponent,
     TestComponent,
     UpdatelogComponent,

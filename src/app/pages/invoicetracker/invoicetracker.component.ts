@@ -48,6 +48,7 @@ export class InvoicetrackerComponent implements OnInit {
 
   pdfDoc = new jsPDF;
   invoices:any;
+  cachedData = true;
   invoicesSub:any;
   db = getFirestore()
   colRef = collection(this.db,'Invoices')
@@ -55,13 +56,30 @@ export class InvoicetrackerComponent implements OnInit {
 
 
   ngOnInit(): void {
+    var cachedInvoices = localStorage.getItem('invoices');
+    if(cachedInvoices && cachedInvoices.length > 0){
+      this.cachedData = true;
+      this.invoices = JSON.parse(cachedInvoices);
+      console.log('Invoices: Getting local data.')
+    }else{
+      this.cachedData = false;
+      this.getInvoiceData();
+    }
+  }
+
+  refreshClicked(){
+    this.getInvoiceData();
+    this.cachedData = false;
+  }
+
+  getInvoiceData(){
+    console.log('GETTING NEW INVOICES!!!');
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.invoices = []
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id})
       })
-    })
-    return;
+    });
   }
 
   onSubmit(){
@@ -79,6 +97,11 @@ export class InvoicetrackerComponent implements OnInit {
   createInvoice(){
     this.router.navigate(['/createinvoice']);
     this.router.navigate(['/createinvoice'],{state:{data:'createinvoice'}});
+  }
+
+  createInvoicePerLoad(){
+    this.router.navigate(['/createinvoiceload']);
+    this.router.navigate(['/createinvoiceload'],{state:{data:'createinvoiceload'}});
   }
 
   formatDateString(d:string){

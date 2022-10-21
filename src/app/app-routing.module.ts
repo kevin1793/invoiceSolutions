@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateinvoiceComponent } from './pages/createinvoice/createinvoice.component';
+import { CreateinvoiceloadComponent } from './pages/createinvoiceload/createinvoiceload.component';
 import { InvoicetrackerComponent } from './pages/invoicetracker/invoicetracker.component';
 
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -17,6 +18,7 @@ const routes:Routes=[
   { path : 'login',component:LoginComponent },
   { path : 'invoicetracker',component:InvoicetrackerComponent },
   { path : 'createinvoice',component:CreateinvoiceComponent },
+  { path : 'createinvoiceload',component:CreateinvoiceloadComponent },
   { path : 'updatelog',component:UpdatelogComponent },
   { path : 'expenses',component:ExpensesComponent },
   { path : 'fuel',component:FuelComponent },

@@ -3,6 +3,7 @@ import { AngularFirestore,AngularFirestoreDocument} from '@angular/fire/compat/f
 import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/firestore';
 import { ChartConfiguration, ChartData, ChartOptions, ScatterDataPoint } from 'chart.js';
+import { TemplateBindingParseResult } from '@angular/compiler';
 
 
 @Component({
@@ -64,6 +65,7 @@ export class DashboardComponent implements OnInit {
   invoicesThisYear = 0;
   invoicesLastYear = 0;
 
+  cachedData = true;
   
 
   public lineChartData: ChartConfiguration<'line'>['data'] = {
@@ -94,54 +96,135 @@ export class DashboardComponent implements OnInit {
   };
   public lineChartLegend = true;
 
+  // START FUNCTIONS //
+
   ngOnInit(): void {
+    var localDataPresent = this.checkLocalStorageData();
+    if(localDataPresent){
+      console.log('dashboard is getting local data');
+      this.setLocalStorageData(); 
+      this.getRevenueData();
+      this.getExpenseData();
+      this.getGasExpenseData();
+    }
+
+    if(!localDataPresent){
+      console.log('GETTING LIVE DATA');
+      return;
+      this.fetchDashboardData();
+    }
+  }
+
+  refreshClicked(){
+    this.fetchDashboardData();
+    this.cachedData = false;
+  }
+
+  fetchDashboardData(){
+    console.log('getting invoice data');
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
-      this.invoices = []
+      this.invoices = [];
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id});
         this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => x.invoiceDate).reverse();
         this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
-      })
-      this.getInvoicesPaidThisMonth();
-      this.getInvoicesPaidLastMonth();
-      this.getInvoicesLastYear();
-      this.getInvoicesThisYear();
-      this.getRevenueLastMonth();
-      this.getRevenueThisMonth();
-      this.getRevenueThisYear();
-      this.getRevenueLastYear();
+      });
+      this.getRevenueData();
+      this.saveToLocalStorage('invoices',this.invoices);
     });
 
+
+    console.log('getting exprenses data');
     onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
-      this.expenses = []
+    this.expenses = [];
       snapshot.docs.forEach( (doc) => {
         this.expenses.push({...doc.data(), id:doc.id})
       });
-      this.getExpensesLastMonth();
-      this.getExpensesThisMonth();
-      this.getExpensesThisYear();
-      this.getExpensesLastYear();
+      this.getExpenseData();
+      this.saveToLocalStorage('expenses',this.expenses);
     });
 
+
+    console.log('getting fuel data');
     onSnapshot(this.fuelQuery,(snapshot: { docs: any[]; }) => {
       this.fuel = []
       snapshot.docs.forEach( (doc) => {
         this.fuel.push({...doc.data(), id:doc.id})
       });
-      this.getGasExpenseLastMonth();
-      this.getGasExpenseThisMonth();
-      this.getGasExpenseThisYear();
-      this.getGasExpenseLastYear();
-      this.getProfitData();
-
+      this.getGasExpenseData();
+      this.saveToLocalStorage('fuel',this.fuel);
     });
 
+
+    console.log('getting truck data');
     onSnapshot(this.trucksQuery,(snapshot: { docs: any[]; }) => {
-      this.trucks = []
+      this.trucks = [];
       snapshot.docs.forEach( (doc) => {
         this.trucks.push({...doc.data(), id:doc.id})
       });
+      this.saveToLocalStorage('trucks',this.trucks);
     });
+  }
+
+  getExpenseData(){
+    this.getExpensesLastMonth();
+    this.getExpensesThisMonth();
+    this.getExpensesThisYear();
+    this.getExpensesLastYear();
+  }
+
+  getGasExpenseData(){
+    this.getGasExpenseLastMonth();
+    this.getGasExpenseThisMonth();
+    this.getGasExpenseThisYear();
+    this.getGasExpenseLastYear();
+    this.getProfitData();
+  }
+
+  getRevenueData(){
+    this.getInvoicesPaidThisMonth();
+    this.getInvoicesPaidLastMonth();
+    this.getInvoicesLastYear();
+    this.getInvoicesThisYear();
+    this.getRevenueLastMonth();
+    this.getRevenueThisMonth();
+    this.getRevenueThisYear();
+    this.getRevenueLastYear();
+  }
+
+  checkLocalStorageData(){
+    var cachedInvoiceData = localStorage.getItem('invoices');
+    var cachedFuelData = localStorage.getItem('fuel');
+    if(cachedInvoiceData && JSON.parse(cachedInvoiceData).length > 0){
+      this.invoices = JSON.parse(cachedInvoiceData);
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  setLocalStorageData(){
+    var cachedTrucksData = localStorage.getItem('trucks');
+    var cachedInvoicesData = localStorage.getItem('invoices');
+    var cachedFuelData = localStorage.getItem('fuel');
+    var cachedExpensesData = localStorage.getItem('expenses');
+
+    if(cachedExpensesData?.length){
+      this.expenses = JSON.parse(cachedExpensesData);
+    }
+    if(cachedFuelData?.length){
+      this.fuel = JSON.parse(cachedFuelData);
+    }
+    if(cachedInvoicesData?.length){
+      this.invoices = JSON.parse(cachedInvoicesData);
+    }
+    if(cachedTrucksData?.length){
+      this.trucks = JSON.parse(cachedTrucksData);
+    }
+  }
+
+  saveToLocalStorage(id: string,data: any){
+    localStorage.setItem(id,JSON.stringify(data));
   }
 
   getProfitData(){
