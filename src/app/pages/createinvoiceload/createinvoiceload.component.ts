@@ -22,7 +22,6 @@ export class CreateinvoiceloadComponent implements OnInit {
   constructor(private fb:FormBuilder,public afs:AngularFirestore) { }
   dashboard = true;
   dashboardData = 'Y';
-  invoiceName = 'asddf';
 
   lastDataLine: number = 0;
 
@@ -35,9 +34,10 @@ export class CreateinvoiceloadComponent implements OnInit {
     total_charged:[0],
     total_billed:[0],
     bill_to:['Preferred Materials, LLC'],
-    charge_per_hour:['',Validators.required],
-
-    workDays:this.fb.array([this.newWorkDay()])
+    workDays:this.fb.array([this.newWorkDay()]),
+    gas_surcharge:[0],
+    load_charge:[0],
+    hourly_wait_charge:[0],
   });
 
   invoiceItem: FormGroup = this.fb.group({
@@ -294,20 +294,64 @@ export class CreateinvoiceloadComponent implements OnInit {
   newWorkDay():FormGroup{
     return this.fb.group({
       date: ['',Validators.required],
-      time_in: ['',Validators.required],
-      time_out: ['',Validators.required],
-      total_hours: [0,Validators.required],
-      trips:this.fb.array([this.newTrip()])
+      trips:this.fb.array([this.newTrip()]),
+      extended_wait_hours: ['',Validators.required],
     })
   }
 
   newTrip():FormGroup{
     return this.fb.group({
-      ticket_no: ['',Validators.required],
-      customer: ['',Validators.required],
-      destination: ['',Validators.required],
-      city: ['',Validators.required],
+      time_in_plant: ['',Validators.required],
+      time_first_load: ['',Validators.required],
+      plant_wait_hours: [{value:'',readonly:true},Validators.required],
+
+      time_arrived_site: ['',Validators.required],
+      time_left_site: ['',Validators.required],
+      site_wait_hours: [{value:'',readonly:true},Validators.required],
     })
+  }
+
+  calculateWaitHours(i:number,j:number){
+    var plantArrivedTime = this.workDayTrips(i).at(j).value.time_in_plant.split(':');
+    var plantArrivedFloat = parseFloat(plantArrivedTime[0])+(parseFloat(plantArrivedTime[1])/60);
+    var firstLoadTime = this.workDayTrips(i).at(j).value.time_first_load.split(':');
+    var firstLoadFloat = parseFloat(firstLoadTime[0])+(parseFloat(firstLoadTime[1])/60);
+
+    var siteArrivedTime = this.workDayTrips(i).at(j).value.time_arrived_site.split(':');
+    var siteArriveFloat = parseFloat(siteArrivedTime[0])+(parseFloat(siteArrivedTime[1])/60);
+    var siteLeftTime = this.workDayTrips(i).at(j).value.time_left_site.split(':');
+    var siteLeftFloat = parseFloat(siteLeftTime[0])+(parseFloat(siteLeftTime[1])/60);
+
+    if(firstLoadFloat> plantArrivedFloat){
+      this.workDayTrips(i).at(j).get('plant_wait_hours')?.setValue((firstLoadFloat-plantArrivedFloat).toFixed(2));
+    }else{
+      this.workDayTrips(i).at(j).get('plant_wait_hours')?.setValue('');
+    }
+
+    if(siteLeftFloat> siteArriveFloat){
+      this.workDayTrips(i).at(j).get('site_wait_hours')?.setValue((siteLeftFloat-siteArriveFloat).toFixed(2));
+    }else{
+      this.workDayTrips(i).at(j).get('site_wait_hours')?.setValue('');
+    }
+
+    if(siteLeftFloat&& siteArriveFloat && siteLeftFloat&& siteArriveFloat){
+      this.calculateWorkDayExtendedWaitHours(i,j);
+    }
+  }
+
+  calculateWorkDayExtendedWaitHours(i:number,j:number){
+    console.log('workday',this.workDays().at(i));
+    var trips = this.workDays().at(i).value.trips;
+    var totalExtendedHours = 0;
+    trips.forEach((x: any) => {
+      if(x.plant_wait_hours >= 1){
+        totalExtendedHours += Math.floor(x.plant_wait_hours);
+      }
+      if(x.plant_wait_hours >= 1){
+        totalExtendedHours += Math.floor(x.site_wait_hours);
+      }
+    });
+    this.workDays().at(i).get('extended_wait_hours')?.setValue((totalExtendedHours).toFixed(2));
   }
 
   timeChange(i:number){
