@@ -106,6 +106,7 @@ export class DashboardComponent implements OnInit {
       this.getRevenueData();
       this.getExpenseData();
       this.getGasExpenseData();
+      this.getChartData();
     }
 
     if(!localDataPresent){
@@ -120,14 +121,18 @@ export class DashboardComponent implements OnInit {
     this.cachedData = false;
   }
 
+  getChartData(){
+    this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => x.invoiceDate).reverse();
+    this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
+  }
+
   fetchDashboardData(){
     console.log('getting invoice data');
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.invoices = [];
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id});
-        this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => x.invoiceDate).reverse();
-        this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
+        this.getChartData();
       });
       this.getRevenueData();
       this.saveToLocalStorage('invoices',this.invoices);
@@ -230,7 +235,6 @@ export class DashboardComponent implements OnInit {
   getProfitData(){
     this.profitThisYear = this.revenueThisYear - (this.gasExpenseThisYear+this.expensesThisYear);
     this.profitThisMonth = this.revenueThisMonth - (this.gasExpenseThisMonth+this.expensesThisMonth);
-    console.log(this.revenueThisMonth , (this.gasExpenseThisMonth+this.expensesThisMonth))
     this.profitLastMonth = this.revenueLastMonth - (this.gasExpenseLastMonth+this.expensesLastMonth);
     this.profitLastYear = this.revenueLastYear - (this.gasExpenseLastYear+this.expensesLastYear);
   }
@@ -243,6 +247,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getGasExpenseLastYear(){
+    this.gasExpenseLastYear = 0;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear-1;
     this.fuel.forEach((x: any) => {
@@ -253,6 +258,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getGasExpenseThisYear(){
+    this.gasExpenseThisYear = 0;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear;
     this.fuel.forEach((x: any) => {
@@ -263,6 +269,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getExpensesThisMonth(){
+    this.expensesThisMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -280,6 +287,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getGasExpenseLastMonth(){
+    this.gasExpenseLastMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -303,6 +311,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getGasExpenseThisMonth(){
+    this.gasExpenseThisMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -320,6 +329,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getExpensesThisYear(){
+    this.expensesThisYear = 0;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear;
     this.expenses.forEach((x: any) => {
@@ -330,6 +340,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getExpensesLastYear(){
+    this.expensesLastYear = 0;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear-1;
     this.expenses.forEach((x: any) => {
@@ -340,6 +351,7 @@ export class DashboardComponent implements OnInit {
   }
   
   getExpensesLastMonth(){
+    this.expensesLastMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -363,6 +375,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getInvoicesPaidLastMonth(){
+    this.invoicesThisMonth = 0;
+    this.invoicesPaidThisMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -383,6 +397,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getInvoicesPaidThisMonth(){
+    this.invoicesLastMonth = 0;
+    this.invoicesPaidLastMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -409,6 +425,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getInvoicesThisYear(){
+    this.invoicesThisYear = 0;;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear;
     this.invoices.forEach((x: any) => {
@@ -419,6 +436,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getInvoicesLastYear(){
+    this.invoicesLastYear = 0;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear-1;
     this.invoices.forEach((x: any) => {
@@ -429,6 +447,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getRevenueThisMonth(){
+    this.revenueThisMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -446,6 +465,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getRevenueThisYear(){
+    this.revenueThisYear = 0;
     var thisYear = new Date().getFullYear();
     var dateSearch = thisYear;
     this.invoices.forEach((x: any) => {
@@ -456,6 +476,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getRevenueLastMonth(){
+    this.revenueLastMonth = 0;
     var thisYear = new Date().getFullYear();
     var thisMonth = new Date().getMonth()+1;
     var strMonth = '';
@@ -479,6 +500,7 @@ export class DashboardComponent implements OnInit {
   }
 
   getRevenueLastYear(){
+    this.revenueLastYear = 0;
     var thisYear = new Date().getFullYear();
     this.invoices.forEach((x: any) => {
       if(x.invoiceDate.includes((thisYear-1).toString())){

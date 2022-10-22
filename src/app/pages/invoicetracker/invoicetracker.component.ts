@@ -78,7 +78,8 @@ export class InvoicetrackerComponent implements OnInit {
       this.invoices = []
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id})
-      })
+      });
+      localStorage.setItem('invoices',JSON.stringify(this.invoices));
     });
   }
 
@@ -90,7 +91,11 @@ export class InvoicetrackerComponent implements OnInit {
     var conf = confirm('Are you sure you want to edit invoice '+data.invoiceNumber+'? (Michelle, you mess up???)');
 
     if(conf){
-      this.router.navigate(['/createinvoice'],{state:{invoiceData:data.invoiceData}});
+      if(data.invoiceData.hourly_wait_charge){
+        this.router.navigate(['/createinvoiceload'],{state:{invoiceData:data.invoiceData}});
+      }else{
+        this.router.navigate(['/createinvoice'],{state:{invoiceData:data.invoiceData}});
+      }
     }
   }
 
@@ -207,6 +212,132 @@ export class InvoicetrackerComponent implements OnInit {
     this.lastDataLine = startingY+(ySpacing*line);
   }
 
+  // BUILD FORM HEADER BY LOAD
+  buildFormHeaderLoad(invoice:any){
+    var startingY = 30;
+    var ySpacing = 6;
+    var startingX = 75;
+    this.pdfDoc.setFontSize(50);
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.text("Invoice",200,15+(ySpacing*1), {align:"right"});
+
+    this.pdfDoc.addImage("../../assets/images/markPavingLogo.jpg", "JPEG", 10, 10, 55, 55);
+    this.pdfDoc.setFontSize(13);
+    this.pdfDoc.text("Invoice Number: ",startingX,startingY+(ySpacing*1));
+    this.pdfDoc.text("Date: ",startingX,startingY+(ySpacing*2));
+    this.pdfDoc.text("Bill To: ",startingX,startingY+(ySpacing*3));
+    this.pdfDoc.text("Balance Due: ",startingX,startingY+(ySpacing*4));
+
+    this.pdfDoc.setFont("helvetica", "normal");
+    this.pdfDoc.text(invoice.invoice_number,200,startingY+(ySpacing*1),{align:"right"},null);
+    this.pdfDoc.text(this.formatDateString(invoice.date),200,startingY+(ySpacing*2),{align:"right"});
+    this.pdfDoc.text(invoice.bill_to,200,startingY+(ySpacing*3),{align:"right"});
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.text('$'+ (typeof invoice.total_billed == 'number'?invoice.total_billed.toFixed(2):invoice.total_billed),200,startingY+(ySpacing*4), {align:"right"});
+
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.text(this.formatDateString(invoice.date_start)+' - '+this.formatDateString(invoice.date_end),105,startingY+(ySpacing*7),{align:"center"});
+  }
+
+  buildFormDaysLoad(invoice:any){
+    console.log(invoice);
+    this.pdfDoc.setFontSize(12);
+    var workDays = invoice.workDays;
+
+    var startingY = 80;
+    var ySpacing = 5;
+
+    var line = 1;
+    workDays.forEach( (x: any) => {
+      if(this.pageAdded == false && line>30){
+        this.pdfDoc.addPage();
+        startingY = 15;
+        line = 1;
+        this.pageAdded= true;
+      }else if(this.pageAdded == true && line>40){
+        this.pdfDoc.addPage();
+        startingY = 15;
+        line = 1;
+      }
+      // header
+      var startingX = 15;
+      var xSpacing = 20;
+      var startLine =startingY+(ySpacing*line);
+      this.pdfDoc.setFont("helvetica", "bold");
+      this.pdfDoc.setFontSize(11);
+      this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text("Total Extended Wait Hours",startingX+(xSpacing*2),startingY+(ySpacing*line));
+      line++;
+
+      this.pdfDoc.setFont("helvetica", "normal");
+      this.pdfDoc.text(this.formatDateString(x.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text(x.extended_wait_hours.toString(),startingX+(xSpacing*2),startingY+(ySpacing*line));
+      line++;
+
+      line++;
+      
+      var xSpacing = 26;
+      this.pdfDoc.setFont("helvetica", "bold");
+      this.pdfDoc.setFontSize(8);
+      this.pdfDoc.text("Ticket No",startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text("Plant Time In",startingX+(xSpacing*1),startingY+(ySpacing*line));
+      this.pdfDoc.text("Plant First Load",startingX+(xSpacing*2),startingY+(ySpacing*line));
+      this.pdfDoc.text("Plant Wait Time",startingX+(xSpacing*3),startingY+(ySpacing*line));
+      this.pdfDoc.text("Site Arrival",startingX+(xSpacing*4),startingY+(ySpacing*line));
+      this.pdfDoc.text("Site Leave",startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text("Site Wait Time",startingX+(xSpacing*6),startingY+(ySpacing*line));
+      line++;
+      x.trips.forEach( (t:  any ) => {
+        console.log(t);
+        this.pdfDoc.setFont("helvetica", "normal");
+        this.pdfDoc.text(t.ticket_number,startingX+(xSpacing*0),startingY+(ySpacing*line));
+        this.pdfDoc.text(this.formatTimes(t.time_in_plant),startingX+(xSpacing*1),startingY+(ySpacing*line));
+        this.pdfDoc.text(this.formatTimes(t.time_first_load),startingX+(xSpacing*2),startingY+(ySpacing*line));
+        this.pdfDoc.text(t.plant_wait_hours,startingX+(xSpacing*3),startingY+(ySpacing*line));
+
+        this.pdfDoc.text(this.formatTimes(t.time_arrived_site),startingX+(xSpacing*4),startingY+(ySpacing*line));
+        this.pdfDoc.text(this.formatTimes(t.time_left_site),startingX+(xSpacing*5),startingY+(ySpacing*line));
+        this.pdfDoc.text(t.site_wait_hours,startingX+(xSpacing*6),startingY+(ySpacing*line));
+        line++;
+      });
+      var endLine =(startingY+(ySpacing*line));
+      this.pdfDoc.setLineWidth(0.5);
+      this.pdfDoc.line(10, (startLine-4), 10, endLine-4);
+
+
+      line++;
+      line++;
+    });
+    this.lastDataLine = startingY+(ySpacing*line);
+  }
+
+  buildFormTotalsLoad(invoice:any){
+    this.pdfDoc.setFontSize(11);
+    var startingY = this.lastDataLine;
+    var ySpacing = 5;
+
+    var xSpacing = 45;
+    var startingX = 25;
+    this.pdfDoc.line(55, startingY-5, 150, startingY-5);
+
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.text("Charge Per Load",startingX+(xSpacing*0),startingY+(ySpacing),{align:"center"});
+    this.pdfDoc.text("Gas Surcharge",startingX+(xSpacing*1),startingY+(ySpacing),{align:"center"});
+    this.pdfDoc.text("Wait Charge",startingX+(xSpacing*2),startingY+(ySpacing),{align:"center"});
+    // this.pdfDoc.text("Total Trips",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
+    // this.pdfDoc.text("Extended Wait Hours",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
+    this.pdfDoc.text("Total Charged",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
+
+    this.pdfDoc.setFont("helvetica", "normal");
+    this.pdfDoc.text('$'+invoice.load_charge.toString(),startingX+(xSpacing*0),startingY+(ySpacing+5),{align:"center"});
+    this.pdfDoc.text('$'+invoice.gas_surcharge.toString(),startingX+(xSpacing*1),startingY+(ySpacing+5),{align:"center"});
+    this.pdfDoc.text('$'+invoice.hourly_wait_charge.toString(),startingX+(xSpacing*2),startingY+(ySpacing+5),{align:"center"});
+    // this.pdfDoc.text(invoice.total_trips.toString() ,startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
+    // this.pdfDoc.text(invoice.total_wait_hours.toString() ,startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
+    this.pdfDoc.text('$'+invoice.total_charged.toString(),startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
+  }
+  // 
+
   buildFormTotals(invoice:any){
     this.pdfDoc.setFontSize(11);
     var startingY = this.lastDataLine;
@@ -228,11 +359,18 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   generatePDF(invoice:any){
+    console.log();
     this.pdfDoc = new jsPDF;
     this.pageAdded = false;
-    this.buildFormHeader(invoice);
-    this.buildFormDays(invoice);
-    this.buildFormTotals(invoice);
+    if(invoice.hourly_wait_charge){
+      this.buildFormHeaderLoad(invoice);
+      this.buildFormDaysLoad(invoice);
+      this.buildFormTotalsLoad(invoice);
+    }else{
+      this.buildFormHeader(invoice);
+      this.buildFormDays(invoice);
+      this.buildFormTotals(invoice);
+    }
     this.pdfDoc.save();
   }
 
@@ -271,11 +409,13 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   async deleteInvoice(item:any){
+    console.log(item);
     const invoiceCollection = this.afs.collection<Item>('Invoices');
     var del = confirm('Are you sure you want to delete invoice '+item.invoiceNumber+'?');
-
+    
     if(del){
       invoiceCollection.doc(item.id).delete();
+      this.refreshClicked();
     }
   }
 
@@ -284,5 +424,8 @@ export class InvoicetrackerComponent implements OnInit {
     var invoiceItem = this.invoiceItem.value;
     var t = invoiceCollection.add(invoiceItem);
     this.invoiceItem.reset();
+    if(this.cachedData == true){
+      this.invoices = [invoiceItem].concat(this.invoices);
+    }
   }
 }
