@@ -30,15 +30,17 @@ export class CreateinvoiceloadComponent implements OnInit {
     date_start: ['',Validators.required],
     date_end: ['',Validators.required],
     date: ['',Validators.required],
-    total_wait_hours:[0],
+    total_wait_charge:[0],
     total_trips:[0],
     total_charged:[0],
     total_billed:[0],
     bill_to:['Preferred Materials, LLC'],
     workDays:this.fb.array([this.newWorkDay()]),
+    additionalCharges:this.fb.array([]),
     gas_surcharge:[35],
     load_charge:[265],
-    hourly_wait_charge:[75],
+    wait_charge:[75],
+    miles_charge:[75]
   });
 
   invoiceItem: FormGroup = this.fb.group({
@@ -80,38 +82,37 @@ export class CreateinvoiceloadComponent implements OnInit {
         this.addWorkDay();
       }
       var wd = this.invoiceForm.get('workDays') as FormArray;
-      // wd.at(i).get('time_in')?.setValue(data.workDays[i].time_in);
-      // wd.at(i).get('time_out')?.setValue(data.workDays[i].time_out);
-      
-
       for(var j=0; j<data.workDays[i].trips.length;j++){
         if(j !=0){
           this.addTrip(i);
         }
         var trip = wd.at(i).get('trips') as FormArray;
-        console.log('trips',trip);
-        // trip.at(j).get('city')?.setValue(data.workDays[i].trips[j].city);
-        trip.at(j).get('time_left_site')?.setValue(data.workDays[i].trips[j].time_left_site);
-        trip.at(j).get('time_arrived_site')?.setValue(data.workDays[i].trips[j].time_arrived_site);
-        trip.at(j).get('time_first_load')?.setValue(data.workDays[i].trips[j].time_first_load);
-        trip.at(j).get('time_in_plant')?.setValue(data.workDays[i].trips[j].time_in_plant);
         trip.at(j).get('ticket_number')?.setValue(data.workDays[i].trips[j].ticket_number);
-        trip.at(j).get('site_wait_hours')?.setValue(data.workDays[i].trips[j].site_wait_hours);
-        trip.at(j).get('plant_wait_hours')?.setValue(data.workDays[i].trips[j].plant_wait_hours);
+        trip.at(j).get('site_wait_charge')?.setValue(data.workDays[i].trips[j].site_wait_charge);
+        trip.at(j).get('plant_wait_charge')?.setValue(data.workDays[i].trips[j].plant_wait_charge);
+        trip.at(j).get('miles')?.setValue(data.workDays[i].trips[j].miles);
 
         this.calculateWorkDayExtendedWaitHours(i,j);
       }
       wd.at(i).get('date')?.setValue(data.workDays[i].date);
-      wd.at(i).get('extended_wait_hours')?.setValue(data.workDays[i].extended_wait_hours);
+      wd.at(i).get('extended_wait_charge')?.setValue(data.workDays[i].extended_wait_charge);
+      wd.at(i).get('extended_miles_trips')?.setValue(data.workDays[i].extended_miles_trips);
       this.calculateTotalCharged();
+    }
 
+    for(var i=0; i<data.additionalCharges.length;i++){
+      this.addCharge();
+      var wd = this.invoiceForm.get('additionalCharges') as FormArray;
+      wd.at(i).get('date')?.setValue(data.additionalCharges[i].date);
+      wd.at(i).get('charge')?.setValue(data.additionalCharges[i].charge);
+      wd.at(i).get('amount')?.setValue(data.additionalCharges[i].amount);
+      this.calculateTotalCharged();
     }
   }
 
   addInvoice(){
     var invoiceData = this.invoiceForm.value;
     const invoiceCollection = this.afs.collection<Item>('Invoices');
-    // var invoiceItem = this.invoiceItem.value;
     this.invoiceItem.get('invoiceNumber')?.setValue(this.invoiceForm.value.invoice_number);
     this.invoiceItem.get('invoiceDate')?.setValue(this.invoiceForm.value.date);
     this.invoiceItem.get('paidDate')?.setValue(null);
@@ -124,7 +125,6 @@ export class CreateinvoiceloadComponent implements OnInit {
       invoiceCollection.add(this.invoiceItem.value);
       alert('Invoice was added.');
     }
-
   }
 
   formatDateString(d:string){
@@ -236,48 +236,80 @@ export class CreateinvoiceloadComponent implements OnInit {
       this.pdfDoc.setFont("helvetica", "bold");
       this.pdfDoc.setFontSize(11);
       this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text("Total Extended Wait Hours",startingX+(xSpacing*2),startingY+(ySpacing*line));
       line++;
 
       this.pdfDoc.setFont("helvetica", "normal");
       this.pdfDoc.text(this.formatDateString(x.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text(x.extended_wait_hours.toString(),startingX+(xSpacing*2),startingY+(ySpacing*line));
       line++;
-
       line++;
       
-      var xSpacing = 26;
+      var xSpacing = 5;
       this.pdfDoc.setFont("helvetica", "bold");
       this.pdfDoc.setFontSize(8);
       this.pdfDoc.text("Ticket No",startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text("Plant Time In",startingX+(xSpacing*1),startingY+(ySpacing*line));
-      this.pdfDoc.text("Plant First Load",startingX+(xSpacing*2),startingY+(ySpacing*line));
-      this.pdfDoc.text("Plant Wait Time",startingX+(xSpacing*3),startingY+(ySpacing*line));
-      this.pdfDoc.text("Site Arrival",startingX+(xSpacing*4),startingY+(ySpacing*line));
-      this.pdfDoc.text("Site Leave",startingX+(xSpacing*5),startingY+(ySpacing*line));
-      this.pdfDoc.text("Site Wait Time",startingX+(xSpacing*6),startingY+(ySpacing*line));
+      this.pdfDoc.text("Plant Extended Wait Hours",startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text("Site Extended Wait Hours",startingX+(xSpacing*15),startingY+(ySpacing*line));
+      this.pdfDoc.text("Miles to Site",startingX+(xSpacing*25),startingY+(ySpacing*line));
       line++;
       x.trips.forEach( (t:  any ) => {
         this.pdfDoc.setFont("helvetica", "normal");
         this.pdfDoc.text(t.ticket_number,startingX+(xSpacing*0),startingY+(ySpacing*line));
-        this.pdfDoc.text(this.formatTimes(t.time_in_plant),startingX+(xSpacing*1),startingY+(ySpacing*line));
-        this.pdfDoc.text(this.formatTimes(t.time_first_load),startingX+(xSpacing*2),startingY+(ySpacing*line));
-        this.pdfDoc.text(t.plant_wait_hours,startingX+(xSpacing*3),startingY+(ySpacing*line));
-
-        this.pdfDoc.text(this.formatTimes(t.time_arrived_site),startingX+(xSpacing*4),startingY+(ySpacing*line));
-        this.pdfDoc.text(this.formatTimes(t.time_left_site),startingX+(xSpacing*5),startingY+(ySpacing*line));
-        this.pdfDoc.text(t.site_wait_hours,startingX+(xSpacing*6),startingY+(ySpacing*line));
+        this.pdfDoc.text(""+t.plant_wait_charge.toString(),startingX+(xSpacing*5),startingY+(ySpacing*line));
+        this.pdfDoc.text(""+t.site_wait_charge.toString(),startingX+(xSpacing*15),startingY+(ySpacing*line));
+        this.pdfDoc.text(''+t.miles+' mi',startingX+(xSpacing*25),startingY+(ySpacing*line));
         line++;
       });
       var endLine =(startingY+(ySpacing*line));
       this.pdfDoc.setLineWidth(0.5);
       this.pdfDoc.line(10, (startLine-4), 10, endLine-4);
 
-
       line++;
       line++;
     });
+
+    //----------ADDITIONAL CHARGES------------// 
+    var additionalChargeLine = startingY+(ySpacing*line);
+    var ac = this.invoiceForm.value.additionalCharges;
+    if(this.pageAdded == false && (line+ac.length>30)){
+      this.pdfDoc.addPage();
+      startingY = 15;
+      line = 1;
+      this.pageAdded= true;
+    }else if(this.pageAdded == true && (line+ac.length)>40){
+      this.pdfDoc.addPage();
+      startingY = 15;
+      line = 1;
+    }
+    
+    this.pdfDoc.line(55, additionalChargeLine-5, 150, additionalChargeLine-5);
+
+    var startingX = 15;
+    var xSpacing = 5;
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.setFontSize(11);
+    line++;
+    this.pdfDoc.text("Additional Charges",startingX+(xSpacing*0),startingY+(ySpacing*line));
+    line++;
+    line++;
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.setFontSize(8);
+    this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Charge",startingX+(xSpacing*5),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Amount",startingX+(xSpacing*10),startingY+(ySpacing*line-1));
+    line++;
+    ac.forEach( (c: any) => {
+      this.pdfDoc.setFont("helvetica", "normal");
+      this.pdfDoc.text(''+this.formatDateString(c.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text(''+c.charge,startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text('$'+c.amount,startingX+(xSpacing*10),startingY+(ySpacing*line));
+      line++;
+    });
+    line++;
+    line++;
     this.lastDataLine = startingY+(ySpacing*line);
+    this.pdfDoc.line(10,additionalChargeLine , 10, (startingY+line*ySpacing)-10);
+    line++;
+    line++;
   }
 
   buildFormTotals(){
@@ -286,24 +318,14 @@ export class CreateinvoiceloadComponent implements OnInit {
     var ySpacing = 5;
 
     var xSpacing = 45;
-    var startingX = 25;
+    var startingX = 12;
     this.pdfDoc.line(55, startingY-5, 150, startingY-5);
 
     this.pdfDoc.setFont("helvetica", "bold");
-    this.pdfDoc.text("Charge Per Load",startingX+(xSpacing*0),startingY+(ySpacing),{align:"center"});
-    this.pdfDoc.text("Gas Surcharge",startingX+(xSpacing*1),startingY+(ySpacing),{align:"center"});
-    this.pdfDoc.text("Wait Charge",startingX+(xSpacing*2),startingY+(ySpacing),{align:"center"});
-    // this.pdfDoc.text("Total Trips",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
-    // this.pdfDoc.text("Extended Wait Hours",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
-    this.pdfDoc.text("Total Charged",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
+    this.pdfDoc.text("Total Charged",startingX+(xSpacing*2),startingY+(ySpacing),{align:"center"});
 
     this.pdfDoc.setFont("helvetica", "normal");
-    this.pdfDoc.text('$'+this.invoiceForm.value.load_charge.toString(),startingX+(xSpacing*0),startingY+(ySpacing+5),{align:"center"});
-    this.pdfDoc.text('$'+this.invoiceForm.value.gas_surcharge.toString(),startingX+(xSpacing*1),startingY+(ySpacing+5),{align:"center"});
-    this.pdfDoc.text('$'+this.invoiceForm.value.hourly_wait_charge.toString(),startingX+(xSpacing*2),startingY+(ySpacing+5),{align:"center"});
-    // this.pdfDoc.text(this.invoiceForm.value.total_trips.toString() ,startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
-    // this.pdfDoc.text(this.invoiceForm.value.total_wait_hours.toString() ,startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
-    this.pdfDoc.text('$'+this.invoiceForm.value.total_charged.toString(),startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
+    this.pdfDoc.text('$'+this.invoiceForm.value.total_charged.toString(),startingX+(xSpacing*2),startingY+(ySpacing+5),{align:"center"});
   }
 
   generatePDF(){
@@ -320,117 +342,97 @@ export class CreateinvoiceloadComponent implements OnInit {
     return this.fb.group({
       date: ['',Validators.required],
       trips:this.fb.array([this.newTrip()]),
-      extended_wait_hours: [{value:'',readonly:true},Validators.required],
+      extended_wait_charge: [{value:0,readonly:true},Validators.required],
+      extended_miles_trips: [{value:0,readonly:true},Validators.required],
+    })
+  }
+
+  newCharge():FormGroup{
+    return this.fb.group({
+      date: ['',Validators.required],
+      charge: ['',Validators.required],
+      amount: ['',Validators.required],
     })
   }
 
   newTrip():FormGroup{
     return this.fb.group({
       ticket_number: ['',Validators.required],
-      time_in_plant: ['',Validators.required],
-      time_first_load: ['',Validators.required],
-      plant_wait_hours: [{value:'',readonly:true},Validators.required],
+      plant_wait_charge: [{value:0},Validators.required],
 
-      time_arrived_site: ['',Validators.required],
-      time_left_site: ['',Validators.required],
-      site_wait_hours: [{value:'',readonly:true},Validators.required],
+      site_wait_charge: [{value:0},Validators.required],
+      miles: [{value:0},Validators.required],
     });
   }
 
   calculateWaitHours(i:number,j:number){
-    var plantArrivedTime = this.workDayTrips(i).at(j).value.time_in_plant.split(':');
-    var plantArrivedFloat = parseFloat(plantArrivedTime[0])+(parseFloat(plantArrivedTime[1])/60);
-    var firstLoadTime = this.workDayTrips(i).at(j).value.time_first_load.split(':');
-    var firstLoadFloat = parseFloat(firstLoadTime[0])+(parseFloat(firstLoadTime[1])/60);
-
-    var siteArrivedTime = this.workDayTrips(i).at(j).value.time_arrived_site.split(':');
-    var siteArriveFloat = parseFloat(siteArrivedTime[0])+(parseFloat(siteArrivedTime[1])/60);
-    var siteLeftTime = this.workDayTrips(i).at(j).value.time_left_site.split(':');
-    var siteLeftFloat = parseFloat(siteLeftTime[0])+(parseFloat(siteLeftTime[1])/60);
-
-    if(firstLoadFloat> plantArrivedFloat){
-      this.workDayTrips(i).at(j).get('plant_wait_hours')?.setValue((firstLoadFloat-plantArrivedFloat).toFixed(2));
-    }else{
-      this.workDayTrips(i).at(j).get('plant_wait_hours')?.setValue('');
-    }
-
-    if(siteLeftFloat> siteArriveFloat){
-      this.workDayTrips(i).at(j).get('site_wait_hours')?.setValue((siteLeftFloat-siteArriveFloat).toFixed(2));
-    }else{
-      this.workDayTrips(i).at(j).get('site_wait_hours')?.setValue('');
-    }
-
-    if(siteLeftFloat&& siteArriveFloat && siteLeftFloat&& siteArriveFloat){
-      this.calculateWorkDayExtendedWaitHours(i,j);
-      this.calculateTotalCharged();
-    }
+    this.calculateWorkDayExtendedWaitHours(i,j);
+    this.calculateTotalCharged();
   }
 
   calculateWorkDayExtendedWaitHours(i:number,j:number){
     console.log('workday',this.workDays().at(i));
     var trips = this.workDays().at(i).value.trips;
     var totalExtendedHours = 0;
+    var tripsOver25 = 0;
     trips.forEach((x: any) => {
       console.log(x);
-      if(x.plant_wait_hours >= 1){
-        totalExtendedHours += Math.floor(parseFloat(x.plant_wait_hours));
-        console.log('test',Math.floor(parseFloat(x.plant_wait_hours)));
+      if(x.plant_wait_charge >= 0){
+        totalExtendedHours += Math.floor(parseFloat(x.plant_wait_charge));
       }
-      if(x.plant_wait_hours >= 1){
-        totalExtendedHours += Math.floor(parseFloat(x.site_wait_hours));
+      if(x.site_wait_charge >= 0){
+        totalExtendedHours += Math.floor(parseFloat(x.site_wait_charge));
+      }
+      if(x.miles > 25){
+        tripsOver25 ++;
       }
     });
     console.log('totalExtendedHours',totalExtendedHours);
-    this.workDays().at(i).get('extended_wait_hours')?.setValue((totalExtendedHours).toFixed(2));
-  }
-
-  timeChange(i:number){
-    var timeInVal = (this.workDays().at(i).value.time_in).split(':');
-    var timeInFloat = parseFloat(timeInVal[0])+(parseFloat(timeInVal[1])/60);
-    var timeOutVal = (this.workDays().at(i).value.time_out).split(':');
-    var timeOutFloat = parseFloat(timeOutVal[0])+(parseFloat(timeOutVal[1])/60);
-    if(timeOutFloat> timeInFloat){
-      this.workDays().at(i).get('total_hours')?.setValue((timeOutFloat-timeInFloat).toFixed(2));
-      this.calculateAllHours();
-    }else{
-      this.workDays().at(i).get('total_hours')?.setValue('');
-    }
-  }
-
-  calculateAllHours(){
-    var totalHours = 0;
-    this.workDays().controls.forEach(x => {
-      totalHours += parseFloat(x.value.total_hours);
-    });
-    this.invoiceForm.get('total_hours')?.setValue(totalHours.toFixed(2));
+    this.workDays().at(i).get('extended_wait_charge')?.setValue((totalExtendedHours));
+    this.workDays().at(i).get('extended_miles_trips')?.setValue((tripsOver25));
     this.calculateTotalCharged();
   }
 
+
   calculateTotalCharged(){
-    console.log('calculateTotalCharged',this.workDays());
     var wd = this.workDays().value;
+    var ad = this.additionalCharges().value;
     var totalTrips = 0;
-    var totalWaitHours = 0;
+    var totalWaitCharge = 0;
+    var tripsOver25 = 0;
+    var addtionalCharges = 0;
+    console.log('calculateTotalCharged',ad,this.workDays());
 
     wd.forEach((x: any) => {
       totalTrips += x.trips.length;
-      totalWaitHours += parseFloat(x.extended_wait_hours);
+      totalWaitCharge += parseFloat(x.extended_wait_charge)  || 0;
+      tripsOver25 += parseFloat(x.extended_miles_trips) || 0;
     });
+
+    ad.forEach((a: any) => {
+      addtionalCharges += parseInt(a.amount);
+    });
+
     if(totalTrips >0){
+      var waitCharge = this.invoiceForm.get('wait_charge')?.value;
+      var milesCharge = this.invoiceForm.get('miles_charge')?.value;
       var gasCharge = this.invoiceForm.get('gas_surcharge')?.value;
       var loadCharge = this.invoiceForm.get('load_charge')?.value;
-      var waitCharge = this.invoiceForm.get('hourly_wait_charge')?.value;
-      var charge = (totalTrips*gasCharge)+(totalTrips*loadCharge)+(totalWaitHours*waitCharge);
+      var charge = (totalTrips*gasCharge)+(totalTrips*loadCharge)+(totalWaitCharge*waitCharge)+(tripsOver25*milesCharge)+(addtionalCharges);
       this.invoiceForm.get('total_charged')?.setValue(charge.toFixed(2));
       this.invoiceForm.get('total_billed')?.setValue(charge.toFixed(2));
 
-      this.invoiceForm.get('total_wait_hours')?.setValue(totalWaitHours);
+      this.invoiceForm.get('total_wait_charge')?.setValue(totalWaitCharge*waitCharge);
       this.invoiceForm.get('total_trips')?.setValue(totalTrips);
     }
   }
 
   workDays(){
     return this.invoiceForm.get('workDays') as FormArray;
+  }
+
+  additionalCharges(){
+    return this.invoiceForm.get('additionalCharges') as FormArray;
   }
 
   workDayTrips(empIndex:number){
@@ -441,14 +443,26 @@ export class CreateinvoiceloadComponent implements OnInit {
     this.workDayTrips(empIndex).push(this.newTrip());
   }
 
-  removeTrip(empIndex:number,j:number){
-    this.workDayTrips(empIndex).removeAt(j);
+  addCharge(){
+    this.additionalCharges().push(this.newCharge());
+  }
+
+  removeCharge(i:number){
+    this.additionalCharges().removeAt(i);
+    this.calculateTotalCharged();
+  }
+
+  removeTrip(i:number,j:number){
+    this.workDayTrips(i).removeAt(j);
+    this.calculateTotalCharged();
   }
 
   removeWorkDay(ele:any,i:number){
     var thisAll = this;
     setTimeout(function(){
       thisAll.workDays().removeAt(i);
+      thisAll.calculateTotalCharged();
+
     },200);
   }
 

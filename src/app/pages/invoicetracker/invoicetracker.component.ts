@@ -88,10 +88,11 @@ export class InvoicetrackerComponent implements OnInit {
   }
   
   editInvoice(data:any){
+    console.log('editInvoice',data);
     var conf = confirm('Are you sure you want to edit invoice '+data.invoiceNumber+'? (Michelle, you mess up???)');
 
     if(conf){
-      if(data.invoiceData.hourly_wait_charge){
+      if(data.invoiceData.wait_charge){
         this.router.navigate(['/createinvoiceload'],{state:{invoiceData:data.invoiceData}});
       }else{
         this.router.navigate(['/createinvoice'],{state:{invoiceData:data.invoiceData}});
@@ -266,49 +267,82 @@ export class InvoicetrackerComponent implements OnInit {
       this.pdfDoc.setFont("helvetica", "bold");
       this.pdfDoc.setFontSize(11);
       this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text("Total Extended Wait Hours",startingX+(xSpacing*2),startingY+(ySpacing*line));
       line++;
 
       this.pdfDoc.setFont("helvetica", "normal");
       this.pdfDoc.text(this.formatDateString(x.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text(x.extended_wait_hours.toString(),startingX+(xSpacing*2),startingY+(ySpacing*line));
+      line++;
       line++;
 
-      line++;
-      
-      var xSpacing = 26;
+      var xSpacing = 5;
       this.pdfDoc.setFont("helvetica", "bold");
       this.pdfDoc.setFontSize(8);
       this.pdfDoc.text("Ticket No",startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text("Plant Time In",startingX+(xSpacing*1),startingY+(ySpacing*line));
-      this.pdfDoc.text("Plant First Load",startingX+(xSpacing*2),startingY+(ySpacing*line));
-      this.pdfDoc.text("Plant Wait Time",startingX+(xSpacing*3),startingY+(ySpacing*line));
-      this.pdfDoc.text("Site Arrival",startingX+(xSpacing*4),startingY+(ySpacing*line));
-      this.pdfDoc.text("Site Leave",startingX+(xSpacing*5),startingY+(ySpacing*line));
-      this.pdfDoc.text("Site Wait Time",startingX+(xSpacing*6),startingY+(ySpacing*line));
+      this.pdfDoc.text("Plant Extended Wait Hours",startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text("Site Extended Wait Hours",startingX+(xSpacing*15),startingY+(ySpacing*line));
+      this.pdfDoc.text("Miles to Site",startingX+(xSpacing*25),startingY+(ySpacing*line));
       line++;
       x.trips.forEach( (t:  any ) => {
         console.log(t);
         this.pdfDoc.setFont("helvetica", "normal");
-        this.pdfDoc.text(t.ticket_number,startingX+(xSpacing*0),startingY+(ySpacing*line));
-        this.pdfDoc.text(this.formatTimes(t.time_in_plant),startingX+(xSpacing*1),startingY+(ySpacing*line));
-        this.pdfDoc.text(this.formatTimes(t.time_first_load),startingX+(xSpacing*2),startingY+(ySpacing*line));
-        this.pdfDoc.text(t.plant_wait_hours,startingX+(xSpacing*3),startingY+(ySpacing*line));
-
-        this.pdfDoc.text(this.formatTimes(t.time_arrived_site),startingX+(xSpacing*4),startingY+(ySpacing*line));
-        this.pdfDoc.text(this.formatTimes(t.time_left_site),startingX+(xSpacing*5),startingY+(ySpacing*line));
-        this.pdfDoc.text(t.site_wait_hours,startingX+(xSpacing*6),startingY+(ySpacing*line));
+        this.pdfDoc.text(''+t.ticket_number,startingX+(xSpacing*0),startingY+(ySpacing*line));
+        this.pdfDoc.text(''+t.plant_wait_charge,startingX+(xSpacing*5),startingY+(ySpacing*line));
+        this.pdfDoc.text(''+t.site_wait_charge,startingX+(xSpacing*15),startingY+(ySpacing*line));
+        this.pdfDoc.text(''+t.miles+' mi',startingX+(xSpacing*25),startingY+(ySpacing*line));
         line++;
       });
       var endLine =(startingY+(ySpacing*line));
       this.pdfDoc.setLineWidth(0.5);
       this.pdfDoc.line(10, (startLine-4), 10, endLine-4);
 
-
       line++;
       line++;
     });
+
+    //----------ADDITIONAL CHARGES------------// 
+    var additionalChargeLine = startingY+(ySpacing*line);
+    var ac = invoice.additionalCharges;
+    if(this.pageAdded == false && (line+ac.length>30)){
+      this.pdfDoc.addPage();
+      startingY = 15;
+      line = 1;
+      this.pageAdded= true;
+    }else if(this.pageAdded == true && (line+ac.length)>40){
+      this.pdfDoc.addPage();
+      startingY = 15;
+      line = 1;
+    }
+    
+    this.pdfDoc.line(55, additionalChargeLine-5, 150, additionalChargeLine-5);
+
+    var startingX = 15;
+    var xSpacing = 5;
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.setFontSize(11);
+    line++;
+    this.pdfDoc.text("Additional Charges",startingX+(xSpacing*0),startingY+(ySpacing*line));
+    line++;
+    line++;
+    this.pdfDoc.setFont("helvetica", "bold");
+    this.pdfDoc.setFontSize(8);
+    this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Charge",startingX+(xSpacing*5),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Amount",startingX+(xSpacing*10),startingY+(ySpacing*line-1));
+    line++;
+    ac.forEach( (c: any) => {
+      this.pdfDoc.setFont("helvetica", "normal");
+      this.pdfDoc.text(''+this.formatDateString(c.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text(''+c.charge,startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text('$'+c.amount,startingX+(xSpacing*10),startingY+(ySpacing*line));
+      line++;
+    });
+    line++;
+    line++;
     this.lastDataLine = startingY+(ySpacing*line);
+    this.pdfDoc.line(10,additionalChargeLine , 10, (startingY+line*ySpacing)-10);
+    line++;
+    line++;
+    
   }
 
   buildFormTotalsLoad(invoice:any){
@@ -317,26 +351,15 @@ export class InvoicetrackerComponent implements OnInit {
     var ySpacing = 5;
 
     var xSpacing = 45;
-    var startingX = 25;
+    var startingX = 12;
     this.pdfDoc.line(55, startingY-5, 150, startingY-5);
 
     this.pdfDoc.setFont("helvetica", "bold");
-    this.pdfDoc.text("Charge Per Load",startingX+(xSpacing*0),startingY+(ySpacing),{align:"center"});
-    this.pdfDoc.text("Gas Surcharge",startingX+(xSpacing*1),startingY+(ySpacing),{align:"center"});
-    this.pdfDoc.text("Wait Charge",startingX+(xSpacing*2),startingY+(ySpacing),{align:"center"});
-    // this.pdfDoc.text("Total Trips",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
-    // this.pdfDoc.text("Extended Wait Hours",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
-    this.pdfDoc.text("Total Charged",startingX+(xSpacing*3),startingY+(ySpacing),{align:"center"});
+    this.pdfDoc.text("Total Charged",startingX+(xSpacing*2),startingY+(ySpacing),{align:"center"});
 
     this.pdfDoc.setFont("helvetica", "normal");
-    this.pdfDoc.text('$'+invoice.load_charge.toString(),startingX+(xSpacing*0),startingY+(ySpacing+5),{align:"center"});
-    this.pdfDoc.text('$'+invoice.gas_surcharge.toString(),startingX+(xSpacing*1),startingY+(ySpacing+5),{align:"center"});
-    this.pdfDoc.text('$'+invoice.hourly_wait_charge.toString(),startingX+(xSpacing*2),startingY+(ySpacing+5),{align:"center"});
-    // this.pdfDoc.text(invoice.total_trips.toString() ,startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
-    // this.pdfDoc.text(invoice.total_wait_hours.toString() ,startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
-    this.pdfDoc.text('$'+invoice.total_charged.toString(),startingX+(xSpacing*3),startingY+(ySpacing+5),{align:"center"});
+    this.pdfDoc.text('$'+invoice.total_charged.toString(),startingX+(xSpacing*2),startingY+(ySpacing+5),{align:"center"});
   }
-  // 
 
   buildFormTotals(invoice:any){
     this.pdfDoc.setFontSize(11);
@@ -359,10 +382,10 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   generatePDF(invoice:any){
-    console.log();
+    console.log('generatePDF',invoice);
     this.pdfDoc = new jsPDF;
     this.pageAdded = false;
-    if(invoice.hourly_wait_charge){
+    if(invoice.gas_surcharge){
       this.buildFormHeaderLoad(invoice);
       this.buildFormDaysLoad(invoice);
       this.buildFormTotalsLoad(invoice);
@@ -375,6 +398,7 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   formatTimes(val: string){
+    console.log(val);
     var timeArr = val.split(':');
     var fullHours = parseInt(timeArr[0]);
 

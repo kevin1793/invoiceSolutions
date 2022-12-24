@@ -59,6 +59,15 @@
       padding: 10px 8px;
       border: none;
     }
+    .block-input-large {
+      width: 100% !important;
+      max-width: 250px;
+      text-align: center;
+      margin: 5px;
+      border-radius: 5px;
+      padding: 10px 8px;
+      border: none;
+    }
     .block-input-smaller {
       width: 100%;
       max-width: 100px;
@@ -116,11 +125,21 @@
     }
   
     .workDayLine {
+      margin-left:15px;
+      margin-right:15px;
       justify-content: left;
     }
     .workDayHeader{
+      
       position:relative;
-  
+    }
+
+    .workDayHeader label{
+      font-size:12px;
+    }
+
+    .workDayHeader input{
+      width: 130px;
     }
     .timeInOut-col div{
       margin-top:20px;
@@ -145,8 +164,23 @@
     }
     .workDayBlock{
       margin-top:30px;
+      padding-left:30px;
+      margin-right:-30px;
       background:#4e7df8;
       border-radius: 10px;
+      padding-bottom: 30px;;
+      box-shadow: #333 3px 3px 6px;
+    }
+
+    .inputRow{
+      width: 100%;
+      justify-content: space-evenly;
+    }
+    .formEndBlock{
+      margin-top:30px;
+      background:#4e7df8;
+      border-radius: 10px;
+      width:100%;
       padding-bottom: 30px;;
       box-shadow: #333 3px 3px 6px;
     }
@@ -158,7 +192,7 @@
       padding-left:30px;
       padding-bottom:30px;
       padding-top:10px;
-      /* margin-top:50px; */
+      justify-content: center;
     }
     .formEndBlock input{
       margin-right: 20px;
@@ -166,13 +200,17 @@
     .formEndBlock .labelInput{
       margin-top: 20px;
     }
+    .workDayBlock  .labelInput label{
+      display: block;
+      width: 100%;
+    }
   
     .labelInput :required{
       border-left: red solid 1px;
     }
 
-    .workDayRow .block-input-small{
-      margin-right: 25px;
+    .workDayRow{
+      justify-content: center;
     }
     .workDayRow button{
       margin-left: 30px;
@@ -220,80 +258,63 @@
       </div>
       <form [formGroup]="invoiceForm"  (ngSubmit)="onSubmit()">
         <div class="formEndBlock">
-          <div class="invoiceDateLine" style="display: flex;flex-wrap: wrap;">
+          <div class="invoiceDateLine" style="display: flex; flex-wrap: wrap;">
             <div class="labelInput labelBox">
               <label>Invoice Number</label>
               <input class="block-input-mlarge" id="first-name" type="text" formControlName="invoice_number">
             </div>
             <div class="labelInput labelBox">
               <label>Invoice Date</label>
-              <input class="block-input-mlarge" placeholder="Invoice Number" type="date"
-                formControlName="date">
+              <input class="block-input-mlarge" placeholder="Invoice Number" type="date" formControlName="date">
             </div>
             <div class="labelInput labelBox">
               <label>Week Start Date</label>
-              <input class="block-input-mlarge" placeholder="Invoice Number" id="last-name" type="date"
-                formControlName="date_start">
+              <input class="block-input-mlarge" placeholder="Invoice Number" id="last-name" type="date" formControlName="date_start">
             </div>
             <div class="labelInput labelBox">
               <label>Week End Date</label>
-              <input class="block-input-mlarge" placeholder="Invoice Number" id="last-name" type="date"
-                formControlName="date_end">
+              <input class="block-input-mlarge" placeholder="Invoice Number" id="last-name" type="date" formControlName="date_end">
             </div>
           </div>
         </div>
-  
+        <!-- ==================WORKDAYS================== -->
         <div *ngIf="workDays" class="workDayHeader">
           <div class="workDayBlock" *ngFor="let day of workDays().controls;let i=index" formArrayName="workDays">
-            <!-- <input type ="text" [formControlName]="i"> -->
             <div style='position: relative;' class="workDayLine" style="display: block;" [formGroupName]="i">
-              <div  *ngIf="workDays().length>1" style="margin-top:30px;padding-top:20px;padding-left:35px;">
+              <div  *ngIf="workDays().length>1" style="margin-top:30px;padding-top:20px;padding-left:20px;">
                 <span  (click)="moveWorkDay(-1, i)" style="color: white;cursor: pointer;margin-right: 5px;font-size: 20px;" class="fa fa-arrow-up"></span>
                 <span  (click)="moveWorkDay(1, i)" style="color: white;cursor: pointer;font-size: 20px;"  class="fa fa-arrow-down"></span>
               </div>
               <!-- // WORK TRIP// -->
-              
-              <div style="display: flex;">
-                <button class="buttonStyle" style="margin-top:35px;margin-left:40px;margin-right:40px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addTrip(i)">
-                  Add Trip
-                </button>
+              <button class="buttonStyle" style=" min-width:100px;margin-top:25px;margin-left:15px;margin-right:40px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addTrip(i)">
+                Add Trip
+              </button>
+              <div style="margin:0 auto;width: 100%;">
                 <div>
-                  <div style="width: 100%;padding-top:30px;"  *ngFor="let trip of workDayTrips(i).controls;let j=index" formArrayName="trips" >
+                  <div style="width: 100%;padding-top:30px; justify-content: center;"  *ngFor="let trip of workDayTrips(i).controls;let j=index" formArrayName="trips" >
                     <div style="padding-top:10px;display: block;">
                       <div class="workDayRow" style="display: flex; justify-content: space-evenly;" [formGroupName]="j">
                         <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Time Arrived At Plant</label> -->
-                          <input class="block-input-small" (change)="calculateWaitHours(i,j)" placeholder="Ticket Number" type="text" formControlName="ticket_number">
+                          <label *ngIf="j!=999">Ticket No</label>
+                          <input class="block-input-large"  placeholder="Ticket Number" type="text" formControlName="ticket_number">
                         </div>
                         <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Time Arrived At Plant</label> -->
-                          <input class="block-input-small timeinput" (change)="calculateWaitHours(i,j)" placeholder="Time In At Plant" type="time" formControlName="time_in_plant">
+                          <label *ngIf="j!=999">Extended Plant Wait Hours</label>
+                          <input class="block-input-large"  placeholder="Extended Plant Wait Hours" (change)="calculateWorkDayExtendedWaitHours(i,j)"  type="number" formControlName="plant_wait_charge">
                         </div>
                         <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Time First Load</label> -->
-                          <input class="block-input-small timeinput" (change)="calculateWaitHours(i,j)" placeholder="Time First Load"  type="time" formControlName="time_first_load">
+                          <label *ngIf="j!=999">Extended Site Wait Hours</label>
+                          <input class="block-input-large" placeholder="Extended Site Wait Hours" (change)="calculateWorkDayExtendedWaitHours(i,j)"  type="number" formControlName="site_wait_charge">
                         </div>
                         <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Ticket No.</label> -->
-                          <input class="block-input-small" [readonly]="true" placeholder="Plant Wait Hours"  type="number" formControlName="plant_wait_hours">
+                          <label *ngIf="j!=999">Miles To Job Site</label>
+                          <input class="block-input-large" placeholder="Miles To Job Site" (change)="calculateWorkDayExtendedWaitHours(i,j)"  type="number" formControlName="miles">
                         </div>
-                        <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Customer</label> -->
-                          <input class="block-input-small timeinput" (change)="calculateWaitHours(i,j)" placeholder="Time Arrived At Site"  type="time" formControlName="time_arrived_site">
-                        </div>
-                        <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Destination</label> -->
-                          <input class="block-input-small timeinput" (change)="calculateWaitHours(i,j)" placeholder="Time Left Site"  type="time" formControlName="time_left_site">
-                        </div>
-                        <div class="labelInput">
-                          <!-- <label *ngIf="j==0">Ticket No.</label> -->
-                          <input class="block-input-small" [readonly]="true" placeholder="Site Wait Hours"  type="number" formControlName="site_wait_hours">
-                        </div>
-                        <div  *ngIf="workDayTrips(i).length>1" style="margin-top: 10px;">
+                        <div  *ngIf="workDayTrips(i).length>1" style="margin-top: 20px;">
                           <span  (click)="moveTrip(-1, i,j)" style="color: white;cursor: pointer;margin-right: 5px;font-size: 20px;" class="fa fa-arrow-up"></span>
                           <span  (click)="moveTrip(1, i,j)" style="color: white;cursor: pointer;font-size: 20px;"  class="fa fa-arrow-down"></span>
                         </div>
-                        <button *ngIf="workDayTrips(i).length>1" class="buttonStyle" style="margin-top:0px;background: red;color:white;font-size: 15px;" (click)="removeTrip(i,j)">
+                        <button *ngIf="workDayTrips(i).length>1" class="buttonStyle" style="margin-top:20px;background: red;color:white;font-size: 15px;" (click)="removeTrip(i,j)">
                           Remove
                         </button>
                       </div>
@@ -306,14 +327,11 @@
                   <div><label>Date</label></div><input class="block-input-smedium" type="date" formControlName="date">
                 </div>
                 <div class="labelInput">
-                  <div><label>Total Extended Wait Hours</label></div><input class="block-input-smedium" type="number" formControlName="extended_wait_hours">
+                  <div><label>Total Extended Wait Hours</label></div><input class="block-input-smedium" type="number" formControlName="extended_wait_charge">
                 </div>
-                <!-- <div class="labelInput">
-                  <div><label>Time Out</label></div><input class="block-input-smedium" id="last-name"  (change)="timeChange(i)" type="time" formControlName="time_out">
-                </div> -->
-                <!-- <div class="labelInput">
-                  <div><label>Total Hours</label></div><input [readonly]=true class="block-input-smedium" placeholder="Total Hours" id="last-name" type="number" formControlName="total_hours">
-                </div> -->
+                <div class="labelInput">
+                  <div><label>Total Site Trips Over 25 Miles</label></div><input class="block-input-smedium" type="number" formControlName="extended_miles_trips">
+                </div>
                 <button *ngIf="workDays().length>1" style="margin-top:57px;height:40px;cursor:pointer;border:none; box-shadow: #2d2d2d 2px 2px 2px;background:red;color:white;font-size: 15px;padding:10px 12px;border-radius: 5px;;" (click)="removeWorkDay($event,i)">
                   Remove Work Day
                 </button>
@@ -325,34 +343,48 @@
             Add Work Day
           </button>
         </div>
+        <!-- ==================CHARGES================== -->
         <div class="formEndBlock" style="margin-top:30px">
-          <div style="display:flex;justify-content: start;">
+          <div style="display:flex; "  class="inputRow">
             <div class="labelInput">
-              <div><label>Charge Per Load</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium"  type="number" formControlName="load_charge">
+              <div><label>Per Load Charge</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium"  type="number" formControlName="load_charge">
             </div>
             <div class="labelInput">
-              <div><label>Trip Gas Surcharge</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium" type="number" formControlName="gas_surcharge">
+              <div><label>Per Trip Charge</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium" type="number" formControlName="gas_surcharge">
             </div>
             <div class="labelInput">
-              <div><label>Extended Wait Hourly Charge</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium"    type="number" formControlName="hourly_wait_charge">
+              <div><label>Per Hour Wait Charge</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium"    type="number" formControlName="wait_charge">
+            </div>
+            <div class="labelInput">
+              <div><label>Extended Miles To Site Charge</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium"    type="number" formControlName="miles_charge">
             </div>
           </div>
         </div>
-        <div class="formEndBlock" style="margin-top:30px;">
-          <div style="display:flex;justify-content: start;">
+        <!-- ==================ADDITIONAL CHARGES================== -->
+        <div  class="formEndBlock" >
+          <button class="buttonStyle" style=" min-width:100px;margin-top:25px;margin-left:15px;margin-right:40px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addCharge()">
+            Add Additional Charge
+          </button>
+          <div *ngFor="let charge of additionalCharges().controls;let i=index" formArrayName="additionalCharges">
+          
+          <div style="display:flex;" class="inputRow" [formGroupName]="i" >
             <div class="labelInput">
-              <div><label>Total Extended Wait Hours</label></div><input class="block-input-smedium" [readonly]=true  type="number" formControlName="total_wait_hours">
+              <div><label>Date</label></div><input class="block-input-smedium" type="date" formControlName="date">
             </div>
             <div class="labelInput">
-              <div><label>Total Trips</label></div><input class="block-input-smedium" [readonly]=true  type="number" formControlName="total_trips">
+              <div><label>Charge</label></div><input class="block-input-smedium" type="text" formControlName="charge">
             </div>
-            <!-- <div class="labelInput">
-              <div><label>Charge Per Hour</label></div><input (change)="calculateTotalCharged()" class="block-input-smedium" type="number" formControlName="charge_per_hour">
-            </div> -->
             <div class="labelInput">
-              <div><label>Total Charged</label></div><input class="block-input-smedium"  [readonly]=true  type="number" formControlName="total_charged">
+              <div><label>Amount</label></div><input class="block-input-smedium"  (change)="calculateTotalCharged()" type="number" formControlName="amount">
             </div>
+            <button  style="margin-top:35px;height:40px;cursor:pointer;border:none; box-shadow: #2d2d2d 2px 2px 2px;background:red;color:white;font-size: 15px;padding:10px 12px;border-radius: 5px;width:150px;" (click)="removeCharge(i)">
+              Remove Charge
+            </button>
           </div>
+        </div>
+      </div>
+        <!-- ==================TOTALS================== -->
+        <div class="formEndBlock" style="margin-top:30px;">
           <div style="display:flex;" >
             <div class="labelInput">
               <div><label>Bill To</label></div><input class="block-input-smedium" type="text" formControlName="bill_to">
