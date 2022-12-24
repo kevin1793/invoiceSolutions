@@ -35,7 +35,7 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   paidItem: FormGroup = this.fb.group({
-    paidDate: ['2022-03-19',Validators.required],
+    paidDate: ['',Validators.required],
   });
 
   invoiceItem: FormGroup = this.fb.group({
@@ -93,7 +93,9 @@ export class InvoicetrackerComponent implements OnInit {
 
     if(conf){
       if(data.invoiceData.wait_charge){
-        this.router.navigate(['/createinvoiceload'],{state:{invoiceData:data.invoiceData}});
+        var editData = data.invoiceData;
+        editData.paid_date = data.paidDate;
+        this.router.navigate(['/createinvoiceload'],{state:{invoiceData:editData}});
       }else{
         this.router.navigate(['/createinvoice'],{state:{invoiceData:data.invoiceData}});
       }
@@ -326,14 +328,15 @@ export class InvoicetrackerComponent implements OnInit {
     this.pdfDoc.setFont("helvetica", "bold");
     this.pdfDoc.setFontSize(8);
     this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line-1));
-    this.pdfDoc.text("Charge",startingX+(xSpacing*5),startingY+(ySpacing*line-1));
-    this.pdfDoc.text("Amount",startingX+(xSpacing*10),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Amount",startingX+(xSpacing*5),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Charge",startingX+(xSpacing*10),startingY+(ySpacing*line-1));
     line++;
     ac.forEach( (c: any) => {
       this.pdfDoc.setFont("helvetica", "normal");
-      this.pdfDoc.text(''+this.formatDateString(c.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text(''+c.charge,startingX+(xSpacing*5),startingY+(ySpacing*line));
-      this.pdfDoc.text('$'+c.amount,startingX+(xSpacing*10),startingY+(ySpacing*line));
+      this.pdfDoc.text(''+c.date,startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text('$'+c.amount,startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text(''+c.charge,startingX+(xSpacing*10),startingY+(ySpacing*line));
+
       line++;
     });
     line++;
@@ -413,6 +416,10 @@ export class InvoicetrackerComponent implements OnInit {
   
   downloadInvoice(invoice: any){
     this.generatePDF(invoice);
+  }
+
+  clearPaid(){
+    this.paidItem.reset();
   }
 
   editPaidDate(invoice: any){

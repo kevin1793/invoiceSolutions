@@ -128,9 +128,8 @@
   .modalBox{
     background-color: white;
     padding:20px;
-    position: absolute;
+    position: fixed;
     top:50%;
-    left:40%;
     /* height: 400px;
     width: 400px; */
     box-shadow: 2px 2px 2px #222;
@@ -154,8 +153,8 @@
       </div>
       <input type="date" formControlName='paidDate'>
       <div style="margin-top:30px;">
-        <button (click)='setInvoicePaidDate()' style="margin-right: 20px;" class="greenBtn">Update</button>
-        <button (click)="showModal = !showModal" class="redBtn">Cancel</button>
+        <button (click)='setInvoicePaidDate()' [disabled]="paidItem.invalid" style="margin-right: 20px;" class="greenBtn">Update</button>
+        <button (click)="clearPaid();showModal = !showModal" class="redBtn">Cancel</button>
       </div>
     </div>
     <div class="pageTitle">

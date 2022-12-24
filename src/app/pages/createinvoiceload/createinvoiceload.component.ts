@@ -30,6 +30,7 @@ export class CreateinvoiceloadComponent implements OnInit {
     date_start: ['',Validators.required],
     date_end: ['',Validators.required],
     date: ['',Validators.required],
+    paid_date: [''],
     total_wait_charge:[0],
     total_trips:[0],
     total_charged:[0],
@@ -68,6 +69,7 @@ export class CreateinvoiceloadComponent implements OnInit {
     if(data){
       this.invoiceForm.get('invoice_number')?.setValue(data.invoice_number);
       this.invoiceForm.get('date')?.setValue(data.date);
+      this.invoiceForm.get('paid_date')?.setValue(data.paid_date);
       this.invoiceForm.get('date_start')?.setValue(data.date_start);
       this.invoiceForm.get('date_end')?.setValue(data.date_end);
       this.invoiceForm.get('total_hours')?.setValue(data.total_hours);
@@ -115,7 +117,7 @@ export class CreateinvoiceloadComponent implements OnInit {
     const invoiceCollection = this.afs.collection<Item>('Invoices');
     this.invoiceItem.get('invoiceNumber')?.setValue(this.invoiceForm.value.invoice_number);
     this.invoiceItem.get('invoiceDate')?.setValue(this.invoiceForm.value.date);
-    this.invoiceItem.get('paidDate')?.setValue(null);
+    this.invoiceItem.get('paidDate')?.setValue(this.invoiceForm.value.paid_date);
     this.invoiceItem.get('billedTo')?.setValue(this.invoiceForm.value.bill_to);
     this.invoiceItem.get('totalBilled')?.setValue(this.invoiceForm.value.total_billed);
     this.invoiceItem.get('invoiceData')?.setValue(invoiceData);
@@ -294,14 +296,14 @@ export class CreateinvoiceloadComponent implements OnInit {
     this.pdfDoc.setFont("helvetica", "bold");
     this.pdfDoc.setFontSize(8);
     this.pdfDoc.text("Date",startingX+(xSpacing*0),startingY+(ySpacing*line-1));
-    this.pdfDoc.text("Charge",startingX+(xSpacing*5),startingY+(ySpacing*line-1));
-    this.pdfDoc.text("Amount",startingX+(xSpacing*10),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Amount",startingX+(xSpacing*5),startingY+(ySpacing*line-1));
+    this.pdfDoc.text("Charge",startingX+(xSpacing*10),startingY+(ySpacing*line-1));
     line++;
     ac.forEach( (c: any) => {
       this.pdfDoc.setFont("helvetica", "normal");
-      this.pdfDoc.text(''+this.formatDateString(c.date),startingX+(xSpacing*0),startingY+(ySpacing*line));
-      this.pdfDoc.text(''+c.charge,startingX+(xSpacing*5),startingY+(ySpacing*line));
-      this.pdfDoc.text('$'+c.amount,startingX+(xSpacing*10),startingY+(ySpacing*line));
+      this.pdfDoc.text(''+c.date,startingX+(xSpacing*0),startingY+(ySpacing*line));
+      this.pdfDoc.text('$'+c.amount,startingX+(xSpacing*5),startingY+(ySpacing*line));
+      this.pdfDoc.text(''+c.charge,startingX+(xSpacing*10),startingY+(ySpacing*line));
       line++;
     });
     line++;
@@ -358,10 +360,9 @@ export class CreateinvoiceloadComponent implements OnInit {
   newTrip():FormGroup{
     return this.fb.group({
       ticket_number: ['',Validators.required],
-      plant_wait_charge: [{value:0},Validators.required],
-
-      site_wait_charge: [{value:0},Validators.required],
-      miles: [{value:0},Validators.required],
+      plant_wait_charge: [0,Validators.required],
+      site_wait_charge: [0,Validators.required],
+      miles: [0,Validators.required],
     });
   }
 

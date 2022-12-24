@@ -265,7 +265,11 @@
             </div>
             <div class="labelInput labelBox">
               <label>Invoice Date</label>
-              <input class="block-input-mlarge" placeholder="Invoice Number" type="date" formControlName="date">
+              <input class="block-input-mlarge"  type="date" formControlName="date">
+            </div>
+            <div class="labelInput labelBox">
+              <label>Paid Date</label>
+              <input class="block-input-mlarge" type="date" formControlName="paid_date">
             </div>
             <div class="labelInput labelBox">
               <label>Week Start Date</label>
@@ -300,7 +304,7 @@
                         </div>
                         <div class="labelInput">
                           <label *ngIf="j!=999">Extended Plant Wait Hours</label>
-                          <input class="block-input-large"  placeholder="Extended Plant Wait Hours" (change)="calculateWorkDayExtendedWaitHours(i,j)"  type="number" formControlName="plant_wait_charge">
+                          <input class="block-input-large"  placeholder="Extended Plant Wait Hours" (change)="calculateWorkDayExtendedWaitHours(i,j)" defaultValue="0" type="number" formControlName="plant_wait_charge">
                         </div>
                         <div class="labelInput">
                           <label *ngIf="j!=999">Extended Site Wait Hours</label>
@@ -369,10 +373,10 @@
           
           <div style="display:flex;" class="inputRow" [formGroupName]="i" >
             <div class="labelInput">
-              <div><label>Date</label></div><input class="block-input-smedium" type="date" formControlName="date">
+              <div><label>Date</label></div><input class="block-input-smedium" type="text" formControlName="date">
             </div>
             <div class="labelInput">
-              <div><label>Charge</label></div><input class="block-input-smedium" type="text" formControlName="charge">
+              <div><label>Description</label></div><input class="block-input-large" type="text" formControlName="charge">
             </div>
             <div class="labelInput">
               <div><label>Amount</label></div><input class="block-input-smedium"  (change)="calculateTotalCharged()" type="number" formControlName="amount">
