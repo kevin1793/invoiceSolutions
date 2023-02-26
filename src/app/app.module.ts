@@ -31,6 +31,7 @@ import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
 import { NgChartsModule } from 'ng2-charts';
+import { InventoryComponent } from './pages/inventory/inventory.component';
 
 firebase.initializeApp(environment.firebase);
 @NgModule({
@@ -50,7 +51,8 @@ firebase.initializeApp(environment.firebase);
     ExpensesComponent,
     NotfoundComponent,
     TrucksComponent,
-    FuelComponent
+    FuelComponent,
+    InventoryComponent
   ],
   imports: [
     BrowserModule,

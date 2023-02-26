@@ -90,6 +90,14 @@ export class SidemenuComponent implements OnInit {
 
   }
 
+  goToPage(pageName:string){
+    if(window.location.pathname != '/'+pageName){
+      this.elementRef.nativeElement.parentElement.remove();
+    }
+    this.router.navigate(['/'+pageName],{state:{data:pageName}});
+    this.closeMenu();
+  }
+
   goToLoginPage(){
     if(window.location.pathname != '/login'){
       this.elementRef.nativeElement.parentElement.remove();

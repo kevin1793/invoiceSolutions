@@ -1,225 +1,260 @@
 /* You can add global styles to this file, and also import other style files */
 @font-face {
-    font-family: "defaultBlack";
-    src: url("/src/assets/fonts/Poppins-Regular.ttf");
-}
-body{
-    margin:0;
-    font-family: defaultBlack, sans-serif;
+  font-family: "defaultBlack";
+  src: url("/src/assets/fonts/Poppins-Regular.ttf");
 }
 
-.actionBtn{
-  cursor:pointer;width: 40px; text-align:center;border-radius: 5px;padding:4px;
+body {
+  margin: 0;
+  font-family: defaultBlack, sans-serif;
 }
 
-.greenBtn{
-    cursor:pointer;
-    border:none;
-    box-shadow: #2d2d2d 2px 2px 2px;
-    color:white;
-    font-size: 15px;
-    padding:10px 12px;
-    border-radius: 5px;
-    background-color: green;
-    width: auto;
+.actionBtn {
+  cursor: pointer;
+  width: 40px;
+  text-align: center;
+  border-radius: 5px;
+  padding: 4px;
 }
 
-.greenBtn[disabled]{
-    /* border: 1px solid #999999; */
-    background-color: #cccccc !important;
-    color: #666666;
+.greenBtn {
+  cursor: pointer;
+  border: none;
+  box-shadow: #2d2d2d 2px 2px 2px;
+  color: white;
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  background-color: green;
+  width: auto;
 }
 
-.redBtn[disabled]{
-    /* border: 1px solid #999999; */
-    background-color: #cccccc !important;
-    color: #666666;
+.greenBtn[disabled] {
+  /* border: 1px solid #999999; */
+  background-color: #cccccc !important;
+  color: #666666;
 }
 
-.redBtn{
-    cursor:pointer;
-    border:none;
-    box-shadow: #2d2d2d 2px 2px 2px;
-    color:white;
-    font-size: 15px;
-    padding:10px 12px;
-    border-radius: 5px;
-    background-color: red;
-    width: auto;
+.redBtn[disabled] {
+  /* border: 1px solid #999999; */
+  background-color: #cccccc !important;
+  color: #666666;
 }
 
-.updateBox{
+.redBtn {
+  cursor: pointer;
+  border: none;
+  box-shadow: #2d2d2d 2px 2px 2px;
+  color: white;
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  background-color: red;
+  width: auto;
+}
+
+.updateBox {
   box-shadow: 3px 3px 6px #333;
 }
-.cardBox{
+
+.cardBox {
   box-shadow: 3px 3px 6px #333;
 }
-.graphBox{
+
+.graphBox {
   box-shadow: 3px 3px 6px #333;
 }
 
 
-.pageTitle{
-    padding-top:150px;
-    padding-bottom:20px;
-    font-size: 60px;;
-    color:#222;
-    text-shadow: #333 1px 1px 3px;
-  }
-
-  .mainCont{
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-  }
-
-.margin1020{
-    margin: 10px 20px;
+.pageTitle {
+  padding-top: 150px;
+  padding-bottom: 20px;
+  font-size: 60px;
+  ;
+  color: #222;
+  text-shadow: #333 1px 1px 3px;
 }
 
-.margin10{
-    margin: 10px;
+.mainCont {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
 }
 
-.width100{
-    width: 100px;
+.margin1020 {
+  margin: 10px 20px;
 }
 
-.width150{
-    width: 150px;
+.margin10 {
+  margin: 10px;
 }
 
-.width200{
+.width100 {
+  width: 100px;
+}
+
+.width150 {
+  width: 150px;
+}
+
+.width200 {
   width: 200px;
 }
 
-.width250{
+.width250 {
   width: 250px;
 }
 
-.mb10{
-    margin-bottom: 10px;
+.mb10 {
+  margin-bottom: 10px;
 }
 
-.mb20{
-    margin-bottom: 20px;
+.mb20 {
+  margin-bottom: 20px;
 }
-.pageWrapper{
-    margin: 0 auto;
-    background-color: #8BC6EC;
-    background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
-    color:white;
-    justify-content: center;
-    padding-bottom: 200px;
-    min-height: 100vh;
-  }
-  .mainCont{
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-  }
-  .listHeaderCont{
-    display: flex;
-    justify-content: space-around;
-    padding:10px 20px;
-    background-color: white;
-    box-shadow: #222 2px 2px 2px;
-    border-radius: 5px;
-    min-width: 50px;
-    color:#1976d2;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  .listItemCont{
-    justify-content: space-around;
-    padding:10px 20px;
-    font-weight: bold;
-    display: flex;
-    color:#222;
-    border-bottom: 1px solid darkslategray;
-    text-align: center;
-  }
-  .headerItem, .listItem{
-    text-align: center;
-    max-width: 170px;
-    min-width: 120px;
-    color:#222;
-  }
-  .btnRow button{
-    margin-right:10px;
-  }
-  .addItemCont{
-    padding:15px;
-    background: #3d70fc;
-    margin-bottom: 30px;
-    border-radius: 5px;
-  }
-  .formRow{
-    margin-bottom: 20px;;
-    display: flex;
-  }
-  .formRow div{
-    margin-right: 10px;;
-  }
-  .addItemInputBox input{
-    border:none;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    width: auto;
-  }
 
-  .addItemInputBox select{
-    border:none;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    width: auto;
-  }
+.pageWrapper {
+  margin: 0 auto;
+  background-color: #8BC6EC;
+  background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  color: white;
+  justify-content: center;
+  padding-bottom: 200px;
+  min-height: 100vh;
+}
+.pageWrapper2 {
+  margin: 0 auto;
+  background-color: #d4d4d4;
+  color: white;
+  justify-content: center;
+  padding-bottom: 200px;
+  min-height: 100vh;
+}
 
-  .addItemInputBox option{
-    border:none;
-    padding: 10px;
-    /* margin: 10px; */
-    border-radius: 5px;
-    width: auto;
-  }
+.mainCont {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
 
-  .addItemInputBox textarea{
-    border:none;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    width: auto;
-    width: 400px;
-    height: 100px;
-  }
-  .addItemInputItem{
-    display: inline-grid;
-    width: auto;
-  }
-  .addItemInputItem label{
-    margin-left: 10px;
-  }
-  .modalBox{
-    background-color: white;
-    padding:20px;
-    position: absolute;
-    top:50%;
-    left:40%;
-    box-shadow: 2px 2px 2px #222;
-    border:none;
-    border-radius: 5px;
-  }
-  .modalTitle{
-    color: black;
-    padding-bottom: 30px;;
-  }
-  .actionItems{
-    display: flex;
-    text-align: center;
-    justify-content: space-evenly;
-  }
+.listHeaderCont {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 20px;
+  background-color: white;
+  box-shadow: #222 2px 2px 2px;
+  border-radius: 5px;
+  min-width: 50px;
+  color: #1976d2;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.listItemCont {
+  justify-content: space-around;
+  padding: 10px 20px;
+  font-weight: bold;
+  display: flex;
+  color: #222;
+  border-bottom: 1px solid darkslategray;
+  text-align: center;
+}
+
+.headerItem,
+.listItem {
+  text-align: center;
+  max-width: 170px;
+  min-width: 120px;
+  color: #222;
+}
+
+.btnRow button {
+  margin-right: 10px;
+}
+
+.addItemCont {
+  padding: 15px;
+  background: #3d70fc;
+  margin-bottom: 30px;
+  border-radius: 5px;
+}
+
+.formRow {
+  margin-bottom: 20px;
+  ;
+  display: flex;
+}
+
+.formRow div {
+  margin-right: 10px;
+  ;
+}
+
+.addItemInputBox input {
+  border: none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: auto;
+}
+
+.addItemInputBox select {
+  border: none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: auto;
+}
+
+.addItemInputBox option {
+  border: none;
+  padding: 10px;
+  /* margin: 10px; */
+  border-radius: 5px;
+  width: auto;
+}
+
+.addItemInputBox textarea {
+  border: none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: auto;
+  width: 400px;
+  height: 100px;
+}
+
+.addItemInputItem {
+  display: inline-grid;
+  width: auto;
+}
+
+.addItemInputItem label {
+  margin-left: 10px;
+}
+
+.modalBox {
+  background-color: white;
+  padding: 20px;
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  box-shadow: 2px 2px 2px #222;
+  border: none;
+  border-radius: 5px;
+}
+
+.modalTitle {
+  color: black;
+  padding-bottom: 30px;
+  ;
+}
+
+.actionItems {
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+}

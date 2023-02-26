@@ -12,6 +12,7 @@ import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
+import { InventoryComponent } from './pages/inventory/inventory.component';
 
 const routes:Routes=[
   { path : 'home',component:LoginComponent },
@@ -22,6 +23,7 @@ const routes:Routes=[
   { path : 'updatelog',component:UpdatelogComponent },
   { path : 'expenses',component:ExpensesComponent },
   { path : 'fuel',component:FuelComponent },
+  { path : 'inventory',component:InventoryComponent },
   { path : 'trucks',component:TrucksComponent },
   { path : '',component:HomeComponent },
   { path : 'dashboard' ,component:DashboardComponent },
