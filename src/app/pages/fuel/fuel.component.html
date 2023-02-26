@@ -151,12 +151,10 @@
         Add Fuel Purchase
       </button>
     </div>
-    <!-- START fuel LIST -->
     <div class="listHeaderCont">
       <div class="headerItem">Truck Number</div>
       <div class="headerItem">Mileage</div>
       <div class="headerItem">Gallons</div>
-      <!-- <div class="headerItem">Cost Per Gallon</div> -->
       <div class="headerItem">Total</div>
       <div class="headerItem">Date</div>
       <div class="headerItem">Actions</div>
@@ -166,14 +164,12 @@
         <div class="listItem">{{fuel.truck_number}}</div>
         <div class="listItem">{{fuel.mileage }}</div>
         <div class="listItem">{{fuel.gallons}}</div>
-        <!-- <div class="listItem">{{fuel.cost_per_gallon}}</div> -->
         <div class="listItem">{{fuel.total | currency}}</div>
         <div class="listItem">{{fuel.date |date: 'mediumDate'  }}</div>
         <div  class="listItem actionItems">
-          <!-- <div *ngIf='!fuel.paidDate' (click)='editPaidDate(fuel)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div> -->
           <div *ngIf='fuel.paidDate' style='width: 20px;'></div>
-          <div (click)='deleteFuel(fuel)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-          <div (click)='editFuel(fuel)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+          <div (click)='deleteFuel(fuel)'  class="actionBtn" style='background:red;'>-</div>
+          <div (click)='editFuel(fuel)' class="fa fa-edit actionBtn" style='background:white;'></div>
         </div>
       </div>
     </div>

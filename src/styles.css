@@ -8,6 +8,10 @@ body{
     font-family: defaultBlack, sans-serif;
 }
 
+.actionBtn{
+  cursor:pointer;width: 40px; text-align:center;border-radius: 5px;padding:4px;
+}
+
 .greenBtn{
     cursor:pointer;
     border:none;
@@ -135,7 +139,7 @@ body{
     font-weight: bold;
     display: flex;
     color:#222;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid darkslategray;
     text-align: center;
   }
   .headerItem, .listItem{

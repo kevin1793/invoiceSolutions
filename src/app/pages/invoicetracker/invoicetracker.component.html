@@ -74,6 +74,8 @@
   .listItemCont{
     justify-content: space-around;
     padding:10px 20px;
+    padding-top:12px;
+    padding-bottom:8px;
     font-weight: bold;
     display: flex;
     /* border-bottom: 1px solid white; */
@@ -81,8 +83,12 @@
   }
   .headerItem, .listItem{
     text-align: center;
-    max-width: 200px;
-    min-width: 200px;
+    
+    max-width: 400px;
+    /* min-width: 200px; */
+  }
+  .listItemText{
+    line-height: 25px;;
   }
   .actionItems{
     display: flex;
@@ -199,34 +205,33 @@
       </div>
     </div>
     <div class="listHeaderCont">
-      <div class="headerItem">Invoice #</div>
+      <div class="headerItem" style="width:150px">Invoice #</div>
       <div class="headerItem">Invoice Date</div>
-      <div class="headerItem">Billed To</div>
+      <div class="headerItem"  style="width:310px;">Billed To</div>
       <div class="headerItem">Total Billed</div>
       <div class="headerItem">Paid Date</div>
       <div class="headerItem">Invoice Paid</div>
-      <div class="headerItem">Actions</div>
+      <div class="headerItem"  style="width:300px;">Actions</div>
     </div>
     <div *ngFor="let invoice of invoices">
       <div class="listItemCont">
-        <div class="listItem">{{invoice.invoiceNumber}}</div>
-        <div class="listItem">{{invoice.invoiceDate | date: 'mediumDate' }}</div>
-        <div class="listItem">{{invoice.billedTo}}</div>
-        <div class="listItem">{{invoice.totalBilled | currency}}</div>
-        <div class="listItem">{{invoice.paidDate?(invoice.paidDate | date: 'mediumDate'):'-'  }}</div>
+        <div class="listItem listItemText"  style="width:150px">{{invoice.invoiceNumber}}</div>
+        <div class="listItem listItemText">{{invoice.invoiceDate | date: 'mediumDate' }}</div>
+        <div class="listItem listItemText"  style="width:310px;">{{invoice.billedTo}}</div>
+        <div class="listItem listItemText">{{invoice.totalBilled | currency}}</div>
+        <div class="listItem  listItemText">{{invoice.paidDate?(invoice.paidDate | date: 'mediumDate'):'-'  }}</div>
         <div class="listItem">
-          <div *ngIf='invoice.paidDate'  style='background:#2E7D32' >{{invoice.paidDate?'Yes':'No'}}</div>
-          <div *ngIf='!invoice.paidDate' style='background:red' >{{invoice.paidDate?'Yes':'No'}}</div>
+          <div *ngIf='invoice.paidDate'  style='background:#edf9F2; border-radius: 5px;padding:4px;color:#2f916c;font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
+          <div *ngIf='!invoice.paidDate' style='background:#ffe7ef; border-radius: 5px;padding:4px;color:rgb(131, 44, 44);font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
         </div>
-        <div  class="listItem actionItems">
-          
-          <div *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</div>
-          <div *ngIf='invoice.paidDate' style='width: 20px;'></div>
-          <div (click)='deleteInvoice(invoice)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-          <div *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-          <div *ngIf='!invoice.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div>
-          <div *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-          <div *ngIf='!invoice.invoiceData'  style='width: 20px;'></div>
+        <div  class="listItem actionItems" style="width:300px;">
+          <div class="actionBtn" *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)'  style='background:orange;'>$</div>
+          <div class="actionBtn" *ngIf='invoice.paidDate' style='width: 40px;'></div>
+          <div class="actionBtn" (click)='deleteInvoice(invoice)' style='background:red;'>-</div>
+          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download actionBtn" style='background:white;'></div>
+          <div class="actionBtn" *ngIf='!invoice.invoiceData'></div>
+          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa fa-edit actionBtn" style='background:white;'></div>
+          <div class="actionBtn" *ngIf='!invoice.invoiceData'  style='width: 40px;'></div>
         </div>
       </div>
     </div>

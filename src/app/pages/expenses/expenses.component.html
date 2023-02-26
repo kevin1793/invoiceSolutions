@@ -182,14 +182,8 @@
         <td class="listItem">{{expense.total | currency}}</td>
         <td class="listItem">{{expense.date |date: 'mediumDate'  }}</td>
         <td class="listItem actionItems">
-          <!-- <td *ngIf='!expense.paidDate' (click)='editPaidDate(expense)' style='cursor:pointer;width: 20px; text-align:center;background:orange;border-radius: 25px;'>$</td> -->
-          <!-- <div *ngIf='expense.paidDate' style='width: 20px;'></div> -->
-          <div (click)='deleteExpense(expense)' style='cursor:pointer;height: 20px;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-          <div (click)='editExpense(expense)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
-
-          <!-- <div *ngIf='!expense.invoiceData'  style='cursor:pointer;font-size:12px; width: 20px;'></div> -->
-          <!-- <div *ngIf='expense.invoiceData' (click)='editExpense(expense)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div> -->
-          <!-- <div *ngIf='!expense.invoiceData'  style='width: 20px;'></div> -->
+          <div (click)='deleteExpense(expense)' class="actionBtn" style='background:red;'>-</div>
+          <div (click)='editExpense(expense)' class="fa fa-edit actionBtn" style='background:white;'></div>
         </td>
     </table>
   </div>

@@ -68,8 +68,8 @@
         <div class="listItem">{{truck.vin || '-'}}</div>
         <div class="listItem">{{truck.nickname || '-'}}</div>
         <div  class="listItem actionItems">
-          <div (click)='deleteTruck(truck)' style='cursor:pointer;width: 20px; text-align:center;background:red;border-radius: 25px;'>-</div>
-          <div (click)='editTruck(truck)' class="fa fa-edit" style='cursor:pointer;font-size:14px; width: 20px;padding-top:2px;color:black; text-align:center;background:white;border-radius: 25px;'></div>
+          <div (click)='deleteTruck(truck)' class="actionBtn"  style='background:red;'>-</div>
+          <div (click)='editTruck(truck)' class="fa fa-edit actionBtn" style='background:white;'></div>
         </div>
       </div>
     </div>
