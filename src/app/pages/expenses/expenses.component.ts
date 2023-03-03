@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
+import { orderBy, limit ,query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
 interface Item {
@@ -40,7 +40,8 @@ export class ExpensesComponent implements OnInit {
   expensesSub:any;
   db = getFirestore();
   colRef = collection(this.db,'Expenses');
-  q = query(this.colRef,orderBy('date','desc'));
+  q = query(this.colRef,orderBy('date','desc'),limit(25));
+  // q2 = query(this.colRef,orderBy('date','desc'));
 
   ngOnInit(): void {
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
