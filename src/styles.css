@@ -4,9 +4,62 @@
   src: url("/src/assets/fonts/Poppins-Regular.ttf");
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
+
 body {
   margin: 0;
   font-family: defaultBlack, sans-serif;
+}
+
+.addRecordCont{
+  /* background: #fff; */
+  margin-bottom:30px;
+}
+.addRecordInputBox input,.addRecordInputBox select,.addRecordInputBox option,.addRecordInputBox textarea{
+  background: #dfdfdf;
+}
+.addRecordInputBox input{
+  border:none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: auto;
+}
+
+.addRecordInputBox select{
+  border:none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: auto;
+}
+
+.addRecordInputBox option{
+  border:none;
+  padding: 10px;
+  /* margin: 10px; */
+  border-radius: 5px;
+  width: auto;
+}
+
+.addRecordInputBox textarea{
+  border:none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: auto;
+  width: 400px;
+  height: 100px;
+}
+.addRecordInputItem{
+  display: inline-grid;
+  width: auto;
+}
+.addRecordInputItem label{
+  font-weight: 600;
+  color:#333;
+  font-size: 14px;
+  margin-left: 10px;
 }
 
 .actionBtn {
@@ -20,12 +73,12 @@ body {
 .greenBtn {
   cursor: pointer;
   border: none;
-  box-shadow: #2d2d2d 2px 2px 2px;
+  box-shadow: #3c3b3f 1px 1px 4px;
   color: white;
   font-size: 15px;
   padding: 10px 12px;
   border-radius: 5px;
-  background-color: green;
+  background-color: #28a74b;
   width: auto;
 }
 
@@ -44,7 +97,7 @@ body {
 .redBtn {
   cursor: pointer;
   border: none;
-  box-shadow: #2d2d2d 2px 2px 2px;
+  box-shadow: #3c3b3f 1px 1px 4px;
   color: white;
   font-size: 15px;
   padding: 10px 12px;
@@ -82,37 +135,21 @@ body {
   position: relative;
 }
 
-.margin1020 {
-  margin: 10px 20px;
-}
+.margin1020 {margin: 10px 20px;}
 
-.margin10 {
-  margin: 10px;
-}
+.margin10 {margin: 10px;}
 
-.width100 {
-  width: 100px;
-}
+.width100 {width: 100px;}
 
-.width150 {
-  width: 150px;
-}
+.width150 {width: 150px}
 
-.width200 {
-  width: 200px;
-}
+.width200 {width: 200px;}
 
-.width250 {
-  width: 250px;
-}
+.width250 {width: 250px;}
 
-.mb10 {
-  margin-bottom: 10px;
-}
+.mb10 {margin-bottom: 10px;}
 
-.mb20 {
-  margin-bottom: 20px;
-}
+.mb20 {margin-bottom: 20px;}
 
 .pageWrapper {
   margin: 0 auto;
@@ -125,11 +162,26 @@ body {
 }
 .pageWrapper2 {
   margin: 0 auto;
-  background-color: #d4d4d4;
+  background-color: #fff;
   color: white;
   justify-content: center;
   padding-bottom: 200px;
   min-height: 100vh;
+}
+.listHeaderCont2 {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 20px;
+  background-color: #fff;
+  /* box-shadow: #222 2px 2px 2px; */
+  /* border-radius: 5px; */
+  min-width: 50px;
+  color: #1976d2;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  border-bottom:1px solid #333;
+  border-top:1px solid #333;
 }
 
 .mainCont {
@@ -159,7 +211,24 @@ body {
   font-weight: bold;
   display: flex;
   color: #222;
+  font-family: 'Source Sans Pro', sans-serif;
   border-bottom: 1px solid darkslategray;
+  text-align: center;
+}
+
+.listItemCont2 {
+  font-family: 'Source Sans Pro', sans-serif !important;
+  justify-content: space-around;
+  padding: 10px 20px;
+  margin-bottom:10px;
+  font-weight: bold;
+  display: flex;
+  background:#f9f9f9;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 5px;;
+  /* border-bottom: 1px solid darkslategray; */
   text-align: center;
 }
 

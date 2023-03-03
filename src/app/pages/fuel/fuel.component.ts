@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
+import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
 interface Item {
@@ -45,7 +45,7 @@ export class FuelComponent implements OnInit {
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
-  q = query(this.colRef,orderBy('date','desc'));
+  q = query(this.colRef,orderBy('date','desc'),limit(25));
 
   colRefTrucks = collection(this.db,'Trucks');
   qTrucks = query(this.colRefTrucks,orderBy('truck_number','desc'));
