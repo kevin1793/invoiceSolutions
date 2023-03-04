@@ -77,6 +77,10 @@
         + Add Unit
       </button>
     </div>
+    <div class="searchCont">
+      <span class="fa fa-search fa-1x" style="color:black;"></span>
+      <input (input)="filterChange($event)" placeholder='Search Inventory...'type='text'>
+    </div>
     <div class="listHeaderCont2">
       <div class="headerItem">Name</div>
       <div class="headerItem">Description</div>

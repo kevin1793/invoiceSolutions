@@ -6,13 +6,22 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
 
+.searchCont input{
+  background: #d4d4d4;
+  border:none;
+  padding: 10px;
+  border-radius: 5px;
+  width: 300px;
+  margin-left:10px;
+  margin-bottom:20px;
+}
+
 body {
   margin: 0;
   font-family: defaultBlack, sans-serif;
 }
 
 .addRecordCont{
-  /* background: #fff; */
   margin-bottom:30px;
 }
 .addRecordInputBox input,.addRecordInputBox select,.addRecordInputBox option,.addRecordInputBox textarea{

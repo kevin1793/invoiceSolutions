@@ -45,6 +45,7 @@ export class InventoryComponent implements OnInit {
   showAddUnitBox = false;
 
   records:any;
+  allRecords:any;
   categories:any;
   units:any;
 
@@ -84,6 +85,7 @@ export class InventoryComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.records.push({...doc.data(), id:doc.id})
       })
+      this.allRecords = this.records;
       console.log('RECORDS',this.records);
     });
 
@@ -105,6 +107,15 @@ export class InventoryComponent implements OnInit {
   }
 
   // FUNCTIONS
+  filterChange(e:any){
+    console.log('filterCHange',e);
+    if(e.srcElement.value.length){
+      this.records = this.allRecords.filter((item:any) => (item.item).toLowerCase().includes((e.srcElement.value).toLowerCase()))
+      .map((item:any) => (item));
+    }else{
+      this.records = this.allRecords;
+    }
+  }
   addRecordClicked(){
     this.recordItem.reset();
   }
@@ -150,11 +161,11 @@ export class InventoryComponent implements OnInit {
   }
 
   async deleteRecord(item:any){
-    const invoiceCollection = this.afs.collection<Record>(this.collectionName);
-    var del = confirm('Are you sure you want to delete fuel '+item.item+' from '+item.date+'?');
+    const collection = this.afs.collection<Record>(this.collectionName);
+    var del = confirm('Are you sure you want to delete '+item.item+'?');
 
     if(del){
-      invoiceCollection.doc(item.id).delete();
+      collection.doc(item.id).delete();
     }
   }
 
