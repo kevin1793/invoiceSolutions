@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { FormControl, FormGroup, FormBuilder, FormArray, NgControl, Validators } from '@angular/forms';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, NgControl, Validators } from '@angular/forms';
 import { CellConfig, jsPDF } from 'jspdf';
 
 
@@ -19,14 +19,14 @@ interface Item {
 })
 export class CreateinvoiceComponent implements OnInit {
 
-  constructor(private fb:FormBuilder,public afs:AngularFirestore) { }
+  constructor(private fb:UntypedFormBuilder,public afs:AngularFirestore) { }
   dashboard = true;
   dashboardData = 'Y';
   invoiceName = 'asddf';
 
   lastDataLine: number = 0;
 
-  invoiceForm: FormGroup = this.fb.group({
+  invoiceForm: UntypedFormGroup = this.fb.group({
     invoice_number: ['',Validators.required],
     date_start: ['',Validators.required],
     date_end: ['',Validators.required],
@@ -40,7 +40,7 @@ export class CreateinvoiceComponent implements OnInit {
     workDays:this.fb.array([this.newWorkDay()])
   });
 
-  invoiceItem: FormGroup = this.fb.group({
+  invoiceItem: UntypedFormGroup = this.fb.group({
     invoiceNumber: ['',Validators.required],
     invoiceDate: ['',Validators.required],
     paidDate: [''],
@@ -76,7 +76,7 @@ export class CreateinvoiceComponent implements OnInit {
       if(i !=0){
         this.addWorkDay();
       }
-      var wd = this.invoiceForm.get('workDays') as FormArray;
+      var wd = this.invoiceForm.get('workDays') as UntypedFormArray;
       wd.at(i).get('time_in')?.setValue(data.workDays[i].time_in);
       wd.at(i).get('time_out')?.setValue(data.workDays[i].time_out);
       wd.at(i).get('date')?.setValue(data.workDays[i].date);
@@ -86,7 +86,7 @@ export class CreateinvoiceComponent implements OnInit {
         if(j !=0){
           this.addTrip(i);
         }
-        var trip = wd.at(i).get('trips') as FormArray;
+        var trip = wd.at(i).get('trips') as UntypedFormArray;
         trip.at(j).get('city')?.setValue(data.workDays[i].trips[j].city);
         trip.at(j).get('customer')?.setValue(data.workDays[i].trips[j].customer);
         trip.at(j).get('destination')?.setValue(data.workDays[i].trips[j].destination);
@@ -165,7 +165,7 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
   moveTrip(shift: any, wdInd:any, currentIndex: any){
-    var trip = this.workDays().at(wdInd).get('trips') as FormArray;
+    var trip = this.workDays().at(wdInd).get('trips') as UntypedFormArray;
     let newIndex: number = currentIndex + shift;
     if(newIndex === -1) {
       newIndex = trip.length - 1;
@@ -178,7 +178,7 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
   moveWorkDay(shift: any,currentIndex: any){
-    var wd = this.workDays() as FormArray;
+    var wd = this.workDays() as UntypedFormArray;
     let newIndex: number = currentIndex + shift;
     if(newIndex === -1) {
       newIndex = wd.length - 1;
@@ -291,7 +291,7 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
 
-  newWorkDay():FormGroup{
+  newWorkDay():UntypedFormGroup{
     return this.fb.group({
       date: ['',Validators.required],
       time_in: ['',Validators.required],
@@ -301,7 +301,7 @@ export class CreateinvoiceComponent implements OnInit {
     })
   }
 
-  newTrip():FormGroup{
+  newTrip():UntypedFormGroup{
     return this.fb.group({
       ticket_no: ['',Validators.required],
       customer: ['',Validators.required],
@@ -343,11 +343,11 @@ export class CreateinvoiceComponent implements OnInit {
   }
 
   workDays(){
-    return this.invoiceForm.get('workDays') as FormArray;
+    return this.invoiceForm.get('workDays') as UntypedFormArray;
   }
 
   workDayTrips(empIndex:number){
-    return this.workDays().at(empIndex).get('trips') as FormArray;
+    return this.workDays().at(empIndex).get('trips') as UntypedFormArray;
   }
 
   addTrip(empIndex:number){

@@ -1,5 +1,5 @@
 import { Component, OnInit  } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
@@ -60,10 +60,10 @@ export class InventoryComponent implements OnInit {
   colUnitRef = collection(this.db,this.collectionName+'Unit');
   qUnit = query(this.colUnitRef,orderBy('unit','asc'));
 
-  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) { }
+  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
   // FORM ITEMS
-  recordItem: FormGroup = this.fb.group({
+  recordItem: UntypedFormGroup = this.fb.group({
     item: ['',Validators.required],
     description:[null,Validators.required],
     category:[null,Validators.required],
@@ -72,11 +72,11 @@ export class InventoryComponent implements OnInit {
     quantity:[null,Validators.required],
   });
 
-  categoryItem: FormGroup = this.fb.group({
+  categoryItem: UntypedFormGroup = this.fb.group({
     category: ['',Validators.required],
   });
 
-  unitItem: FormGroup = this.fb.group({
+  unitItem: UntypedFormGroup = this.fb.group({
     unit: ['',Validators.required],
   });
 

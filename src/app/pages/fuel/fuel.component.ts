@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
@@ -29,9 +29,9 @@ export class FuelComponent implements OnInit {
   // truckNumber = '';
 
 
-  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) { }
+  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
-  fuelItem: FormGroup = this.fb.group({
+  fuelItem: UntypedFormGroup = this.fb.group({
     truck_number: ['',Validators.required],
     date: ['',Validators.required],
     mileage:[null,Validators.required],

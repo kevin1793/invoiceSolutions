@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
@@ -30,15 +30,15 @@ export class InvoicetrackerComponent implements OnInit {
   pageAdded = false;
   lastDataLine: number = 0;
 
-  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) {
+  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) {
     //...
   }
 
-  paidItem: FormGroup = this.fb.group({
+  paidItem: UntypedFormGroup = this.fb.group({
     paidDate: ['',Validators.required],
   });
 
-  invoiceItem: FormGroup = this.fb.group({
+  invoiceItem: UntypedFormGroup = this.fb.group({
     invoiceNumber: ['',Validators.required],
     invoiceDate: ['',Validators.required],
     paidDate: [''],

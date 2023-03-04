@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { orderBy, limit ,query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
@@ -26,9 +26,9 @@ export class ExpensesComponent implements OnInit {
   showModal = false;
   expenseEdit = '';
 
-  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) { }
+  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
-  expenseItem: FormGroup = this.fb.group({
+  expenseItem: UntypedFormGroup = this.fb.group({
     item: ['',Validators.required],
     category: ['',Validators.required],
     date: ['',Validators.required],

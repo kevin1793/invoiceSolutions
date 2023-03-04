@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 @Component({
@@ -15,8 +15,8 @@ export class LoginComponent implements OnInit {
     private elementRef: ElementRef
     ){} 
   title = 'markPaving';
-  email = new FormControl('');
-  password = new FormControl('');
+  email = new UntypedFormControl('');
+  password = new UntypedFormControl('');
   loginMessage = 'Login below to get started';
   
 

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
@@ -23,14 +23,14 @@ interface item {
 })
 export class TrucksComponent implements OnInit {
 
-  constructor(firestore: Firestore,private fb:FormBuilder,public afs:AngularFirestore,private router:Router) { }
+  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
   dashboard = true;
   dashboardData = 'Y';
   showAddItemBox = false;
   showModal = false;
 
-  truckItem: FormGroup = this.fb.group({
+  truckItem: UntypedFormGroup = this.fb.group({
     truck_number: ['',Validators.required],
     nickname: [''],
     vin: [''],

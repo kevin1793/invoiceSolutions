@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { FormControl, FormGroup, FormBuilder, FormArray, NgControl, Validators } from '@angular/forms';
+import { FormControl, UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, NgControl, Validators } from '@angular/forms';
 import { CellConfig, jsPDF } from 'jspdf';
 
 
@@ -19,13 +19,13 @@ interface Item {
 })
 export class CreateinvoiceloadComponent implements OnInit {
 
-  constructor(private fb:FormBuilder,public afs:AngularFirestore) { }
+  constructor(private fb:UntypedFormBuilder,public afs:AngularFirestore) { }
   dashboard = true;
   dashboardData = 'Y';
 
   lastDataLine: number = 0;
 
-  invoiceForm: FormGroup = this.fb.group({
+  invoiceForm: UntypedFormGroup = this.fb.group({
     invoice_number: ['',Validators.required],
     date_start: ['',Validators.required],
     date_end: ['',Validators.required],
@@ -44,7 +44,7 @@ export class CreateinvoiceloadComponent implements OnInit {
     miles_charge:[75]
   });
 
-  invoiceItem: FormGroup = this.fb.group({
+  invoiceItem: UntypedFormGroup = this.fb.group({
     invoiceNumber: ['',Validators.required],
     invoiceDate: ['',Validators.required],
     paidDate: [''],
@@ -83,12 +83,12 @@ export class CreateinvoiceloadComponent implements OnInit {
       if(i !=0){
         this.addWorkDay();
       }
-      var wd = this.invoiceForm.get('workDays') as FormArray;
+      var wd = this.invoiceForm.get('workDays') as UntypedFormArray;
       for(var j=0; j<data.workDays[i].trips.length;j++){
         if(j !=0){
           this.addTrip(i);
         }
-        var trip = wd.at(i).get('trips') as FormArray;
+        var trip = wd.at(i).get('trips') as UntypedFormArray;
         trip.at(j).get('ticket_number')?.setValue(data.workDays[i].trips[j].ticket_number);
         trip.at(j).get('site_wait_charge')?.setValue(data.workDays[i].trips[j].site_wait_charge);
         trip.at(j).get('plant_wait_charge')?.setValue(data.workDays[i].trips[j].plant_wait_charge);
@@ -104,7 +104,7 @@ export class CreateinvoiceloadComponent implements OnInit {
 
     for(var i=0; i<data.additionalCharges.length;i++){
       this.addCharge();
-      var wd = this.invoiceForm.get('additionalCharges') as FormArray;
+      var wd = this.invoiceForm.get('additionalCharges') as UntypedFormArray;
       wd.at(i).get('date')?.setValue(data.additionalCharges[i].date);
       wd.at(i).get('charge')?.setValue(data.additionalCharges[i].charge);
       wd.at(i).get('amount')?.setValue(data.additionalCharges[i].amount);
@@ -157,7 +157,7 @@ export class CreateinvoiceloadComponent implements OnInit {
   }
 
   moveTrip(shift: any, wdInd:any, currentIndex: any){
-    var trip = this.workDays().at(wdInd).get('trips') as FormArray;
+    var trip = this.workDays().at(wdInd).get('trips') as UntypedFormArray;
     let newIndex: number = currentIndex + shift;
     if(newIndex === -1) {
       newIndex = trip.length - 1;
@@ -170,7 +170,7 @@ export class CreateinvoiceloadComponent implements OnInit {
   }
 
   moveWorkDay(shift: any,currentIndex: any){
-    var wd = this.workDays() as FormArray;
+    var wd = this.workDays() as UntypedFormArray;
     let newIndex: number = currentIndex + shift;
     if(newIndex === -1) {
       newIndex = wd.length - 1;
@@ -340,7 +340,7 @@ export class CreateinvoiceloadComponent implements OnInit {
   }
 
 
-  newWorkDay():FormGroup{
+  newWorkDay():UntypedFormGroup{
     return this.fb.group({
       date: ['',Validators.required],
       trips:this.fb.array([this.newTrip()]),
@@ -349,7 +349,7 @@ export class CreateinvoiceloadComponent implements OnInit {
     })
   }
 
-  newCharge():FormGroup{
+  newCharge():UntypedFormGroup{
     return this.fb.group({
       date: ['',Validators.required],
       charge: ['',Validators.required],
@@ -357,7 +357,7 @@ export class CreateinvoiceloadComponent implements OnInit {
     })
   }
 
-  newTrip():FormGroup{
+  newTrip():UntypedFormGroup{
     return this.fb.group({
       ticket_number: ['',Validators.required],
       plant_wait_charge: [0,Validators.required],
@@ -429,15 +429,15 @@ export class CreateinvoiceloadComponent implements OnInit {
   }
 
   workDays(){
-    return this.invoiceForm.get('workDays') as FormArray;
+    return this.invoiceForm.get('workDays') as UntypedFormArray;
   }
 
   additionalCharges(){
-    return this.invoiceForm.get('additionalCharges') as FormArray;
+    return this.invoiceForm.get('additionalCharges') as UntypedFormArray;
   }
 
   workDayTrips(empIndex:number){
-    return this.workDays().at(empIndex).get('trips') as FormArray;
+    return this.workDays().at(empIndex).get('trips') as UntypedFormArray;
   }
 
   addTrip(empIndex:number){
