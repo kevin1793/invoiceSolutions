@@ -6,10 +6,28 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
 
+.addRecordCont .formRow{
+  margin-bottom: 0px;;
+}
+
+.tagCont{
+  display: flex;
+  flex-wrap: wrap;
+}
+.tagItem{
+  padding:10px 15px;
+  margin:10px;
+  background:#005695;
+  color:white;
+  width: fit-content;
+  box-shadow: #3c3b3f 1px 1px 4px;
+  cursor: pointer;
+  border-radius: 5px;
+}
 .searchCont input{
-  background: #d4d4d4;
+  background: #dfdfdf;
   border:none;
-  padding: 10px;
+  padding: 11px;
   border-radius: 5px;
   width: 300px;
   margin-left:10px;
@@ -22,7 +40,7 @@ body {
 }
 
 .addRecordCont{
-  margin-bottom:30px;
+  margin-bottom:10px;
 }
 .addRecordInputBox input,.addRecordInputBox select,.addRecordInputBox option,.addRecordInputBox textarea{
   background: #dfdfdf;
@@ -46,7 +64,6 @@ body {
 .addRecordInputBox option{
   border:none;
   padding: 10px;
-  /* margin: 10px; */
   border-radius: 5px;
   width: auto;
 }
@@ -180,17 +197,18 @@ body {
 .listHeaderCont2 {
   display: flex;
   justify-content: space-around;
-  padding: 20px 20px;
-  background-color: #fff;
-  /* box-shadow: #222 2px 2px 2px; */
-  /* border-radius: 5px; */
+  padding: 15px 20px;
+  background-color: #474747;
   min-width: 50px;
   color: #1976d2;
   font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
-  border-bottom:1px solid #333;
-  border-top:1px solid #333;
+  border-radius: 5px;
+}
+
+.listHeaderCont2 .headerItem{
+  color: white;
 }
 
 .mainCont {

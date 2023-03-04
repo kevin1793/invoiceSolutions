@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
@@ -43,6 +43,7 @@ export class InventoryComponent implements OnInit {
   showAddRecordBox = false;
   showAddCategoryBox = false;
   showAddUnitBox = false;
+  filterProperty = 'item';
 
   records:any;
   allRecords:any;
@@ -79,6 +80,9 @@ export class InventoryComponent implements OnInit {
     unit: ['',Validators.required],
   });
 
+  currentSortDirection = true;
+  currentPropDirection = '';
+
   ngOnInit(): void {
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.records = []
@@ -107,10 +111,44 @@ export class InventoryComponent implements OnInit {
   }
 
   // FUNCTIONS
+  sortProperty(prop:string){
+    console.log('sortProperty',prop)
+    var thisAll = this;
+    this.records.sort(function (a:any, b:any) {
+      if(thisAll.currentSortDirection == true){
+        return a[prop] - b[prop];
+      }else{
+        return b[prop] - a[prop];
+      }
+    });
+    this.currentSortDirection = !this.currentSortDirection;
+  }
+  filterPropertyChanged(e:any){
+    console.log('filterPropertyChanged',e);
+    this.filterProperty = e.srcElement.value;
+  }
+  removeUnit(u:any){
+    const collection = this.afs.collection<Record>(this.collectionName+'Unit');
+    var del = confirm('Are you sure you want to delete '+u.unit+'?');
+
+    if(del){
+      collection.doc(u.id).delete();
+    }
+  }
+  removeCategory(u:any){
+    const collection = this.afs.collection<Record>(this.collectionName+'Category');
+    var del = confirm('Are you sure you want to delete '+u.name+'?');
+
+    if(del){
+      collection.doc(u.id).delete();
+    }
+  }
   filterChange(e:any){
     console.log('filterCHange',e);
     if(e.srcElement.value.length){
-      this.records = this.allRecords.filter((item:any) => (item.item).toLowerCase().includes((e.srcElement.value).toLowerCase()))
+      this.records = this.allRecords.filter((item:any) => 
+        item[this.filterProperty].toLowerCase().includes((e.srcElement.value).toLowerCase())
+        )
       .map((item:any) => (item));
     }else{
       this.records = this.allRecords;

@@ -16,7 +16,7 @@
             <input  type='text' formControlName='item' placeholder="Name">
           </div>
           <div class="addRecordInputItem"><label>Description</label>
-            <input  type='text' formControlName='description' placeholder="Descriotion">
+            <input  type='text' formControlName='description' placeholder="Description">
           </div>
           <div class="addRecordInputItem"><label>Category</label>
             <select formControlName='category' placeholder="Category">
@@ -49,8 +49,13 @@
         </div>
       </form>
       <div>
-        <button (click)="addCategory()" [disabled]=categoryItem.invalid class="greenBtn margin10  width150">Add Catogory</button>
+        <button (click)="addCategory()" [disabled]=categoryItem.invalid class="greenBtn margin10  width150">Add Category</button>
         <button (click)="showAddCategoryBox = !showAddCategoryBox" class="redBtn margin10 width150">Cancel</button>
+      </div>
+      <div class="tagCont">
+        <div *ngFor="let u of categories">
+          <div class="tagItem" (click)="removeCategory(u)"><span class="fa fa-close" style="padding-right:10px;"></span>{{u.category}}</div>
+        </div>
       </div>
     </div>
     <div class="addRecordCont" *ngIf='showAddUnitBox'>
@@ -64,6 +69,11 @@
       <div>
         <button (click)="addUnit()" [disabled]=unitItem.invalid class="greenBtn margin10  width100">Add Unit</button>
         <button (click)="showAddUnitBox = !showAddUnitBox" class="redBtn margin10 width100">Cancel</button>
+      </div>
+      <div class="tagCont">
+        <div *ngFor="let u of units">
+          <div class="tagItem" (click)="removeUnit(u)"><span class="fa fa-close" style="padding-right:10px;"></span>{{u.unit}}</div>
+        </div>
       </div>
     </div>
 		<div *ngIf='!showAddRecordBox && !showAddCategoryBox  && !showAddUnitBox' style="display:flex;">
@@ -79,21 +89,28 @@
     </div>
     <div class="searchCont">
       <span class="fa fa-search fa-1x" style="color:black;"></span>
-      <input (input)="filterChange($event)" placeholder='Search Inventory...'type='text'>
+      <input (input)="filterChange($event)" placeholder='Filter Inventory...' type='text'>
+      <span class="addRecordInputItem addRecordInputBox">
+        <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
+          <option selected value="item">Name</option>
+          <option value="category">Category</option>
+          <option value="unit">Unit</option>
+        </select>
+      </span>
     </div>
     <div class="listHeaderCont2">
-      <div class="headerItem">Name</div>
-      <div class="headerItem">Description</div>
-      <div class="headerItem">Category</div>
-      <div class="headerItem">Quantity</div>
-      <div class="headerItem">Unit</div>
-      <div class="headerItem">Last Modified</div>
+      <div (click)="sortProperty('item')" class="headerItem">Name</div>
+      <div (click)="sortProperty('description')" class="headerItem" style="width:250px;">Description</div>
+      <div (click)="sortProperty('category')" class="headerItem">Category</div>
+      <div (click)="sortProperty('quantity')" class="headerItem">Quantity</div>
+      <div (click)="sortProperty('unit')" class="headerItem">Unit</div>
+      <div (click)="sortProperty('modified')" class="headerItem">Last Modified</div>
       <div class="headerItem">Actions</div>
     </div>
-    <div *ngFor="let rec of records">
+    <div *ngFor="let rec of records | orderBy:'item' ">
       <div class="listItemCont2">
         <div class="listItem">{{rec.item}}</div>
-        <div class="listItem">{{rec.description }}</div>
+        <div class="listItem" style="width:250px;">{{rec.description }}</div>
         <div class="listItem">{{rec.category || '-' }}</div>
         <div class="listItem">{{rec.quantity |  number}}</div>
         <div class="listItem">{{rec.unit || '-'}}</div>
