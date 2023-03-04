@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit ,Input, ElementRef,Output,EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { ClickService } from '../../services/click.service';
 
 const fadeInOut = trigger('fadeInOut',[
   state(
@@ -35,11 +36,11 @@ export class SidemenuComponent implements OnInit {
   @Output() currentFeature = new EventEmitter<string>();
   @Input() dashboardData: any;
 
-  constructor(private router:Router, private elementRef: ElementRef) {
+  testVar:any  = '>?';
+
+  constructor(private router:Router, private elementRef: ElementRef, private click:ClickService) {
 
   }
-
-    
 
   ngOnInit(): void {
     if(this.dashboardData && this.dashboardData == 'Y'){
@@ -48,7 +49,15 @@ export class SidemenuComponent implements OnInit {
     if(window.location.pathname == '/create-invoice'){
       this.closeMenu();
     }
+    this.click.isMenuOpen$.subscribe(navOpened => {
+      this.navOpened = navOpened;
+    });
+
     //TODO: add verification here to see in user has logged in
+  }
+
+  test(){
+    console.log(this);
   }
 
   toExpenses(){

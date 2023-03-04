@@ -91,7 +91,7 @@
     padding-top: 7px;
   }
 </style>
-<div class="sidemenuWrapper">
+<div (click)="test()" class="sidemenuWrapper">
   <div #closedMenu class="showClosedMenu" [ngClass]="navOpened?'hideMenu':'showClosedMenu'">
     <div (click)="openMenu(this)" class="menuBtnCont" [@fadeInOut]="navOpened ? 'close' : 'open'">
 

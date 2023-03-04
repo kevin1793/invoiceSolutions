@@ -99,13 +99,13 @@
       </span>
     </div>
     <div class="listHeaderCont2">
-      <div (click)="sortPropertyChanged('item')" class="headerItem">Name</div>
-      <div (click)="sortPropertyChanged('description')" class="headerItem" style="width:250px;">Description</div>
-      <div (click)="sortPropertyChanged('category')" class="headerItem">Category</div>
-      <div (click)="sortPropertyChanged('quantity')" class="headerItem">Quantity</div>
-      <div (click)="sortPropertyChanged('unit')" class="headerItem">Unit</div>
-      <div (click)="sortPropertyChanged('modified')" class="headerItem">Last Modified</div>
-      <div class="headerItem">Actions</div>
+      <div (click)="sortPropertyChanged('item')" class="headerItem">Name <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('description')" class="headerItem" style="width:250px;">Description <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('category')" class="headerItem">Category <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('quantity')" class="headerItem">Quantity <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('unit')" class="headerItem">Unit <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('modified')" class="headerItem">Last Modified <span class="fa fa-sort"></span></div>
+      <div class="headerItem" style="cursor:unset;">Actions</div>
     </div>
     <div *ngFor="let rec of records ">
       <div class="listItemCont2">
