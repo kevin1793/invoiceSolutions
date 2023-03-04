@@ -99,15 +99,15 @@
       </span>
     </div>
     <div class="listHeaderCont2">
-      <div (click)="sortProperty('item')" class="headerItem">Name</div>
-      <div (click)="sortProperty('description')" class="headerItem" style="width:250px;">Description</div>
-      <div (click)="sortProperty('category')" class="headerItem">Category</div>
-      <div (click)="sortProperty('quantity')" class="headerItem">Quantity</div>
-      <div (click)="sortProperty('unit')" class="headerItem">Unit</div>
-      <div (click)="sortProperty('modified')" class="headerItem">Last Modified</div>
+      <div (click)="sortPropertyChanged('item')" class="headerItem">Name</div>
+      <div (click)="sortPropertyChanged('description')" class="headerItem" style="width:250px;">Description</div>
+      <div (click)="sortPropertyChanged('category')" class="headerItem">Category</div>
+      <div (click)="sortPropertyChanged('quantity')" class="headerItem">Quantity</div>
+      <div (click)="sortPropertyChanged('unit')" class="headerItem">Unit</div>
+      <div (click)="sortPropertyChanged('modified')" class="headerItem">Last Modified</div>
       <div class="headerItem">Actions</div>
     </div>
-    <div *ngFor="let rec of records | orderBy:'item' ">
+    <div *ngFor="let rec of records ">
       <div class="listItemCont2">
         <div class="listItem">{{rec.item}}</div>
         <div class="listItem" style="width:250px;">{{rec.description }}</div>
@@ -117,8 +117,15 @@
         <div class="listItem">{{rec.modified | date: 'mediumDate'  }}</div>
         <div  class="listItem actionItems">
           <div (click)='deleteRecord(rec)'  class=" fa fa-trash actionBtn" ></div>
-          <div (click)='editRecord(rec)' class="fa fa-edit actionBtn" ></div>
+          <div (click)='editRecordClicked(rec)' class="fa fa-edit actionBtn" ></div>
         </div>
+      </div>
+      <div *ngIf="recordEdit == rec" class="editRecordCont">
+        <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='editItem'>
+          <input   type="text" formControlName="quantity">
+        </form>
+        <div (click)='updateRecord(rec,$event)' class="greenBtn width100">Update</div>
+        <div (click)='recordEdit = null' class="redBtn width100">Cancel</div>
       </div>
     </div>
 	</div>

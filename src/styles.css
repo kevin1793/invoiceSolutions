@@ -6,8 +6,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
 
+.editRecordCont{
+  justify-content: center;
+  display: flex;
+  padding:10px;
+}
+.editRecordCont div{
+  margin:10px;
+  text-align: center;
+}
 .addRecordCont .formRow{
-  margin-bottom: 0px;;
+  margin-bottom: 0px;
+}
+
+.listHeaderCont2 .headerItem{
+  cursor: pointer;
 }
 
 .tagCont{

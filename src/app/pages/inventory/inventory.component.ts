@@ -11,7 +11,8 @@ interface Record {
   date: string,
   modified :string,
   category: string,
-  quantity:number
+  quantity:number,
+  id:string
   // ...
 };
 
@@ -80,7 +81,14 @@ export class InventoryComponent implements OnInit {
     unit: ['',Validators.required],
   });
 
+  editItem: UntypedFormGroup = this.fb.group({
+    quantity: [0,Validators.required],
+  });
+
+  editQuantity: number = 0;
+
   currentSortDirection = true;
+  sortProperty = 'item';
   currentPropDirection = '';
 
   ngOnInit(): void {
@@ -111,17 +119,36 @@ export class InventoryComponent implements OnInit {
   }
 
   // FUNCTIONS
-  sortProperty(prop:string){
-    console.log('sortProperty',prop)
-    var thisAll = this;
-    this.records.sort(function (a:any, b:any) {
-      if(thisAll.currentSortDirection == true){
-        return a[prop] - b[prop];
-      }else{
-        return b[prop] - a[prop];
-      }
-    });
+  editRecordClicked(rec:any){
+    this.recordEdit = rec;
+    this.editItem.get('quantity')?.setValue((rec.quantity));
+    // .get('quantity') = rec.quantity;
+  }
+  updateRecord(rec:Record,e:any){
+    console.log('updateRecord',e,rec);
+    const invoiceCollection = this.afs.collection<Record>(this.collectionName);
+    var updatedRec  = rec;
+    updatedRec.quantity = this.editItem.get('quantity')?.value;
+    invoiceCollection.doc(updatedRec.id).update(updatedRec);
+  }
+  compare(a: any, b: any, propName: string) {
+    let result = 0;
+    if (a[propName] < b[propName]) {
+      result = -1;
+    } else if (a[propName] > b[propName]) {
+      result = 1;
+    }
+    if (this.currentSortDirection) {
+      result = -result;
+    }
+    return result;
+  }
+  sortPropertyChanged(prop:string){
+    console.log('sortProperty',prop);
     this.currentSortDirection = !this.currentSortDirection;
+    this.sortProperty = prop;
+    this.records = this.records.sort((a:any, b:any) => this.compare(a, b, this.sortProperty));
+    console.log(this.records);
   }
   filterPropertyChanged(e:any){
     console.log('filterPropertyChanged',e);
@@ -187,9 +214,6 @@ export class InventoryComponent implements OnInit {
     recordItem.modified = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
     var t = invoiceCollection.add(recordItem);
     this.recordItem.reset();
-    if(this.recordEdit){
-      this.quickDeleteRecord(this.recordEdit);
-    }
   }
 
   async quickDeleteRecord(fuel:any){
@@ -205,18 +229,6 @@ export class InventoryComponent implements OnInit {
     if(del){
       collection.doc(item.id).delete();
     }
-  }
-
-  editRecord(e:any){
-    // var thisAll =this;
-    // this.fuelItem.get('truck_number')?.setValue(e.truck_number);
-    // this.fuelItem.get('date')?.setValue(e.date);
-    // this.fuelItem.get('mileage')?.setValue(e.mileage);
-    // this.fuelItem.get('gallons')?.setValue(e.gallons);
-    // this.fuelItem.get('total')?.setValue(e.total);
-    // this.fuelEdit = e;
-    // console.log(this.fuelItem.get('truck_number'),e);
-    // thisAll.showAddFuelBox = true;
   }
 
   refreshClicked(){
