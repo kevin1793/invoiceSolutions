@@ -63,15 +63,17 @@ body {
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
-  width: auto;
+  /* width: auto; */
+  width: 150px;
 }
 
 .addRecordInputBox select{
   border:none;
   padding: 10px;
   margin: 10px;
+  width: 170px;
   border-radius: 5px;
-  width: auto;
+  /* width: auto; */
 }
 
 .addRecordInputBox option{
@@ -86,7 +88,7 @@ body {
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
-  width: auto;
+  /* width: auto; */
   width: 400px;
   height: 100px;
 }

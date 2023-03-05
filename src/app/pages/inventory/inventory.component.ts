@@ -122,7 +122,6 @@ export class InventoryComponent implements OnInit {
   editRecordClicked(rec:any){
     this.recordEdit = rec;
     this.editItem.get('quantity')?.setValue((rec.quantity));
-    // .get('quantity') = rec.quantity;
   }
   updateRecord(rec:Record,e:any){
     console.log('updateRecord',e,rec);

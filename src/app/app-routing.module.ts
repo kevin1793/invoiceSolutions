@@ -13,6 +13,7 @@ import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
+import { EmployeesComponent } from './pages/employees/employees.component';
 
 const routes:Routes=[
   { path : 'home',component:LoginComponent },
@@ -23,6 +24,7 @@ const routes:Routes=[
   { path : 'updatelog',component:UpdatelogComponent },
   { path : 'expenses',component:ExpensesComponent },
   { path : 'fuel',component:FuelComponent },
+  { path : 'employees',component:EmployeesComponent },
   { path : 'inventory',component:InventoryComponent },
   { path : 'trucks',component:TrucksComponent },
   { path : '',component:HomeComponent },
