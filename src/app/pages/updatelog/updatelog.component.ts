@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-updatelog',
@@ -7,12 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UpdatelogComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router:Router
+    ) { }
 
   dashboard = true;
   dashboardData = 'Y';
 
   ngOnInit(): void {
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
   }
 
 }

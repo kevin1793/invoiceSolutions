@@ -24,17 +24,22 @@ export class LoginComponent implements OnInit {
   }
 
   login(){
+    
     const auth = getAuth();
+    console.log('AUTH before',auth);
     var email =this.email.value;
     var pass = this.password.value;
     signInWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        this.router.navigate(['/dashboard'], { state: { loggedIn: true  } });
+        this.loggedIn = true;
+        var userData = {email:email};
+        localStorage.setItem('user',JSON.stringify(userData))
+        this.router.navigate(['/expenses'], { state: { loggedIn: true  } });
         this.elementRef.nativeElement.parent.destroy();
         // ...
-        this.loggedIn = true;
+        
       })
       .catch((error) => {
         const errorCode = error.code;

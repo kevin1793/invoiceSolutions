@@ -4,6 +4,7 @@ import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/firestore';
 import { ChartConfiguration, ChartData, ChartOptions, ScatterDataPoint } from 'chart.js';
 import { TemplateBindingParseResult } from '@angular/compiler';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,7 +17,8 @@ export class DashboardComponent implements OnInit {
   currentFeature = '';
   loggedIn = false;
   dashboardData = 'Y';
-  constructor(firestore: Firestore,public afs:AngularFirestore) { }
+  constructor(firestore: Firestore,public afs:AngularFirestore,
+    private router:Router) { }
 
   invoices:any;
   expenses:any;
@@ -99,6 +101,10 @@ export class DashboardComponent implements OnInit {
   // START FUNCTIONS //
 
   ngOnInit(): void {
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
     var localDataPresent = this.checkLocalStorageData();
     if(localDataPresent){
       console.log('dashboard is getting local data');

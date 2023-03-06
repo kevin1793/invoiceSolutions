@@ -56,6 +56,10 @@ export class InvoicetrackerComponent implements OnInit {
 
 
   ngOnInit(): void {
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
     var cachedInvoices = localStorage.getItem('invoices');
     if(cachedInvoices && cachedInvoices.length > 0){
       this.cachedData = true;

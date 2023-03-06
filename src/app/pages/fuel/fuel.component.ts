@@ -51,6 +51,10 @@ export class FuelComponent implements OnInit {
   qTrucks = query(this.colRefTrucks,orderBy('truck_number','desc'));
 
   ngOnInit(): void {
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
     //load in previous fuels
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.fuels = []

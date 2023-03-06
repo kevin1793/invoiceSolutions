@@ -13,8 +13,10 @@ import { NotfoundComponent } from './pages/notfound/notfound.component';
 import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
+import { AuthGuardService } from './services/auth-guard.service';
 
 const routes:Routes=[
+  { path : '', component: HomeComponent, canActivate: [AuthGuardService] },
   { path : 'home',component:LoginComponent },
   { path : 'login',component:LoginComponent },
   { path : 'invoicetracker',component:InvoicetrackerComponent },

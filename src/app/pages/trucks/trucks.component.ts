@@ -47,7 +47,10 @@ export class TrucksComponent implements OnInit {
   q = query(this.colRef,orderBy('truck_number','desc'));
 
   ngOnInit(): void {
-    //load in previous trucks
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.trucks = []
       snapshot.docs.forEach( (doc) => {

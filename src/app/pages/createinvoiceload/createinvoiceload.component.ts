@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, UntypedFormGroup, UntypedFormBuilder, UntypedFormArray, NgControl, Validators } from '@angular/forms';
 import { CellConfig, jsPDF } from 'jspdf';
+import { Router } from '@angular/router';
 
 
 interface Item {
@@ -19,7 +20,9 @@ interface Item {
 })
 export class CreateinvoiceloadComponent implements OnInit {
 
-  constructor(private fb:UntypedFormBuilder,public afs:AngularFirestore) { }
+  constructor(private fb:UntypedFormBuilder,public afs:AngularFirestore,
+    private router:Router
+    ) { }
   dashboard = true;
   dashboardData = 'Y';
 
@@ -58,6 +61,10 @@ export class CreateinvoiceloadComponent implements OnInit {
   pageAdded = false;
     
   ngOnInit(): void {
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
     console.log(history);
     if(history.state.invoiceData){
       this.loadInvoice(history.state.invoiceData);

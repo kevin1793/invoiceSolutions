@@ -26,7 +26,11 @@ export class ExpensesComponent implements OnInit {
   showModal = false;
   expenseEdit = '';
 
-  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
+  constructor(firestore: Firestore,
+    private fb:UntypedFormBuilder,
+    public afs:AngularFirestore,
+    private router:Router
+    ) { }
 
   expenseItem: UntypedFormGroup = this.fb.group({
     item: ['',Validators.required],
@@ -41,16 +45,18 @@ export class ExpensesComponent implements OnInit {
   db = getFirestore();
   colRef = collection(this.db,'Expenses');
   q = query(this.colRef,orderBy('date','desc'),limit(25));
-  // q2 = query(this.colRef,orderBy('date','desc'));
 
   ngOnInit(): void {
+    var userAuth = localStorage.getItem('user');
+    if(!userAuth){
+      this.router.navigate(['/login']);
+    }
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
       this.expenses = []
       snapshot.docs.forEach( (doc) => {
         this.expenses.push({...doc.data(), id:doc.id})
       })
     })
-    return;
   }
 
   async deleteExpense(item:any){

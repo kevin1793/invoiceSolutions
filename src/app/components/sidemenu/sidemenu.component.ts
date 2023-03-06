@@ -55,6 +55,11 @@ export class SidemenuComponent implements OnInit {
 
     //TODO: add verification here to see in user has logged in
   }
+  // FUNCTIONS BELOW
+  logOut(){
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
+  }
 
   test(){
     console.log(this);

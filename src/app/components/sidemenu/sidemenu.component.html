@@ -139,6 +139,12 @@
           Update Log
         </div>
       </div>
+      <div (click)="logOut()" class="menuBtnCont menuLink">
+        <img class="sideMenuImg" src="../../../assets/images/dashboard.png">
+        <div class="sideText">
+          Log Out
+        </div>
+      </div>
     </div>
     <div *ngIf="!dashboard" (click)="goToLoginPage()" class="menuBtnCont menuLink">
       <img class="sideMenuImg" src="../../../assets/images/login.png">
