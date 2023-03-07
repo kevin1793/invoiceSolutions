@@ -14,6 +14,7 @@ import { TrucksComponent } from './pages/trucks/trucks.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { EmployeesComponent } from './pages/employees/employees.component';
 
 const routes:Routes=[
   { path : '', component: HomeComponent, canActivate: [AuthGuardService] },
@@ -25,6 +26,7 @@ const routes:Routes=[
   { path : 'updatelog',component:UpdatelogComponent },
   { path : 'expenses',component:ExpensesComponent },
   { path : 'fuel',component:FuelComponent },
+  { path : 'employees',component:EmployeesComponent },
   { path : 'inventory',component:InventoryComponent },
   { path : 'trucks',component:TrucksComponent },
   { path : '',component:HomeComponent },

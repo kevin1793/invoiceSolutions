@@ -1,0 +1,104 @@
+<style>
+
+</style>
+
+<div class="pageWrapper2">
+	<app-navbar></app-navbar>
+	<app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
+	<div class="mainCont">
+		<div class="pageTitle">
+      Employees
+    </div>
+		<div class="addRecordCont" *ngIf='showAddRecordBox'>
+      <form class="addRecordInputBox" [formGroup]='recordItem'>
+        <div class="formRow">
+					<div class="addRecordInputItem"><label>Employee ID</label>
+            <input  type='text' formControlName='employeeID' placeholder="Name">
+          </div>
+          <div class="addRecordInputItem"><label>First Name</label>
+            <input  type='text' formControlName='firstName' placeholder="Name">
+          </div>
+					<div class="addRecordInputItem"><label>Middle Name</label>
+            <input  type='text' formControlName='middleName' placeholder="Name">
+          </div>
+					<div class="addRecordInputItem"><label>Last Name</label>
+            <input  type='text' formControlName='lastName' placeholder="Name">
+          </div>
+        </div>
+				<div class="formRow">
+					<div class="addRecordInputItem"><label>Work Type</label>
+            <select formControlName='workType' placeholder="Category">
+              <option></option>
+              <option value="Full Time">Full Time</option>
+							<option value="Part Time">Part Time</option>
+            </select>
+          </div>
+					<div class="addRecordInputItem"><label>Compensation</label>
+            <input type='number' formControlName='compensation' placeholder="Compensation">
+          </div>
+          <div class="addRecordInputItem"><label>Compensation Type</label>
+            <select formControlName='compensationType'>
+              <option></option>
+              <option value="Yearly">Yearly</option>
+							<option value="Hourly">Hourly</option>
+            </select>
+          </div>
+				</div>
+				<div class="formRow">
+					<div class="addRecordInputItem"><label>Notes</label>
+            <textarea  type='textarea' formControlName='notes' placeholder="Notes"></textarea>
+          </div>
+				</div>
+      </form>
+      <div>
+        <button (click)="addRecord()" [disabled]=recordItem.invalid class="greenBtn margin10  width150">Add Employee</button>
+        <button (click)="showAddRecordBox = !showAddRecordBox" class="redBtn margin10 width150">Cancel</button>
+      </div>
+    </div>
+		<div *ngIf='!showAddRecordBox' style="display:flex;">
+      <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addRecordClicked();showAddRecordBox = !showAddRecordBox">
+        + Add Employee
+      </button>
+    </div>
+		<div class="searchCont">
+      <span class="fa fa-search fa-1x" style="color:black;"></span>
+      <input (input)="filterChange($event)" placeholder='Filter Employees...' type='text'>
+      <span class="addRecordInputItem addRecordInputBox">
+        <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
+          <option selected value="firstName">First Name</option>
+          <option value="lastName">Last Name</option>
+          <option value="employeeID">Employee ID</option>
+        </select>
+      </span>
+    </div>
+		<div class="listHeaderCont2">
+			<div (click)="sortPropertyChanged('employeeID')" class="headerItem">Employee ID <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('firstName')" class="headerItem">First Name <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('lastName')" class="headerItem" >Last Name <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('status')" class="headerItem">Status <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('hiredDate')" class="headerItem">Hired Date <span class="fa fa-sort"></span></div>
+      <div class="headerItem" style="cursor:unset;">Actions</div>
+    </div>
+    <div *ngFor="let rec of records ">
+      <div class="listItemCont2" style="cursor: pointer;">
+				<div class="listItem">{{rec.employeeID}}</div>
+        <div class="listItem">{{rec.firstName}}</div>
+				<div class="listItem">{{rec.lastName}}</div>
+        <div class="listItem">{{rec.status || '-'}}</div>
+        <div class="listItem">{{(rec.hiredDate | date: 'mediumDate') || '-'  }}</div>
+        <div  class="listItem actionItems">
+					<div (click)='infoClicked(rec)' class="fa fa-info actionBtn" ></div>
+          <div (click)='editRecordClicked(rec)' class="fa fa-edit actionBtn" ></div>
+          <div (click)='deleteRecord(rec)'  class=" fa fa-trash actionBtn" ></div>
+        </div>
+      </div>
+      <div *ngIf="recordEdit == rec" class="editRecordCont">
+        <form class="addRecordInputBox" [formGroup]='editItem'>
+          <input type="text" formControlName="quantity">
+        </form>
+        <div (click)='updateRecord(rec,$event)' class="greenBtn width100">Update</div>
+        <div (click)='recordEdit = null' class="redBtn width100">Cancel</div>
+      </div>
+    </div>
+  </div>
+</div>
