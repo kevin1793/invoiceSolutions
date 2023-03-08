@@ -1,50 +1,146 @@
 <style>
-    .homeWrapper{
-        /* background:gray; */
-        background:white;
-        height: 100%;
-        min-height: 100vh;
-        margin: 0 auto;
-        justify-content: center;
-        padding-bottom: 120px;
-    }
-    .siteTitle{
-        text-align: center;
-        margin-top:100px;
-        font-size:80px;
-        /* font-family:fantasy;
-         */
-         font-weight: bold;
-    }
-    .imageDiv{
-        height: 700px;
-        width: 100%;
-        background: url('../../../assets/images/image000000.jpg');
-        background-size: cover;
-        background-position: center;
-    }
-    .siteText{
-        max-width: 800px;
-        text-align: center;
-        margin: 0 auto;
-        font-size: 20px;
-        padding-top: 30px;
-    }
-    .aStyle{
-        color: black;
-    }
+  body{
+    font-family: 'Quicksand', sans-serif;
+  }
+  .homeWrapper{
+      /* background:gray; */
+      background:white;
+      height: 100%;
+      min-height: 100vh;
+      margin: 0 auto;
+      justify-content: center;
+      padding-bottom: 120px;
+  }
+  .siteTitle{
+      text-align: center;
+      margin-top:100px;
+      font-size:80px;
+      /* font-family:fantasy;
+        */
+        font-weight: bold;
+  }
+  .imageDiv{
+      height: 700px;
+      width: 100%;
+      background: url('../../../assets/images/image000000.jpg');
+      background-size: cover;
+      background-position: center;
+  }
+  .siteText{
+      max-width: 800px;
+      text-align: center;
+      margin: 0 auto;
+      font-size: 20px;
+      padding-top: 30px;
+  }
+  .aStyle{
+      color: black;
+  }
+  .headerSection{
+    text-align: center;
+    padding:120px 15px;
+    color:white;
+    background:#1674ea;
+  }
+  .headerSection h1{
+    font-family: 'Bungee Shade', cursive;
+    font-size: 70px;
+    margin-bottom:0px;
+    margin-top:0px;
+  }
+  .headerSection h6{
+    font-family: 'Quicksand', sans-serif;
+    font-size: 22px;
+    margin-top:0px;
+    margin-bottom:0px;
+  }
+  h3{
+    font-family: 'Lobster', cursive;
+    color:#1674ea;
+    font-size: 60px;
+    text-align: center;
+    margin: 0;
+    margin-bottom: 30px;;
+  }
+  .subHeaderText{
+    font-size: 18px;
+    max-width: 800px;
+    margin:0 auto
+  }
+  .headerSection{
+    justify-content: center;
+  }
+
+  .featuresSection{
+    background: #f4f4f4;
+  }
+  .boxCont{
+    max-width: 800px;
+    margin: 0 auto;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;;
+  }
+
+  .section{
+    padding:80px 15px;
+    justify-content: center;
+    text-align: center
+  }
+
+  .box{
+    width:150px;
+    padding:25px 15px;
+    margin:20px;
+    text-align: center;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: #888 2px 2px 6px;
+  }
+  .box div{
+    font-size: 18px;
+    font-weight: 200;
+    margin-top:25px;
+  }
+  .contactSection{
+
+  }
+  .contactSection a{
+    padding-left: 20px;;
+    font-size: 20px;
+    color: #444;
+    text-decoration: none;
+  }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="homeWrapper">
     <app-navbar></app-navbar>
     <app-sidemenu></app-sidemenu>
-    <div class="imageDiv"></div>
-    <div class="siteTitle">About Us</div>
-    <div class="siteText">
-        We are a family-sized concrete transportation service founded in 2021. We operate out of Forney, TX and serve the Dallas Metroplex Area.<br><br>
-        Call us at <a class="aStyle" href='tel:4697161822'>469-716-1822</a>
+    <div class="headerSection section">
+      <h1>OMNI WEB</h1>
+      <h6>The Easy To Use<br>All-In-One Business Management Software</h6>
     </div>
-    <div style="text-align: center;">
-        <div class="siteTitle">Follow Us</div>
-      <div style="padding-top:30px;"><a href='https://www.facebook.com/MARKPavinginc/'><i class="fa fa-facebook-official" style="font-size:48px;color:#1674ea"></i></a></div>
+    <div class="featuresSection section">
+      <h3>Our Features</h3>
+      <div class="subHeaderText">
+        Omni Web is a comprehensive solution that combines multiple functions and features in one program.
+        These programs are designed to simplify tasks for users by eliminating the need for multiple software applications.
+        We want you to get the most value out of our product and the only way we can give that to our customers is add numerous components.
+      </div>
+      <div class="boxCont">
+        <div class="box"><i class="fa-solid fa-file-invoice fa-2x"></i><div>Invoices</div></div>
+        <div class="box"><i class="fa-solid fa-warehouse fa-2x"></i><div>Inventory</div></div>
+        <div class="box"><i class="fa-solid fa-truck fa-2x"></i><div>Trucks</div></div>
+        <div class="box"><i class="fa-solid fa-money fa-2x"></i><div>Expenses</div></div>
+        <div class="box"><i class="fa-solid fa-user fa-2x"></i><div>Employees</div></div>
+        <div class="box"><i class="fa-solid fa-gas-pump fa-2x"></i><div>Fuel</div></div>
+        <div class="box"><i class="fa-solid fa-file-pdf fa-2x"></i><div>PDFs</div></div>
+        <div class="box"><i class="fa-solid fa-chart-column fa-2x"></i><div>Dashboard Charts</div></div>
+      </div>
+    </div>
+    <div class="contactSection section">
+      <h3>Contact Us</h3>
+      <div><i class="fa-regular fa-envelope fa-2x"></i> <a href="mailto:kevin.d.claveria@gmail.com">kevin.d.claveria@gmail.com</a></div>
     </div>
 </div>

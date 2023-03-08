@@ -33,6 +33,7 @@ import { FuelComponent } from './pages/fuel/fuel.component';
 import { NgChartsModule } from 'ng2-charts';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { EmployeesComponent } from './pages/employees/employees.component';
+import { MarkpavingComponent } from './pages/markpaving/markpaving.component';
 
 firebase.initializeApp(environment.firebase);
 @NgModule({
@@ -54,7 +55,8 @@ firebase.initializeApp(environment.firebase);
     TrucksComponent,
     FuelComponent,
     InventoryComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    MarkpavingComponent
   ],
   imports: [
     BrowserModule,

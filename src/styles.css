@@ -4,7 +4,12 @@
   src: url("/src/assets/fonts/Poppins-Regular.ttf");
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap');
+
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Lobster&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 .editRecordCont{
   justify-content: center;
@@ -194,8 +199,7 @@ body {
 
 .pageWrapper {
   margin: 0 auto;
-  background-color: #8BC6EC;
-  background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);
+  background-color: #fafafa;
   color: white;
   justify-content: center;
   padding-bottom: 200px;
