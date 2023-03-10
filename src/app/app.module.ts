@@ -34,6 +34,10 @@ import { NgChartsModule } from 'ng2-charts';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { EmployeesComponent } from './pages/employees/employees.component';
 import { MarkpavingComponent } from './pages/markpaving/markpaving.component';
+import { TasksComponent } from './pages/tasks/tasks.component';
+import { AnnouncementsComponent } from './pages/announcements/announcements.component';
+import { WorkordersComponent } from './pages/workorders/workorders.component';
+import { SchedulingComponent } from './pages/scheduling/scheduling.component';
 
 firebase.initializeApp(environment.firebase);
 @NgModule({
@@ -56,7 +60,11 @@ firebase.initializeApp(environment.firebase);
     FuelComponent,
     InventoryComponent,
     EmployeesComponent,
-    MarkpavingComponent
+    MarkpavingComponent,
+    TasksComponent,
+    AnnouncementsComponent,
+    WorkordersComponent,
+    SchedulingComponent
   ],
   imports: [
     BrowserModule,

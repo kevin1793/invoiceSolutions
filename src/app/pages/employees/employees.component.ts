@@ -3,7 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
-import { Firestore, collection } from '@angular/fire/firestore';
+import { collection } from '@angular/fire/firestore';
 
 interface Record {
   firstName: string,
@@ -11,11 +11,19 @@ interface Record {
   middleName: string,
   notes :string,
   workType: string,
+  status:string,
   compensationType: string,
   compensation:number,
   employeeID:string,
   createdDate:Date,
-  id:string
+  address1:string,
+  address2:string,
+  state:string,
+  zip:string,
+  city:string,
+  id:string,
+  phone:string,
+  email:string,
   // ...
 };
 
@@ -30,20 +38,47 @@ export class EmployeesComponent {
     employeeID: [''],
     firstName: ['',Validators.required],
     middleName: [''],
+    status: [''],
     lastName: [null,Validators.required],
     workType: [null,Validators.required],
     createdDate: [Date()],
+    hiredDate: [Date()],
     compensationType: [''],
     compensation: [null],
     notes :[''],
+    address1 :[''],
+    address2 :[''],
+    state :[''],
+    city :[''],
+    zip :[''],
+    phone :[''],
+    email :[''],
   });
 
   editItem: UntypedFormGroup = this.fb.group({
-    quantity: [0,Validators.required],
+    employeeID: [''],
+    firstName: ['',Validators.required],
+    middleName: [''],
+    status: [''],
+    lastName: [null,Validators.required],
+    workType: [null,Validators.required],
+    createdDate: [Date()],
+    hiredDate: [Date()],
+    compensationType: [''],
+    compensation: [null],
+    notes :[''],
+    address1 :[''],
+    address2 :[''],
+    state :[''],
+    city :[''],
+    zip :[''],
+    phone :[''],
+    email :[''],
   });
 
-  recordEdit = null;
+  recordEdit:Record | any;
   dashboard = true;
+  showInfoBox = false;
   dashboardData = 'Y';
   showAddRecordBox = false;
   collectionName = 'Employees';
@@ -55,8 +90,9 @@ export class EmployeesComponent {
 
   records:any;
   allRecords:any;
+  infoRec:any;
 
-  constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
+  constructor(private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
@@ -73,8 +109,17 @@ export class EmployeesComponent {
     });
   }
 
+  modalClicked(e:any){
+    console.log('modalClicked',e.target?.id);
+    if(e.target?.id){
+      this.showInfoBox = !this.showInfoBox;
+    }
+  }
+
   infoClicked(rec:any){
-    console.log('SHOW INFO');
+    this.infoRec = rec;
+    console.log('SHOW INFO',rec);
+    this.showInfoBox = !this.showInfoBox;
   }
 
   sortPropertyChanged(prop:string){
@@ -108,16 +153,17 @@ export class EmployeesComponent {
   }
 
   editRecordClicked(rec:any){
+    console.log('editRecordClicked',rec);
     this.recordEdit = rec;
-    this.editItem.get('quantity')?.setValue((rec.quantity));
+    this.editItem.patchValue(rec);
   }
 
   updateRecord(rec:Record,e:any){
-    console.log('updateRecord',e,rec);
+    console.log('updateRecord',e,rec,this.editItem);
     const invoiceCollection = this.afs.collection<Record>(this.collectionName);
     var updatedRec  = rec;
-    // updatedRec.quantity = this.editItem.get('quantity')?.value;
-    invoiceCollection.doc(updatedRec.id).update(updatedRec);
+    invoiceCollection.doc(updatedRec.id).update(this.editItem.value);
+    this.recordEdit = null;
   }
 
   filterPropertyChanged(e:any){

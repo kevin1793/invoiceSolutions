@@ -121,50 +121,63 @@
     <div class="pageTitle">
       Expenses
     </div>
-    <div class="addExpenseCont" *ngIf='showAddExpenseBox'>
-      <form (ngSubmit)="onSubmit()" class="addExpenseInputBox" [formGroup]='expenseItem'>
+    <div class="addRecordCont" *ngIf='showAddExpenseBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='expenseItem'>
         <div class="formRow">
-          <div class="addExpenseInputItem">
+          <div class="addRecordInputItem">
             <label>Item</label>
             <input type='text' formControlName='item' placeholder="Item">
           </div>
-          <div class="addExpenseInputItem"><label>Category</label>
+          <div class="addRecordInputItem"><label>Category</label>
             <select  formControlName='category' placeholder="Category">
-              <option value="Parts">Parts</option>
-              <option  value="Repair">Repair</option>
-              <option  value="Food">Food</option>
-              <option  value="Insurance">Insurance</option>
-              <option  value="Other">Other</option>
+              <option></option>
+              <option *ngFor="let c of categories;" value="{{c.name}}">{{c.name}}</option>
             </select>
           </div>
-          <div class="addExpenseInputItem"><label>Quantity</label>
+          <div class="addRecordInputItem"><label>Quantity</label>
             <input  type='number' formControlName='quantity' placeholder="Quantity">
           </div>
-          <div class="addExpenseInputItem"><label>Total</label>
+          <div class="addRecordInputItem"><label>Total</label>
             <input type='number' formControlName='total' placeholder="Total">
           </div>
           
-          <div class="addExpenseInputItem"><label>Date</label>
+          <div class="addRecordInputItem"><label>Date</label>
             <input type='date' formControlName='date' placeholder="Paid Date">
           </div>
         </div>
-        <!-- <div class="formRow">
-          <div class="addExpenseInputItem"><label>Description</label>
-            <textarea type='text' formControlName='description' placeholder="Description"></textarea>
-          </div>
-        </div> -->
-
       </form>
       <div>
-        <button (click)="addExpense()" [disabled]=expenseItem.invalid class="greenBtn margin10  width100">Add</button>
-        <button (click)="showAddExpenseBox = !showAddExpenseBox" class="redBtn margin10 width100">Cancel</button>
+        <button (click)="addExpense()" [disabled]=expenseItem.invalid class="greenBtn margin10  width150">Add Expense</button>
+        <button (click)="showAddExpenseBox = !showAddExpenseBox" class="redBtn margin10 width150">Cancel</button>
       </div>
     </div>
-    <div class="btnRow">
-      <button  *ngIf='!showAddExpenseBox' class="greenBtn width150 mb20" (click)="addItemClicked();showAddExpenseBox = !showAddExpenseBox">
-        Add Expense
+    <div class="addRecordCont" *ngIf='showAddCategoryBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='categoryItem'>
+        <div class="formRow">
+          <div class="addRecordInputItem"><label>Category</label>
+            <input  type='text' formControlName='name' placeholder="Category">
+          </div>
+        </div>
+      </form>
+      <div>
+        <button (click)="addCategory()" [disabled]=categoryItem.invalid class="greenBtn margin10  width150">Add Category</button>
+        <button (click)="showAddCategoryBox = !showAddCategoryBox" class="redBtn margin10 width150">Cancel</button>
+      </div>
+      <div class="tagCont">
+        <div *ngFor="let u of categories">
+          <div class="tagItem" (click)="removeCategory(u)"><span class="fa fa-close" style="padding-right:10px;"></span>{{u.name}}</div>
+        </div>
+      </div>
+    </div>
+    <div  *ngIf='!showAddExpenseBox && !showAddCategoryBox' class="btnRow">
+      <button  class="greenBtn width150 mb20" (click)="addItemClicked();showAddExpenseBox = !showAddExpenseBox">
+        + Add Expense
+      </button>
+      <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addCategoryClicked();showAddCategoryBox = !showAddCategoryBox">
+        + Add Category
       </button>
     </div>
+    
     <!-- START EXPENSE LIST -->
     <div class="listHeaderCont2">
       <div class="headerItem"  style="width: 250px;">Item</div>
@@ -175,17 +188,17 @@
       <div class="headerItem">Actions</div>
     </div>
     <div *ngFor="let expense of expenses">
-      <table class="listItemCont">
+      <div class="listItemCont2">
         <td class="listItem" style="width: 250px;">{{expense.item}}</td>
         <td class="listItem">{{expense.category }}</td>
         <td class="listItem">{{expense.quantity}}</td>
         <td class="listItem">{{expense.total | currency}}</td>
         <td class="listItem">{{expense.date |date: 'mediumDate'  }}</td>
         <td class="listItem actionItems">
-          <div (click)='deleteExpense(expense)' class="actionBtn" style='background:red;'>-</div>
-          <div (click)='editExpense(expense)' class="fa fa-edit actionBtn" style='background:white;'></div>
+          <div (click)='deleteExpense(expense)' class="fa fa-remove actionBtn" ></div>
+          <div (click)='editExpense(expense)' class="fa fa-edit actionBtn"></div>
         </td>
-    </table>
+    </div>
   </div>
   </div>
 </div>

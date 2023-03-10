@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'markPaving'`, () => {
+  it(`should have as title 'Omni Web'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('markPaving');
+    expect(app.title).toEqual('Omni Web');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('markPaving app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('Omni Web app is running!');
   });
 });

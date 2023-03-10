@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   constructor(private router:Router,
     private elementRef: ElementRef
     ){} 
-  title = 'markPaving';
+  title = 'Omni Web';
   email = new UntypedFormControl('');
   password = new UntypedFormControl('');
   loginMessage = 'Login below to get started';

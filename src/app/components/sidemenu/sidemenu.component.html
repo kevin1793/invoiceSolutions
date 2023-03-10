@@ -113,9 +113,12 @@
         <img class="sideMenuImg" src="../../../assets/images/dashboard.png">
         <div class="sideText">Dashboard</div>
       </div>
+      <div (click)="goToPage('announcements')" class="menuBtnCont menuLink">
+        <img class="sideMenuImg" src="../../../assets/images/annoucement.png">
+        <div class="sideText">Announcements</div>
+      </div>
       <div (click)="goToPage('employees')" class="menuBtnCont menuLink">
         <img class="sideMenuImg" src="../../../assets/images/user.png">
-        <!-- <span class="fa fa-user fa-lg"></span> -->
         <div class="sideText">Employees</div>
       </div>
       <div (click)="goToPage('inventory')" class="menuBtnCont menuLink">
@@ -139,13 +142,13 @@
         <div class="sideText">Trucks</div>
       </div>
       <div (click)="toUpdateLog()" class="menuBtnCont menuLink">
-        <img class="sideMenuImg" src="../../../assets/images/dashboard.png">
+        <img class="sideMenuImg" src="../../../assets/images/news.png">
         <div class="sideText">
           Update Log
         </div>
       </div>
       <div (click)="logOut()" class="menuBtnCont menuLink">
-        <img class="sideMenuImg" src="../../../assets/images/dashboard.png">
+        <img class="sideMenuImg" src="../../../assets/images/logout.png">
         <div class="sideText">
           Log Out
         </div>

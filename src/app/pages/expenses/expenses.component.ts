@@ -14,6 +14,11 @@ interface Item {
   // ...
 };
 
+interface Category {
+  name: string,
+  // ...
+};
+
 @Component({
   selector: 'app-expenses',
   templateUrl: './expenses.component.html',
@@ -23,8 +28,10 @@ export class ExpensesComponent implements OnInit {
   dashboard = true;
   dashboardData = 'Y';
   showAddExpenseBox = false;
+  showAddCategoryBox = false;
   showModal = false;
   expenseEdit = '';
+  collectionName = 'Expenses';
 
   constructor(firestore: Firestore,
     private fb:UntypedFormBuilder,
@@ -39,12 +46,21 @@ export class ExpensesComponent implements OnInit {
     quantity:[null,Validators.required],
     total:[null,Validators.required],
   });
+
+  categoryItem: UntypedFormGroup = this.fb.group({
+    name: ['',Validators.required],
+  });
   
   expenses:any;
+  categories:any;
   expensesSub:any;
+
   db = getFirestore();
   colRef = collection(this.db,'Expenses');
   q = query(this.colRef,orderBy('date','desc'),limit(25));
+
+  colCategoryRef = collection(this.db,this.collectionName+'Category');
+  qCategory = query(this.colCategoryRef,orderBy('name','asc'));
 
   ngOnInit(): void {
     var userAuth = localStorage.getItem('user');
@@ -56,7 +72,43 @@ export class ExpensesComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.expenses.push({...doc.data(), id:doc.id})
       })
-    })
+    });
+    onSnapshot(this.qCategory,(snapshot: { docs: any[]; }) => {
+      this.categories = []
+      snapshot.docs.forEach( (doc) => {
+        this.categories.push({...doc.data(), id:doc.id})
+      })
+      console.log(this.categories)
+    });
+  }
+
+  addCategoryClicked(){
+    this.categoryItem.reset();
+  }
+
+  addCategory(){
+    const invoiceCollection = this.afs.collection<Category>(this.collectionName+'Category');
+    var categoryItem = this.categoryItem.value;
+    var t = invoiceCollection.add(categoryItem);
+    this.categoryItem.reset();
+    if(this.categories.length <= 1){
+      onSnapshot(this.qCategory,(snapshot: { docs: any[]; }) => {
+        this.categories = []
+        snapshot.docs.forEach( (doc) => {
+          this.categories.push({...doc.data(), id:doc.id})
+        })
+      });
+    }
+  }
+
+  removeCategory(u:any){
+    console.log('remove category',u);
+    const collection = this.afs.collection<Category>(this.collectionName+'Category');
+    var del = confirm('Are you sure you want to delete '+u.name+'?');
+
+    if(del){
+      collection.doc(u.id).delete();
+    }
   }
 
   async deleteExpense(item:any){

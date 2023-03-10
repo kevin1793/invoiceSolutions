@@ -11,6 +11,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Quicksand:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Lobster&family=Quicksand:wght@300;400;500;600;700&display=swap');
 
+
+/* MODAL */
+.modal {
+   /* Hidden by default */
+   text-align: center;
+   color:#333;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  padding-bottom: 100px;;
+
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* END MODAL */
 .editRecordCont{
   justify-content: center;
   display: flex;
@@ -94,7 +139,7 @@ body {
   margin: 10px;
   border-radius: 5px;
   /* width: auto; */
-  width: 400px;
+  width: 550px;
   height: 100px;
 }
 .addRecordInputItem{

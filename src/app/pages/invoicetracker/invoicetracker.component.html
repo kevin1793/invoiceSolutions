@@ -222,16 +222,16 @@
         <div class="listItem listItemText">{{invoice.totalBilled | currency}}</div>
         <div class="listItem  listItemText">{{invoice.paidDate?(invoice.paidDate | date: 'mediumDate'):'-'  }}</div>
         <div class="listItem">
-          <div *ngIf='invoice.paidDate'  style='background:#edf9F2; border-radius: 5px;padding:4px;color:#2f916c;font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
+          <div *ngIf='invoice.paidDate'  style='background:#b3f7cf; border-radius: 5px;padding:4px;color:#2f916c;font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
           <div *ngIf='!invoice.paidDate' style='background:#ffe7ef; border-radius: 5px;padding:4px;color:rgb(131, 44, 44);font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
         </div>
         <div  class="listItem actionItems" style="width:300px;">
-          <div class="actionBtn" *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)'  style='background:orange;'>$</div>
+          <div class="actionBtn" *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' class="fa-solid fa-dollar-sign actionBtn"  ></div>
           <div class="actionBtn" *ngIf='invoice.paidDate' style='width: 40px;'></div>
-          <div class="actionBtn" (click)='deleteInvoice(invoice)' style='background:red;'>-</div>
-          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download actionBtn" style='background:white;'></div>
+          <div class="actionBtn" (click)='deleteInvoice(invoice)'  class="fa fa-remove actionBtn" ></div>
+          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download actionBtn" ></div>
           <div class="actionBtn" *ngIf='!invoice.invoiceData'></div>
-          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa fa-edit actionBtn" style='background:white;'></div>
+          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa-solid fa-pen-to-square actionBtn" ></div>
           <div class="actionBtn" *ngIf='!invoice.invoiceData'  style='width: 40px;'></div>
         </div>
       </div>
