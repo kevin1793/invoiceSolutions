@@ -66,7 +66,7 @@ export class InventoryComponent implements OnInit {
   // FORM ITEMS
   recordItem: UntypedFormGroup = this.fb.group({
     item: ['',Validators.required],
-    description:[null,Validators.required],
+    description:[null],
     category:[null,Validators.required],
     unit:[null,Validators.required],
     modified :[''],

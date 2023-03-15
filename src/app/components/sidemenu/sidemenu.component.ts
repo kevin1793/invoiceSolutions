@@ -13,7 +13,7 @@ const fadeInOut = trigger('fadeInOut',[
   ),
   state(
     'close',style({
-      width:'40px',
+      width:'50px',
       opacity:0,
       height:'50px',
       visibility:'hidden',
@@ -93,10 +93,12 @@ export class SidemenuComponent implements OnInit {
   }
 
   closeMenu(){
+    console.log('close nmenu');
     this.navOpened = false;
   }
 
   openMenu(ele: any){
+    console.log('openmenu');
     this.navOpened = true;
   }
 

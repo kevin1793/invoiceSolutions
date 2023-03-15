@@ -1,1 +1,71 @@
-<p>tasks works!</p>
+<style>
+  .aTypeBtn{
+    width: 120px;;
+    border-radius: 5px;
+    color: white;
+    padding:5px 15px;
+    background: #2879ff;
+    text-align: center;
+    height: 20px;
+  }
+  .recDate{
+    padding-top:5px;
+    font-weight: bold;
+    font-size: 15px;;
+  }
+</style>
+
+<div class="pageWrapper2">
+	<app-navbar></app-navbar>
+	<app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
+	<div class="mainCont">
+		<div class="pageTitle">
+      Tasks
+    </div>
+    <div class="addRecordCont" *ngIf='showAddRecordBox'>
+      <form class="addRecordInputBox" [formGroup]='recordItem'>
+				<div class="formRow">
+					<div class="addRecordInputItem"><label>Task</label>
+            <textarea  type='textarea' formControlName='task' placeholder="Task"></textarea>
+          </div>
+				</div>
+      </form>
+      <div>
+        <button (click)="addRecord()" [disabled]=recordItem.invalid class="greenBtn margin10  width150">Add Task</button>
+        <button (click)="showAddRecordBox = !showAddRecordBox" class="redBtn margin10 width150">Cancel</button>
+      </div>
+    </div>
+    <div *ngIf='!showAddRecordBox' style="display:flex;justify-content: space-between;" class="addRecordInputBox">
+      <button   style="margin-right: 15px;margin-top:15px;" class="greenBtn width150 mb20"  (click)="addRecordClicked();showAddRecordBox = !showAddRecordBox">
+        + Add Task
+      </button>
+      <div class="addRecordInputItem">
+        <!-- <label>Status</label> -->
+        <select (change)="filterTasks($event)"  value="All" style="margin-top:20px;margin-bottom: 15px;width: 100px;">
+          <option value="All">All</option>
+          <option value="Done">Done</option>
+          <option value="Not Done">Not Done</option>
+        </select>
+      </div>
+    </div>
+    <div class="listHeaderCont2">
+      <div (click)="sortPropertyChanged('completed')"  class="headerItem"  style="width: 600px;max-width: 600px;">Task <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('createdDate')"  class="headerItem">Created <span class="fa fa-sort"></span></div>
+      <div class="headerItem">Actions</div>
+    </div>
+    <div *ngFor="let rec of records ">
+      <div class="listItemCont2" style="justify-content: space-around;">
+        <td *ngIf='!rec.completedDate'  class="listItem"   style="width: 600px;max-width: 600px;">{{rec.task}}</td>
+        <td *ngIf='rec.completedDate'  class="listItem"   style="width: 600px;max-width: 600px;text-decoration: line-through;">{{rec.task}}</td>
+        <td class="listItem">{{rec.createdDate |date: 'short'  }}</td>
+        <td class="listItem actionItems">
+          <div *ngIf='!rec.completedDate'  (click)='completeTask(rec)' class="fa fa-check actionBtn"></div>
+          <div *ngIf='rec.completedDate'  (click)='uncompleteTask(rec)'  class="fa fa-redo actionBtn" ></div>
+          <div (click)='deleteRecord(rec)' class="fa fa-remove actionBtn" ></div>
+        </td>
+    </div>
+    <div style="color:#333;text-align: center;" *ngIf='!records.length'>
+      <h2>Looks empty! Let's add some {{collectionName}}.</h2>
+    </div>
+  </div>
+</div>

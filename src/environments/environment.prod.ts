@@ -1,3 +1,18 @@
+// LUNA FARM
+// export const environment = {
+//   firebase: {
+//     apiKey: "AIzaSyDAUQDWQFKjNhWWRbSuXXdjbMPfblW7wtk",
+//     authDomain: "lunafarm-2a145.firebaseapp.com",
+//     projectId: "lunafarm-2a145",
+//     storageBucket: "lunafarm-2a145.appspot.com",
+//     messagingSenderId: "921653257010",
+//     appId: "1:921653257010:web:0f8aa10969df3cbb922d2b",
+//     measurementId: "G-WL7ET1CMSK"
+//   },
+//   production: true
+// }; 
+
+// MARK PAVING
 // export const environment = {
 //   firebase: {
 //     projectId: 'markpaving-8bf66',
@@ -11,6 +26,7 @@
 //   production: true
 // }; 
 
+// OMNI WEB
 export const environment = {
   firebase: {
     apiKey: "AIzaSyBLa_JEFPnIPe612m8gSxTizLYsz4yN4H4",

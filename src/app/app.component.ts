@@ -24,8 +24,7 @@ export class AppComponent implements AfterViewInit {
   ngOnInit(): void {}
 
   sendMessage(e: any) {
-    console.log('click from app main',e.srcElement.className);
-    if(typeof e.srcElement.className == 'string' && (!e.srcElement.className.includes('openedMenu') || !e.srcElement.className.includes('menuBtnCont')) ){
+    if(typeof e.srcElement.className == 'string' && (!e.srcElement.className.includes('openedMenu') && !e.srcElement.className.includes('menuBtnCont')) ){
       this.click.closeMenu();
     }
   }

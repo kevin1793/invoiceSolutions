@@ -42,7 +42,7 @@ export class AnnouncementsComponent {
   dashboardData = 'Y';
   showAddRecordBox = false;
   collectionName = 'Announcements';
-  filterProperty = 'item';
+  // filterProperty = 'item';
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
