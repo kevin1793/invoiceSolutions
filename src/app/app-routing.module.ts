@@ -17,10 +17,12 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { EmployeesComponent } from './pages/employees/employees.component';
 import { AnnouncementsComponent } from './pages/announcements/announcements.component';
 import { TasksComponent } from './pages/tasks/tasks.component';
+import { WorkordersComponent } from './pages/workorders/workorders.component';
 
 const routes:Routes=[
   { path : '', component: HomeComponent, canActivate: [AuthGuardService] },
   { path : 'home',component:LoginComponent },
+  { path : 'workorders',component:WorkordersComponent },
   { path : 'login',component:LoginComponent },
   { path : 'invoicetracker',component:InvoicetrackerComponent },
   { path : 'createinvoice',component:CreateinvoiceComponent },

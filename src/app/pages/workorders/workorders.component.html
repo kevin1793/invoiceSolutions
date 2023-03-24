@@ -1,1 +1,132 @@
-<p>workorders works!</p>
+<style>
+
+</style>
+
+<div class="pageWrapper2">
+	<app-navbar></app-navbar>
+	<app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
+	<div class="mainCont">
+		<div class="pageTitle">
+      Work Orders
+    </div>
+    <div class="addRecordCont" *ngIf='showAddRecordBox'>
+      <form  class="addRecordInputBox" [formGroup]='recordItem'>
+        <div class="formRow">
+          <div class="addRecordInputItem"><label>Name</label>
+            <input  type='text' formControlName='item' placeholder="Name">
+          </div>
+          <div class="addRecordInputItem"><label>Description</label>
+            <input  type='text' formControlName='description' placeholder="Description">
+          </div>
+          <div class="addRecordInputItem"><label>Category</label>
+            <select formControlName='category' placeholder="Category">
+              <option></option>
+              <option *ngFor="let c of categories;" value="{{c.category}}">{{c.category}}</option>
+            </select>
+          </div>
+          <div class="addRecordInputItem"><label>Unit</label>
+            <select formControlName='unit' placeholder="Unit">
+              <option></option>
+              <option *ngFor="let c of units;" value="{{c.unit}}">{{c.unit}}</option>
+            </select>
+          </div>
+          <div class="addRecordInputItem"><label>Quantity</label>
+            <input type='number' formControlName='quantity' placeholder="Quantity">
+          </div>
+        </div>
+      </form>
+      <div>
+        <button (click)="addRecord()" [disabled]=recordItem.invalid class="greenBtn margin10  width150">Add Inventory</button>
+        <button (click)="showAddRecordBox = !showAddRecordBox" class="redBtn margin10 width150">Cancel</button>
+      </div>
+    </div>
+    <div class="addRecordCont" *ngIf='showAddCategoryBox'>
+      <form class="addRecordInputBox" [formGroup]='categoryItem'>
+        <div class="formRow">
+          <div class="addRecordInputItem"><label>Category</label>
+            <input  type='text' formControlName='category' placeholder="Category">
+          </div>
+        </div>
+      </form>
+      <div>
+        <button (click)="addCategory()" [disabled]=categoryItem.invalid class="greenBtn margin10  width150">Add Category</button>
+        <button (click)="showAddCategoryBox = !showAddCategoryBox" class="redBtn margin10 width150">Cancel</button>
+      </div>
+      <div class="tagCont">
+        <div *ngFor="let u of categories">
+          <div class="tagItem" (click)="removeCategory(u)"><span class="fa fa-close" style="padding-right:10px;"></span>{{u.category}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="addRecordCont" *ngIf='showAddUnitBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='unitItem'>
+        <div class="formRow">
+          <div class="addRecordInputItem"><label>Unit</label>
+            <input  type='text' formControlName='unit' placeholder="Unit">
+          </div>
+        </div>
+      </form>
+      <div>
+        <button (click)="addUnit()" [disabled]=unitItem.invalid class="greenBtn margin10  width100">Add Unit</button>
+        <button (click)="showAddUnitBox = !showAddUnitBox" class="redBtn margin10 width100">Cancel</button>
+      </div>
+      <div class="tagCont">
+        <div *ngFor="let u of units">
+          <div class="tagItem" (click)="removeUnit(u)"><span class="fa fa-close" style="padding-right:10px;"></span>{{u.unit}}</div>
+        </div>
+      </div>
+    </div>
+		<div *ngIf='!showAddRecordBox && !showAddCategoryBox  && !showAddUnitBox' style="display:flex;">
+      <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addRecordClicked();showAddRecordBox = !showAddRecordBox">
+        + Add Inventory
+      </button>
+      <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addCategoryClicked();showAddCategoryBox = !showAddCategoryBox">
+        + Add Category
+      </button>
+      <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addUnitClicked();showAddUnitBox = !showAddUnitBox">
+        + Add Unit
+      </button>
+    </div>
+    <div class="searchCont">
+      <span class="fa fa-search fa-1x" style="color:black;"></span>
+      <input (input)="filterChange($event)" placeholder='Filter Inventory...' type='text'>
+      <span class="addRecordInputItem addRecordInputBox">
+        <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
+          <option selected value="item">Name</option>
+          <option value="category">Category</option>
+          <option value="unit">Unit</option>
+        </select>
+      </span>
+    </div>
+    <div class="listHeaderCont2">
+      <div (click)="sortPropertyChanged('item')" class="headerItem">Name <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('description')" class="headerItem" style="width:250px;">Description <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('category')" class="headerItem">Category <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('quantity')" class="headerItem">Quantity <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('unit')" class="headerItem">Unit <span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('modified')" class="headerItem">Last Modified <span class="fa fa-sort"></span></div>
+      <div class="headerItem" style="cursor:unset;">Actions</div>
+    </div>
+    <div *ngFor="let rec of records ">
+      <div class="listItemCont2">
+        <div class="listItem">{{rec.item}}</div>
+        <div class="listItem" style="width:250px;">{{rec.description }}</div>
+        <div class="listItem">{{rec.category || '-' }}</div>
+        <div class="listItem">{{rec.quantity |  number}}</div>
+        <div class="listItem">{{rec.unit || '-'}}</div>
+        <div class="listItem">{{rec.modified | date: 'mediumDate'  }}</div>
+        <div  class="listItem actionItems">
+          <div (click)='deleteRecord(rec)'  class=" fa fa-remove actionBtn" ></div>
+          <div (click)='editRecordClicked(rec)' class="fa fa-edit actionBtn" ></div>
+        </div>
+      </div>
+      <div *ngIf="recordEdit == rec" class="editRecordCont">
+        <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='editItem'>
+          <input   type="text" formControlName="quantity">
+        </form>
+        <div (click)='updateRecord(rec,$event)' class="greenBtn width100">Update</div>
+        <div (click)='recordEdit = null' class="redBtn width100">Cancel</div>
+      </div>
+    </div>
+	</div>
+</div>
