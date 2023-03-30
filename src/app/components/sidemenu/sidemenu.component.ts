@@ -73,11 +73,11 @@ export class SidemenuComponent implements OnInit {
     this.closeMenu();
   }
 
-  toTrucks(){
-    if(window.location.pathname != '/trucks'){
+  toVehicles(){
+    if(window.location.pathname != '/vehicles'){
       this.elementRef.nativeElement.parentElement.remove();
     }
-    this.router.navigate(['/trucks'],{state:{data:'trucks'}});
+    this.router.navigate(['/vehicles'],{state:{data:'vehicles'}});
     this.closeMenu();
   }
   toFuel(){

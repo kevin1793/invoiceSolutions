@@ -28,7 +28,7 @@ import { TestComponent } from './components/test/test.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
-import { TrucksComponent } from './pages/trucks/trucks.component';
+import { VehiclesComponent } from './pages/vehicles/vehicles.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
 import { NgChartsModule } from 'ng2-charts';
 import { InventoryComponent } from './pages/inventory/inventory.component';
@@ -56,7 +56,7 @@ firebase.initializeApp(environment.firebase);
     UpdatelogComponent,
     ExpensesComponent,
     NotfoundComponent,
-    TrucksComponent,
+    VehiclesComponent,
     FuelComponent,
     InventoryComponent,
     EmployeesComponent,

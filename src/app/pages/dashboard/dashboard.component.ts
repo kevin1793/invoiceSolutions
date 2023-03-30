@@ -31,8 +31,8 @@ export class DashboardComponent implements OnInit {
   colRefExpenses = collection(this.db,'Expenses');
   expensesQuery = query(this.colRefExpenses,orderBy('date','desc'));
 
-  colRefTrucks = collection(this.db,'Trucks');
-  trucksQuery = query(this.colRefTrucks,orderBy('truck_number','desc'));
+  colRefVehicles = collection(this.db,'Vehicles');
+  vehiclesQuery = query(this.colRefVehicles,orderBy('vehicle_number','desc'));
 
   colRefFuel = collection(this.db,'Fuels');
   fuelQuery = query(this.colRefFuel,orderBy('date','desc'));
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   profitThisMonth = 0;
   profitThisYear = 0;
 
-  trucks:any;
+  vehicles:any;
 
   expensesThisMonth = 0;
   expensesLastMonth = 0;
@@ -167,13 +167,13 @@ export class DashboardComponent implements OnInit {
     });
 
 
-    console.log('getting truck data');
-    onSnapshot(this.trucksQuery,(snapshot: { docs: any[]; }) => {
-      this.trucks = [];
+    console.log('getting vehicle data');
+    onSnapshot(this.vehiclesQuery,(snapshot: { docs: any[]; }) => {
+      this.vehicles = [];
       snapshot.docs.forEach( (doc) => {
-        this.trucks.push({...doc.data(), id:doc.id})
+        this.vehicles.push({...doc.data(), id:doc.id})
       });
-      this.saveToLocalStorage('trucks',this.trucks);
+      this.saveToLocalStorage('vehicles',this.vehicles);
     });
   }
 
@@ -215,7 +215,7 @@ export class DashboardComponent implements OnInit {
   }
 
   setLocalStorageData(){
-    var cachedTrucksData = localStorage.getItem('trucks');
+    var cachedVehiclesData = localStorage.getItem('vehicles');
     var cachedInvoicesData = localStorage.getItem('invoices');
     var cachedFuelData = localStorage.getItem('fuel');
     var cachedExpensesData = localStorage.getItem('expenses');
@@ -229,8 +229,8 @@ export class DashboardComponent implements OnInit {
     if(cachedInvoicesData?.length){
       this.invoices = JSON.parse(cachedInvoicesData);
     }
-    if(cachedTrucksData?.length){
-      this.trucks = JSON.parse(cachedTrucksData);
+    if(cachedVehiclesData?.length){
+      this.vehicles = JSON.parse(cachedVehiclesData);
     }
   }
 

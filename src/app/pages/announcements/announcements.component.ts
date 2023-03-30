@@ -9,7 +9,7 @@ interface Record {
   subject: string,
   message:string,
   type:string,
-  createdDate: string,
+  createdDate: Date,
   notes :string,
   // ...
 };
@@ -60,7 +60,7 @@ export class AnnouncementsComponent {
   }
   async deleteRecord(item:any){
     const collection = this.afs.collection<Record>(this.collectionName);
-    var del = confirm('Are you sure you want to delete the Announcement '+item.subject+' from '+(item.createdDate)+'?');
+    var del = confirm('Are you sure you want to delete the Announcement `'+item.subject+'` from '+(new Date(item.createdDate).toDateString())+'?');
 
     if(del){
       collection.doc(item.id).delete();
@@ -69,8 +69,8 @@ export class AnnouncementsComponent {
   addRecord(){
     const invoiceCollection = this.afs.collection<Record>(this.collectionName);
     var recordItem = this.recordItem.value;
-    var d = new Date();
-    recordItem.createdDate = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    var d = Date();
+    recordItem.createdDate = d;
     var t = invoiceCollection.add(recordItem);
     this.recordItem.reset();
   }

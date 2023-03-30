@@ -10,7 +10,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { UpdatelogComponent } from './pages/updatelog/updatelog.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { NotfoundComponent } from './pages/notfound/notfound.component';
-import { TrucksComponent } from './pages/trucks/trucks.component';
+import { VehiclesComponent } from './pages/vehicles/vehicles.component';
 import { FuelComponent } from './pages/fuel/fuel.component';
 import { InventoryComponent } from './pages/inventory/inventory.component';
 import { AuthGuardService } from './services/auth-guard.service';
@@ -34,7 +34,7 @@ const routes:Routes=[
   { path : 'inventory',component:InventoryComponent },
   { path : 'announcements',component:AnnouncementsComponent },
   { path : 'tasks',component:TasksComponent },
-  { path : 'trucks',component:TrucksComponent },
+  { path : 'vehicles',component:VehiclesComponent },
   { path : '',component:HomeComponent },
   { path : 'dashboard' ,component:DashboardComponent },
   { path : '404', component: NotfoundComponent },

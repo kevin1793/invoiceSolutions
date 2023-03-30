@@ -21,10 +21,10 @@ export class LoginComponent implements OnInit {
   
 
   ngOnInit(): void {
+    
   }
 
   login(){
-    
     const auth = getAuth();
     console.log('AUTH before',auth);
     var email =this.email.value;

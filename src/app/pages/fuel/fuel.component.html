@@ -118,10 +118,10 @@
     <div class="addFuelCont" *ngIf='showAddFuelBox'>
       <form (ngSubmit)="onSubmit()" class="addFuelInputBox" [formGroup]='fuelItem'>
         <div class="formRow">
-          <div class="addFuelInputItem"><label>Truck Number</label>
-            <select formControlName='truck_number' placeholder="Category">
+          <div class="addFuelInputItem"><label>vehicle Number</label>
+            <select formControlName='vehicle_number' placeholder="Category">
               <option></option>
-              <option *ngFor="let truck of trucks;" value="{{truck.truck_number}}">{{truck.truck_number}}</option>
+              <option *ngFor="let vehicle of vehicles;" value="{{vehicle.vehicle_number}}">{{vehicle.vehicle_number}}</option>
             </select>
           </div>
           <div class="addFuelInputItem"><label>Mileage</label>
@@ -152,7 +152,7 @@
       </button>
     </div>
     <div class="listHeaderCont2">
-      <div class="headerItem">Truck Number</div>
+      <div class="headerItem">vehicle Number</div>
       <div class="headerItem">Mileage</div>
       <div class="headerItem">Gallons</div>
       <div class="headerItem">Total</div>
@@ -161,7 +161,7 @@
     </div>
     <div *ngFor="let fuel of fuels">
       <div class="listItemCont">
-        <div class="listItem">{{fuel.truck_number}}</div>
+        <div class="listItem">{{fuel.vehicle_number}}</div>
         <div class="listItem">{{fuel.mileage }}</div>
         <div class="listItem">{{fuel.gallons}}</div>
         <div class="listItem">{{fuel.total | currency}}</div>

@@ -48,26 +48,13 @@
     min-width: 180px;
     transition: max-height 0.5s, overflow 0s
   }
-
   .hideOpenedMenu {
     display: none;
-    transition: max-height 0.5s, overflow 0s
   }
-
   .showClosedMenu {
     visibility: none;
-    transition: height 0.5s ease;
+    transition: height 0.5s ease,width 0.5s ease,;
   }
-
-  .hideClosedMenu {
-    height: 0 !important;
-    width: 0;
-    /* display: none; */
-    transition: opacity 1s ease-out;
-    opacity: 0;
-    transition: height 0.5s, overflow 0s;
-  }
-
   .menuLink {
     display: flex;
     cursor: pointer;
@@ -76,9 +63,9 @@
   .hideMenu {
     height: 0 !important;
     width: 0 !important;
-    transition: height 0.5s, overflow 0s;
+    transition: height 0.5s ease,width 0.5s ease, overflow 0s;
     visibility: hidden;
-    /* display: none; */
+    display: none;
   }
 
   .sideMenuImg {
@@ -120,11 +107,10 @@
         <img class="sideMenuImg" src="../../../assets/images/dashboard.png">
         <div class="sideText">Dashboard</div>
       </div>
-      <div (click)="goToPage('workorders')" class="menuBtnCont menuLink">
-        <!-- <img class="sideMenuImg" src="../../../assets/images/workorder.png"> -->
+      <!-- <div (click)="goToPage('workorders')" class="menuBtnCont menuLink">
         <i class="fa-regular fa-clipboard"></i>
         <div class="sideText">Work Orders</div>
-      </div> 
+      </div>  -->
       <div (click)="goToPage('announcements')" class="menuBtnCont menuLink">
         <img class="sideMenuImg" src="../../../assets/images/annoucement.png">
         <div class="sideText">Announcements</div>
@@ -154,9 +140,9 @@
         <img class="sideMenuImg" src="../../../assets/images/fuel.png">
         <div class="sideText">Fuel</div>
       </div>
-      <div (click)="toTrucks()" class="menuBtnCont menuLink">
+      <div (click)="toVehicles()" class="menuBtnCont menuLink">
         <img class="sideMenuImg" src="../../../assets/images/truck.png">
-        <div class="sideText">Trucks</div>
+        <div class="sideText">Vehicles</div>
       </div>
       <div (click)="toUpdateLog()" class="menuBtnCont menuLink">
         <img class="sideMenuImg" src="../../../assets/images/news.png">

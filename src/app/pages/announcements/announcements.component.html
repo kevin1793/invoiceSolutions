@@ -1,6 +1,6 @@
 <style>
   .aTypeBtn{
-    width: 120px;;
+    width: 150px;;
     border-radius: 5px;
     color: white;
     padding:5px 15px;
@@ -33,6 +33,7 @@
               <option></option>
               <option value="Informational">Informational</option>
 							<option value="Important">Important</option>
+              <option value="Warning">Warning</option>
             </select>
           </div>
         </div>
@@ -54,12 +55,15 @@
     </div>
     <div *ngFor="let rec of records ">
       <div class="listItemCont2" style="text-align: left;justify-content: space-between;">
-        <div  *ngIf="rec.type == 'Important'"  class="recDate aTypeBtn" style="background:#ba000d">
+        <div  *ngIf="rec.type == 'Important'"  class="recDate aTypeBtn" style="background:#ba000d;">
           <i class="fa-solid fa-exclamation"></i>
-          &nbsp;&nbsp;&nbsp;{{rec.createdDate | date:'longDate'}}</div>
+          &nbsp;&nbsp;&nbsp;{{rec.createdDate | date:'short'}}</div>
+        <div  *ngIf="rec.type == 'Warning'"  class="recDate aTypeBtn" style="background:rgb(255, 255, 16);color:#222;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          &nbsp;&nbsp;&nbsp;{{rec.createdDate | date:'short'}}</div>
         <div  *ngIf="rec.type == 'Informational'"  class="recDate aTypeBtn">
           <i  class="fa-solid fa-info"></i>
-          &nbsp;&nbsp;&nbsp;{{rec.createdDate | date:'longDate'}}</div>
+          &nbsp;&nbsp;&nbsp;{{rec.createdDate | date:'short'}}</div>
         <div class="recDate">{{rec.subject }}<span> - {{rec.message }}</span></div>
 
         <div  (click)='deleteRecord(rec)'   class="actionBtn fa fa-close"></div>

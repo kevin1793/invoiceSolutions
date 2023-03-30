@@ -69,10 +69,10 @@
       </div>
   
       <div class="inputCont">
-        <input id="email" placeholder="User" type="text" [formControl]="email">
+        <input id="email" placeholder="User" (keyup.enter)="login()"  type="text" [formControl]="email">
       </div>
       <div class="inputCont">
-        <input id="password"  placeholder="Password" type="password" [formControl]="password">
+        <input id="password" (keyup.enter)="login()"  placeholder="Password" type="password" [formControl]="password">
       </div>
       
       <button class="loginBtn" (click)="login()">Login</button>

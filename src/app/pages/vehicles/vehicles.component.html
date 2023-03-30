@@ -1,31 +1,31 @@
 <style>
 </style>
 
-<div class="pageWrapper">
+<div class="pageWrapper2">
   <app-navbar></app-navbar>
   <app-sidemenu [dashboardData]="dashboardData" ></app-sidemenu>
   <div class="mainCont">
     <div class="pageTitle">
-      Trucks
+      Vehicles
     </div>
-    <div class="addItemCont" *ngIf='showAddItemBox'>
-      <form (ngSubmit)="onSubmit()" class="addItemInputBox" [formGroup]='truckItem'>
+    <div class="addRecordCont" *ngIf='showAddItemBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='vehicleItem'>
         <div class="formRow">
-          <div class="addItemInputItem">
-            <label>Truck Number</label>
-            <input type='text' required="true" formControlName='truck_number' placeholder="Truck Number">
+          <div class="addRecordInputItem">
+            <label>Vehicle Number</label>
+            <input type='text' required="true" formControlName='vehicle_number' placeholder="Vehicle Number">
           </div>
-          <div class="addItemInputItem">
+          <!-- <div class="addRecordInputItem">
             <label>Nickname</label>
             <input type='text' required="true" formControlName='nickname' placeholder="Nickname">
-          </div>
-          <div class="addItemInputItem"><label>Vin</label>
+          </div> -->
+          <div class="addRecordInputItem"><label>Vin</label>
             <input type='text' formControlName='vin' placeholder="Vin">
           </div>
-          <div class="addItemInputItem"><label>Mileage</label>
+          <div class="addRecordInputItem"><label>Mileage</label>
             <input  type='number' formControlName='mileage' placeholder="Mileage">
           </div>
-          <div class="addItemInputItem"><label>Status</label>
+          <div class="addRecordInputItem"><label>Status</label>
             <select type='number' formControlName='status' placeholder="Status">
               <option>Operational</option>
               <option>At Mechanic/Repair Shop</option>
@@ -35,41 +35,41 @@
           </div>
         </div>
         <div class="formRow">
-          <div class="addItemInputItem"><label>Notes</label>
+          <div class="addRecordInputItem"><label>Notes</label>
             <textarea type='text' formControlName='notes' placeholder="Notes"></textarea>
           </div>
         </div>
   
       </form>
       <div>
-        <button (click)="addTruck()" [disabled]=truckItem.invalid class="greenBtn margin10  width100">Save</button>
+        <button (click)="addvehicle()" [disabled]=vehicleItem.invalid class="greenBtn margin10  width100">Save</button>
         <button (click)="resetForm();showAddItemBox = !showAddItemBox" class="redBtn margin10 width100">Cancel</button>
       </div>
     </div>
     <div class="btnRow">
       <button  *ngIf='!showAddItemBox' class="greenBtn width150 mb20" (click)="showAddItemBox = !showAddItemBox">
-        Add Truck
+        Add Vehicle
       </button>
     </div>
     <!-- START EXPENSE LIST -->
     <div class="listHeaderCont2">
-      <div class="headerItem">Truck Number</div>
-      <div class="headerItem">Status</div>
+      <div class="headerItem">Vehicle Number</div>
+      <div class="headerItem" style="width: 300px;max-width: 300px;">Status</div>
       <div class="headerItem">Mileage</div>
       <div class="headerItem">Vin #</div>
-      <div class="headerItem">Nickname</div>
+      <!-- <div class="headerItem">Nickname</div> -->
       <div class="headerItem">Actions</div>
     </div>
-    <div *ngFor="let truck of trucks">
-      <div class="listItemCont">
-        <div class="listItem">{{truck.truck_number}}</div>
-        <div class="listItem">{{truck.status }}</div>
-        <div class="listItem">{{(truck.mileage | number) || '-'}}</div>
-        <div class="listItem">{{truck.vin || '-'}}</div>
-        <div class="listItem">{{truck.nickname || '-'}}</div>
+    <div *ngFor="let vehicle of vehicles">
+      <div class="listItemCont2">
+        <div class="listItem">{{vehicle.vehicle_number}}</div>
+        <div class="listItem" style="width: 300px;max-width: 300px;">{{vehicle.status }}</div>
+        <div class="listItem">{{(vehicle.mileage | number) || '-'}}</div>
+        <div class="listItem">{{vehicle.vin || '-'}}</div>
+        <!-- <div class="listItem">{{vehicle.nickname || '-'}}</div> -->
         <div  class="listItem actionItems">
-          <div (click)='deleteTruck(truck)' class="actionBtn"  style='background:red;'>-</div>
-          <div (click)='editTruck(truck)' class="fa fa-edit actionBtn" style='background:white;'></div>
+          <div (click)='deletevehicle(vehicle)' class=" fa fa-remove actionBtn" ></div>
+          <div (click)='editvehicle(vehicle)' class="fa fa-edit actionBtn" ></div>
         </div>
       </div>
     </div>

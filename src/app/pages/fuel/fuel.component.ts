@@ -6,7 +6,7 @@ import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestor
 import { Router } from '@angular/router';
 
 interface Item {
-  truck_number: number,
+  vehicle_number: number,
   mileage:number,
   date:string,
   gallons:string,
@@ -26,13 +26,13 @@ export class FuelComponent implements OnInit {
   showAddFuelBox = false;
   showModal = false;
   showAddItemBox  = false;
-  // truckNumber = '';
+  // vehicleNumber = '';
 
 
   constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
   fuelItem: UntypedFormGroup = this.fb.group({
-    truck_number: ['',Validators.required],
+    vehicle_number: ['',Validators.required],
     date: ['',Validators.required],
     mileage:[null,Validators.required],
     gallons:[null,Validators.required],
@@ -40,15 +40,15 @@ export class FuelComponent implements OnInit {
   });
   
   fuels:any;
-  trucks:any;
+  vehicles:any;
   fuelEdit = null;
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
   q = query(this.colRef,orderBy('date','desc'),limit(25));
 
-  colRefTrucks = collection(this.db,'Trucks');
-  qTrucks = query(this.colRefTrucks,orderBy('truck_number','desc'));
+  colRefVehicles = collection(this.db,'Vehicles');
+  qVehicles = query(this.colRefVehicles,orderBy('vehicle_number','desc'));
 
   ngOnInit(): void {
     var userAuth = localStorage.getItem('user');
@@ -62,10 +62,10 @@ export class FuelComponent implements OnInit {
         this.fuels.push({...doc.data(), id:doc.id})
       })
     });
-    onSnapshot(this.qTrucks,(snapshot: { docs: any[]; }) => {
-      this.trucks = []
+    onSnapshot(this.qVehicles,(snapshot: { docs: any[]; }) => {
+      this.vehicles = []
       snapshot.docs.forEach( (doc) => {
-        this.trucks.push({...doc.data(), id:doc.id})
+        this.vehicles.push({...doc.data(), id:doc.id})
       })
     })
     return;
@@ -117,13 +117,13 @@ export class FuelComponent implements OnInit {
   
   editFuel(e:any){
     var thisAll =this;
-    this.fuelItem.get('truck_number')?.setValue(e.truck_number);
+    this.fuelItem.get('vehicle_number')?.setValue(e.vehicle_number);
     this.fuelItem.get('date')?.setValue(e.date);
     this.fuelItem.get('mileage')?.setValue(e.mileage);
     this.fuelItem.get('gallons')?.setValue(e.gallons);
     this.fuelItem.get('total')?.setValue(e.total);
     this.fuelEdit = e;
-    console.log(this.fuelItem.get('truck_number'),e);
+    console.log(this.fuelItem.get('vehicle_number'),e);
     thisAll.showAddFuelBox = true;
   }
 

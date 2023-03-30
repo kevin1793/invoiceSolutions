@@ -182,15 +182,15 @@
       </div>
     </div>
 
-      <div class="rowTitle">Trucks</div>
-      <div class="cardsRow" *ngFor="let truck of trucks" >
+      <div class="rowTitle">Vehicles</div>
+      <div class="cardsRow" *ngFor="let vehicle of vehicles" >
         <div class="cardBox">
-          <div class="cardTitle">Truck Number: {{truck.truck_number}}</div>
+          <div class="cardTitle">vehicle Number: {{vehicle.vehicle_number}}</div>
           <div class="cardInfo2">
-            {{truck.status}}
+            {{vehicle.status}}
           </div>
           <div class="cardInfo2">
-            {{truck.mileage | number}} Miles
+            {{vehicle.mileage | number}} Miles
           </div>
         </div>
       </div>
