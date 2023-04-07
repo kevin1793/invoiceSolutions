@@ -96,7 +96,7 @@ export class EmployeesComponent {
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
-  q = query(this.colRef,orderBy('employeeID','desc'),limit(25));
+  q = query(this.colRef,orderBy('employeeID','desc'));
 
   ngOnInit(): void {
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {

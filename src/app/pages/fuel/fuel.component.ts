@@ -45,7 +45,7 @@ export class FuelComponent implements OnInit {
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
-  q = query(this.colRef,orderBy('date','desc'),limit(25));
+  q = query(this.colRef,orderBy('date','desc'));
 
   colRefVehicles = collection(this.db,'Vehicles');
   qVehicles = query(this.colRefVehicles,orderBy('vehicle_number','desc'));

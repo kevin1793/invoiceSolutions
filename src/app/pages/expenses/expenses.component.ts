@@ -57,7 +57,7 @@ export class ExpensesComponent implements OnInit {
 
   db = getFirestore();
   colRef = collection(this.db,'Expenses');
-  q = query(this.colRef,orderBy('date','desc'),limit(25));
+  q = query(this.colRef,orderBy('date','desc'));
 
   colCategoryRef = collection(this.db,this.collectionName+'Category');
   qCategory = query(this.colCategoryRef,orderBy('name','asc'));

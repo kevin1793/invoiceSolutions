@@ -46,7 +46,7 @@ export class AnnouncementsComponent {
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
-  q = query(this.colRef,orderBy('createdDate','desc'),limit(25));
+  q = query(this.colRef,orderBy('createdDate','desc'));
 
   ngOnInit(){
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {

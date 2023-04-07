@@ -53,7 +53,7 @@ export class WorkordersComponent {
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
-  q = query(this.colRef,orderBy('modified','desc'),limit(25));
+  q = query(this.colRef,orderBy('modified','desc'));
 
   colCategoryRef = collection(this.db,this.collectionName+'Category');
   qCategory = query(this.colCategoryRef,orderBy('category','asc'));

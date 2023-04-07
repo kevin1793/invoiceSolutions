@@ -47,7 +47,7 @@ export class TasksComponent {
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
-  q = query(this.colRef,orderBy('createdDate','desc'),limit(25));
+  q = query(this.colRef,orderBy('createdDate','desc'));
 
   ngOnInit(){
     this.records =[];
