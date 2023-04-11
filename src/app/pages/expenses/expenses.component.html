@@ -177,6 +177,17 @@
         + Add Category
       </button>
     </div>
+    <div class="searchCont">
+      <span class="fa fa-search fa-1x" style="color:black;"></span>
+      <input (input)="filterChange($event)" placeholder='Filter Expenses...' type='text'>
+      <span class="addRecordInputItem addRecordInputBox">
+        <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
+          <option selected value="item">Item</option>
+          <option value="category">Category</option>
+          <!-- <option value="unit">Unit</option> -->
+        </select>
+      </span>
+    </div>
     
     <!-- START EXPENSE LIST -->
     <div class="listHeaderCont2">
@@ -187,16 +198,16 @@
       <div class="headerItem">Date</div>
       <div class="headerItem">Actions</div>
     </div>
-    <div *ngFor="let expense of expenses">
+    <div *ngFor="let rec of records">
       <div class="listItemCont2">
-        <td class="listItem" style="width: 250px;">{{expense.item}}</td>
-        <td class="listItem">{{expense.category }}</td>
-        <td class="listItem">{{expense.quantity}}</td>
-        <td class="listItem">{{expense.total | currency}}</td>
-        <td class="listItem">{{expense.date |date: 'mediumDate'  }}</td>
+        <td class="listItem" style="width: 250px;">{{rec.item}}</td>
+        <td class="listItem">{{rec.category }}</td>
+        <td class="listItem">{{rec.quantity}}</td>
+        <td class="listItem">{{rec.total | currency}}</td>
+        <td class="listItem">{{rec.date |date: 'mediumDate'  }}</td>
         <td class="listItem actionItems">
-          <div (click)='deleteExpense(expense)' class="fa fa-remove actionBtn" ></div>
-          <div (click)='editExpense(expense)' class="fa fa-edit actionBtn"></div>
+          <div (click)='deleteExpense(rec)' class="fa fa-remove actionBtn" ></div>
+          <div (click)='editExpense(rec)' class="fa fa-edit actionBtn"></div>
         </td>
     </div>
   </div>

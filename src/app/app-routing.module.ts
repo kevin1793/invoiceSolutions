@@ -21,7 +21,7 @@ import { WorkordersComponent } from './pages/workorders/workorders.component';
 import { MarkpavingComponent } from './pages/markpaving/markpaving.component';
 
 const routes:Routes=[
-  { path : '', component: MarkpavingComponent, canActivate: [AuthGuardService] },
+  { path : '', component: HomeComponent, canActivate: [AuthGuardService] },
   { path : 'home',component:LoginComponent },
   { path : 'workorders',component:WorkordersComponent },
   { path : 'login',component:LoginComponent },

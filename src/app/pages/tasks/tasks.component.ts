@@ -123,7 +123,7 @@ export class TasksComponent {
   addRecord(){
     const invoiceCollection = this.afs.collection<Record>(this.collectionName);
     var recordItem = this.recordItem.value;
-    recordItem.createdDate = Date();
+    recordItem.createdDate = Date.now();
     recordItem.completed = false;
     var t = invoiceCollection.add(recordItem);
     this.recordItem.reset();

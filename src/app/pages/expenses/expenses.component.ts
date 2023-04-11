@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 interface Item {
   item: string,
   category:string,
-  date:string,
+  date:Date,
   total:number,
   quantity:number
   // ...
@@ -42,7 +42,7 @@ export class ExpensesComponent implements OnInit {
   expenseItem: UntypedFormGroup = this.fb.group({
     item: ['',Validators.required],
     category: ['',Validators.required],
-    date: ['',Validators.required],
+    date: [null,Validators.required],
     quantity:[null,Validators.required],
     total:[null,Validators.required],
   });
@@ -50,8 +50,11 @@ export class ExpensesComponent implements OnInit {
   categoryItem: UntypedFormGroup = this.fb.group({
     name: ['',Validators.required],
   });
+
+  filterProperty = 'item';
   
-  expenses:any;
+  records:any;
+  allRecords:any;
   categories:any;
   expensesSub:any;
 
@@ -68,10 +71,12 @@ export class ExpensesComponent implements OnInit {
       this.router.navigate(['/login']);
     }
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
-      this.expenses = []
+      this.records = []
       snapshot.docs.forEach( (doc) => {
-        this.expenses.push({...doc.data(), id:doc.id})
+        this.records.push({...doc.data(), id:doc.id})
       })
+      console.log('EXPENSES',this.records);
+      this.allRecords = this.records;
     });
     onSnapshot(this.qCategory,(snapshot: { docs: any[]; }) => {
       this.categories = []
@@ -80,6 +85,21 @@ export class ExpensesComponent implements OnInit {
       })
       console.log(this.categories)
     });
+  }
+  filterChange(e:any){
+    console.log('filterCHange',e);
+    if(e.srcElement.value.length){
+      this.records = this.allRecords.filter((item:any) => 
+        item[this.filterProperty].toLowerCase().includes((e.srcElement.value).toLowerCase())
+        )
+      .map((item:any) => (item));
+    }else{
+      this.records = this.allRecords;
+    }
+  }
+  filterPropertyChanged(e:any){
+    console.log('filterPropertyChanged',e);
+    this.filterProperty = e.srcElement.value;
   }
 
   addCategoryClicked(){
@@ -138,6 +158,7 @@ export class ExpensesComponent implements OnInit {
     const invoiceCollection = this.afs.collection<Item>('Expenses');
     var expenseItem = this.expenseItem.value;
     var t = invoiceCollection.add(expenseItem);
+    console.log(expenseItem);
     this.expenseItem.reset();
     if(this.expenseEdit){
       this.quickDeleteFuel(this.expenseEdit);

@@ -181,6 +181,26 @@
         <!-- <span (click)="refreshClicked();"  style="height:30px;width: auto;color:black;"  class="fa fa-refresh fa-2x"></span> -->
       </div>
     </div>
+    <div class="searchCont " style="display:flex;">
+      <div>
+        <span class="fa fa-search fa-1x" style="color:black;"></span>
+        <input (input)="filterChange($event)" placeholder='Filter Invoices...' type='text'>
+        <span class="addRecordInputItem addRecordInputBox">
+          <select (change)="filterPropertyChanged($event)" >
+            <option selected value="invoiceNumber">Invoice #</option>
+            <option value="billedTo">Billed To</option>
+          </select>
+        </span>
+      </div>
+      <div class="addRecordInputItem addRecordInputBox" style="margin-left:auto;">
+        <select (change)="filterTasks($event)"  value="All" style="margin-top:10px;margin-bottom: 15px;width: 100px;">
+          <option value="All">All</option>
+          <option value="Paid">Paid</option>
+          <option value="Not Paid">Not Paid</option>
+        </select>
+      </div>
+      
+    </div>
     <div class="addInvoiceCont" *ngIf='showAddInvoiceBox'>
       <form (ngSubmit)="onSubmit()" class="addInvoiceInputBox" [formGroup]='invoiceItem'>
         <div class="addInvoiceInputItem">
@@ -215,7 +235,7 @@
       <div class="headerItem"  style="width:300px;">Actions</div>
     </div>
     <div *ngFor="let invoice of invoices">
-      <div class="listItemCont">
+      <div class="listItemCont2">
         <div class="listItem listItemText"  style="width:150px">{{invoice.invoiceNumber}}</div>
         <div class="listItem listItemText">{{invoice.invoiceDate | date: 'mediumDate' }}</div>
         <div class="listItem listItemText"  style="width:310px;">{{invoice.billedTo}}</div>
@@ -227,12 +247,12 @@
         </div>
         <div  class="listItem actionItems" style="width:300px;">
           <div class="actionBtn" *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' class="fa-solid fa-dollar-sign actionBtn"  ></div>
-          <div class="actionBtn" *ngIf='invoice.paidDate' style='width: 40px;'></div>
+          <div class="actionBtn"  style="cursor: unset;"  *ngIf='invoice.paidDate' style='width: 40px;'></div>
           <div class="actionBtn" (click)='deleteInvoice(invoice)'  class="fa fa-remove actionBtn" ></div>
-          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa fa-download actionBtn" ></div>
-          <div class="actionBtn" *ngIf='!invoice.invoiceData'></div>
+          <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='downloadInvoice(invoice.invoiceData)' class="fa-solid fa-download actionBtn" ></div>
+          <div class="actionBtn"  style="cursor: unset;"  *ngIf='!invoice.invoiceData'></div>
           <div class="actionBtn" *ngIf='invoice.invoiceData' (click)='editInvoice(invoice)' class="fa-solid fa-pen-to-square actionBtn" ></div>
-          <div class="actionBtn" *ngIf='!invoice.invoiceData'  style='width: 40px;'></div>
+          <div class="actionBtn" *ngIf='!invoice.invoiceData'  style='width: 40px;cursor:unset !important;'></div>
         </div>
       </div>
     </div>

@@ -48,11 +48,13 @@ export class InvoicetrackerComponent implements OnInit {
 
   pdfDoc = new jsPDF;
   invoices:any;
+  allRecords:any;
   cachedData = true;
   invoicesSub:any;
   db = getFirestore()
   colRef = collection(this.db,'Invoices')
-  q = query(this.colRef,orderBy('invoiceDate','desc'))
+  q = query(this.colRef,orderBy('invoiceDate','desc'));
+  filterProperty = 'invoiceNumber';
 
 
   ngOnInit(): void {
@@ -64,10 +66,43 @@ export class InvoicetrackerComponent implements OnInit {
     if(cachedInvoices && cachedInvoices.length > 0){
       this.cachedData = true;
       this.invoices = JSON.parse(cachedInvoices);
-      console.log('Invoices: Getting local data.')
+      console.log('Invoices: Getting local data.',this.invoices);
+      this.allRecords = this.invoices;
     }else{
       this.cachedData = false;
       this.getInvoiceData();
+    }
+  }
+  filterTasks(e:any){
+    console.log('filterCHange',e);
+    var val = e.target.value;
+    if(val == 'Paid'){
+      this.invoices = this.allRecords.filter((item:any) => 
+      item.paidDate
+        )
+      .map((item:any) => (item));
+    }else if(val == 'Not Paid'){
+      this.invoices = this.allRecords.filter((item:any) => 
+        !item.paidDate
+        )
+      .map((item:any) => (item));
+    }else{
+      this.invoices = this.allRecords;
+    }
+  }
+  filterPropertyChanged(e:any){
+    console.log('filterPropertyChanged',e);
+    this.filterProperty = e.srcElement.value;
+  }
+  filterChange(e:any){
+    console.log('filterCHange',e);
+    if(e.srcElement.value.length){
+      this.invoices = this.allRecords.filter((item:any) => 
+        item[this.filterProperty].toLowerCase().includes((e.srcElement.value).toLowerCase())
+        )
+      .map((item:any) => (item));
+    }else{
+      this.invoices = this.allRecords;
     }
   }
 
@@ -77,12 +112,14 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   getInvoiceData(){
-    console.log('GETTING NEW INVOICES!!!');
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
-      this.invoices = []
+      this.invoices = [];
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id})
       });
+      this.allRecords = this.invoices;
+    console.log('GETTING NEW INVOICES!!!',this.invoices);
+
       localStorage.setItem('invoices',JSON.stringify(this.invoices));
     });
   }
@@ -433,7 +470,7 @@ export class InvoicetrackerComponent implements OnInit {
 
   setInvoicePaidDate(){
     const invoiceCollection = this.afs.collection<Item>('Invoices');
-    this.pendingInvoiceItem.paidDate = this.paidItem.controls['paidDate'].value;
+    this.pendingInvoiceItem.paidDate = this.getDatePickerSeconds(this.paidItem.controls['paidDate'].value);
     invoiceCollection.doc(this.pendingInvoiceItem.id).set(this.pendingInvoiceItem);
     this.showModal = !this.showModal;
     this.paidItem.controls['paidDate'].reset();
@@ -453,11 +490,19 @@ export class InvoicetrackerComponent implements OnInit {
       this.refreshClicked();
     }
   }
+  getDatePickerSeconds(datePickerValue:any){
+    var d = new Date(datePickerValue);
+    d.setDate(d.getDate()+1);
+    return Date.parse(d.toString());
+  }
 
   addItem(){
     const invoiceCollection = this.afs.collection<Item>('Invoices');
     var invoiceItem = this.invoiceItem.value;
+    console.log(this.invoiceItem.value);
+    invoiceItem.invoiceDate = this.getDatePickerSeconds(invoiceItem.invoiceDate);
     var t = invoiceCollection.add(invoiceItem);
+    console.log(invoiceItem);
     this.invoiceItem.reset();
     if(this.cachedData == true){
       this.invoices = [invoiceItem].concat(this.invoices);

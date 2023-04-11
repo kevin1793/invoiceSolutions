@@ -1,6 +1,6 @@
 import { Component, OnInit,Output ,Input } from '@angular/core';
 import { AngularFirestore,AngularFirestoreDocument} from '@angular/fire/compat/firestore';
-import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
+import { orderBy, query,onSnapshot,where, getFirestore } from 'firebase/firestore';
 import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/firestore';
 import { ChartConfiguration, ChartData, ChartOptions, ScatterDataPoint } from 'chart.js';
 import { TemplateBindingParseResult } from '@angular/compiler';
@@ -25,8 +25,9 @@ export class DashboardComponent implements OnInit {
   fuel:any;
   db = getFirestore();
   
-  colRef = collection(this.db,'Invoices');
-  q = query(this.colRef,orderBy('invoiceDate','desc'));
+  
+  // colRef = collection(this.db,'Invoices');
+  // q = query(this.colRef,orderBy('invoiceDate','desc'));
 
   colRefExpenses = collection(this.db,'Expenses');
   expensesQuery = query(this.colRefExpenses,orderBy('date','desc'));
@@ -134,7 +135,12 @@ export class DashboardComponent implements OnInit {
 
   fetchDashboardData(){
     console.log('getting invoice data');
-    onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
+    var colRef = collection(this.db,'Invoices');
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    var q = query(colRef,orderBy('invoiceDate','desc'),where('invoiceDate', '>=', thirtyDaysAgo));
+    
+    onSnapshot(q,(snapshot: { docs: any[]; }) => {
       this.invoices = [];
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id});
@@ -142,39 +148,40 @@ export class DashboardComponent implements OnInit {
       });
       this.getRevenueData();
       this.saveToLocalStorage('invoices',this.invoices);
+      console.log(this.invoices);
     });
 
 
-    console.log('getting exprenses data');
-    onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
-    this.expenses = [];
-      snapshot.docs.forEach( (doc) => {
-        this.expenses.push({...doc.data(), id:doc.id})
-      });
-      this.getExpenseData();
-      this.saveToLocalStorage('expenses',this.expenses);
-    });
+    // console.log('getting exprenses data');
+    // onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
+    // this.expenses = [];
+    //   snapshot.docs.forEach( (doc) => {
+    //     this.expenses.push({...doc.data(), id:doc.id})
+    //   });
+    //   this.getExpenseData();
+    //   this.saveToLocalStorage('expenses',this.expenses);
+    // });
 
 
-    console.log('getting fuel data');
-    onSnapshot(this.fuelQuery,(snapshot: { docs: any[]; }) => {
-      this.fuel = []
-      snapshot.docs.forEach( (doc) => {
-        this.fuel.push({...doc.data(), id:doc.id})
-      });
-      this.getGasExpenseData();
-      this.saveToLocalStorage('fuel',this.fuel);
-    });
+    // console.log('getting fuel data');
+    // onSnapshot(this.fuelQuery,(snapshot: { docs: any[]; }) => {
+    //   this.fuel = []
+    //   snapshot.docs.forEach( (doc) => {
+    //     this.fuel.push({...doc.data(), id:doc.id})
+    //   });
+    //   this.getGasExpenseData();
+    //   this.saveToLocalStorage('fuel',this.fuel);
+    // });
 
 
-    console.log('getting vehicle data');
-    onSnapshot(this.vehiclesQuery,(snapshot: { docs: any[]; }) => {
-      this.vehicles = [];
-      snapshot.docs.forEach( (doc) => {
-        this.vehicles.push({...doc.data(), id:doc.id})
-      });
-      this.saveToLocalStorage('vehicles',this.vehicles);
-    });
+    // console.log('getting vehicle data');
+    // onSnapshot(this.vehiclesQuery,(snapshot: { docs: any[]; }) => {
+    //   this.vehicles = [];
+    //   snapshot.docs.forEach( (doc) => {
+    //     this.vehicles.push({...doc.data(), id:doc.id})
+    //   });
+    //   this.saveToLocalStorage('vehicles',this.vehicles);
+    // });
   }
 
   getExpenseData(){
