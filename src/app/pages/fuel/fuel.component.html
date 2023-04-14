@@ -115,34 +115,32 @@
     <div class="pageTitle">
       Fuel
     </div>
-    <div class="addFuelCont" *ngIf='showAddFuelBox'>
-      <form (ngSubmit)="onSubmit()" class="addFuelInputBox" [formGroup]='fuelItem'>
+    <div class="addRecordCont" *ngIf='showAddFuelBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='fuelItem'>
         <div class="formRow">
-          <div class="addFuelInputItem"><label>vehicle Number</label>
+          <div class="addRecordInputItem"><label>Vehicle Number</label>
             <select formControlName='vehicle_number' placeholder="Category">
               <option></option>
               <option *ngFor="let vehicle of vehicles;" value="{{vehicle.vehicle_number}}">{{vehicle.vehicle_number}}</option>
             </select>
           </div>
-          <div class="addFuelInputItem"><label>Mileage</label>
+          <div class="addRecordInputItem"><label>Mileage</label>
             <input  type='number' formControlName='mileage' placeholder="Mileage">
           </div>
-          <div class="addFuelInputItem"><label>Gallons</label>
+          <div class="addRecordInputItem"><label>Gallons</label>
             <input  type='number' formControlName='gallons' placeholder="Gallons">
           </div>
-          <!-- <div class="addFuelInputItem"><label>Cost Per Gallon</label>
-            <input  type='number' (change)="calculateTotal()" formControlName='cost_per_gallon' placeholder="Cost Per Gallon">
-          </div> -->
-          <div class="addFuelInputItem"><label>Total</label>
+          <div class="addRecordInputItem"><label>Total</label>
             <input type='number' formControlName='total' placeholder="Total">
           </div>
-          <div class="addFuelInputItem"><label>Date</label>
+          <div class="addRecordInputItem"><label>Date</label>
             <input type='date' formControlName='date' placeholder="Paid Date">
           </div>
         </div>
       </form>
       <div>
-        <button (click)="addFuel()" [disabled]=fuelItem.invalid class="greenBtn margin10  width100">Add</button>
+        <button *ngIf="addingFuel" (click)="addFuel()" [disabled]=fuelItem.invalid class="greenBtn margin10  width100">Add</button>
+        <button *ngIf="!addingFuel" (click)="addFuel()" [disabled]=fuelItem.invalid class="greenBtn margin10  width100">Edit</button>
         <button (click)="showAddFuelBox = !showAddFuelBox" class="redBtn margin10 width100">Cancel</button>
       </div>
     </div>
@@ -152,7 +150,7 @@
       </button>
     </div>
     <div class="listHeaderCont2">
-      <div class="headerItem">vehicle Number</div>
+      <div class="headerItem">Vehicle Number</div>
       <div class="headerItem">Mileage</div>
       <div class="headerItem">Gallons</div>
       <div class="headerItem">Total</div>
@@ -160,7 +158,7 @@
       <div class="headerItem">Actions</div>
     </div>
     <div *ngFor="let fuel of fuels">
-      <div class="listItemCont">
+      <div class="listItemCont2">
         <div class="listItem">{{fuel.vehicle_number}}</div>
         <div class="listItem">{{fuel.mileage }}</div>
         <div class="listItem">{{fuel.gallons}}</div>
@@ -168,8 +166,8 @@
         <div class="listItem">{{fuel.date |date: 'mediumDate'  }}</div>
         <div  class="listItem actionItems">
           <div *ngIf='fuel.paidDate' style='width: 20px;'></div>
-          <div (click)='deleteFuel(fuel)'  class="actionBtn" style='background:red;'>-</div>
-          <div (click)='editFuel(fuel)' class="fa fa-edit actionBtn" style='background:white;'></div>
+          <div (click)='deleteFuel(fuel)'  class="fa fa-remove actionBtn" ></div>
+          <div (click)='editFuel(fuel)' class="fa fa-edit actionBtn" ></div>
         </div>
       </div>
     </div>

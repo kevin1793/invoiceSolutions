@@ -201,22 +201,22 @@
       </div>
       
     </div>
-    <div class="addInvoiceCont" *ngIf='showAddInvoiceBox'>
-      <form (ngSubmit)="onSubmit()" class="addInvoiceInputBox" [formGroup]='invoiceItem'>
-        <div class="addInvoiceInputItem">
+    <div class="addRecordCont" *ngIf='showAddInvoiceBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='invoiceItem'>
+        <div class="addRecordInputItem">
           <label>Invoice Number</label>
           <input type='text' formControlName='invoiceNumber' placeholder="Invoice Number">
         </div>
-        <div class="addInvoiceInputItem"><label>Invoice Date</label>
+        <div class="addRecordInputItem"><label>Invoice Date</label>
           <input type='date' name='invoiceDate' placeholder="Invoice Date" formControlName='invoiceDate'>
         </div>
-        <div class="addInvoiceInputItem"><label>Billed To</label>
+        <div class="addRecordInputItem"><label>Billed To</label>
           <input type='text' formControlName='billedTo' placeholder="Billed To">
         </div>
-        <div class="addInvoiceInputItem"><label>Total Billed</label>
+        <div class="addRecordInputItem"><label>Total Billed</label>
           <input type='number' formControlName='totalBilled' placeholder="Total Billed">
         </div>
-        <div class="addInvoiceInputItem"><label>Paid Date</label>
+        <div class="addRecordInputItem"><label>Paid Date</label>
           <input type='date' formControlName='paidDate' placeholder="Paid Date">
         </div>
       </form>

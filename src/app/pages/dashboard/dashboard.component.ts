@@ -67,23 +67,24 @@ export class DashboardComponent implements OnInit {
   invoicesThisMonth = 0;
   invoicesThisYear = 0;
   invoicesLastYear = 0;
+  last30DayData = {expenses:0,invoices:0,invoicesPaid:'',fuel:0,};
 
   cachedData = true;
   
 
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['white'],
+  public lineChartData: ChartConfiguration<'bar'>['data'] = {
+    // labels: ['white'],
     datasets: [
       {
         data: [],
-        label: 'All Revenue',
-        fill: true,
-        tension: 0.5,
+        label: 'Invoice Totals By Day (Last 30 Days)',
+        // fill: true,
+        // tension: 0.5,
         borderColor: 'white',
       }
     ]
   };
-  public lineChartOptions: ChartOptions<'line'> = {
+  public lineChartOptions: ChartOptions<'bar'> = {
     responsive: false,
     color:'#222',
     scales: {
@@ -95,13 +96,63 @@ export class DashboardComponent implements OnInit {
         ticks: { color: '#22'},
         grid:{display:false}
       }
-    }
+    },
+    plugins: {
+      title: {
+          display: true,
+          text: 'Expenses By Category'
+      },
+      legend:{
+        display:false,
+
+      }
+    },
+    
   };
+  public pieChartData: any = {
+    labels: [],
+    
+    datasets: [
+      {
+        label: 'Expenses By Category',
+        data: [],
+        // fill: true,
+        // tension: 0.5,
+        borderColor: 'white',
+        hoverOffset: 4
+      }
+    ],
+  };
+  // public pieChartData: any = [10,20];
+  // public pieChartLabels: string[] = [];
+  public pieChartOptions: ChartOptions<'doughnut'> = {
+    responsive: false,
+    plugins: {
+      title: {
+          display: true,
+          text: 'Expenses By Category'
+      }
+    },
+    color:'#222',
+    // scales: {
+    //   y: {
+    //     ticks: { color: '#222'},
+    //     grid:{display:false}
+    //   },
+    //   x: {
+    //     ticks: { color: '#22'},
+    //     grid:{display:false}
+    //   }
+    // }
+  };
+  
   public lineChartLegend = true;
 
   // START FUNCTIONS //
 
   ngOnInit(): void {
+    this.fetchDashboardData();
+    return;
     var userAuth = localStorage.getItem('user');
     if(!userAuth){
       this.router.navigate(['/login']);
@@ -128,39 +179,115 @@ export class DashboardComponent implements OnInit {
     this.cachedData = false;
   }
 
-  getChartData(){
-    this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => x.invoiceDate).reverse();
-    this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
+  secondsToDateFormat(secs:any){
+    var month = new Date(secs).getMonth()+1;
+    var day = new Date(secs).getDate();
+    return new Date(secs).getFullYear()+'-'+
+    (month<10?'0'+month:month)+
+    '-'+(day<10?'0'+day:day);
   }
 
+  
+
+  getLast30DaysTotal(data:any){
+    var total = 0;
+    for(var i =0;i<data.length;i++){
+      if(data[i].total){
+        total+= data[i].total;
+      }else if(data[i].totalBilled){
+        total+= data[i].totalBilled;
+      }
+    }
+    return total;
+  }
+  getPaidInvoices(data:any){
+    var total = data.length;
+    var paid = 0;
+    for(var i =0;i<data.length;i++){
+      if(data[i].paidDate){
+        paid++;
+      }
+    }
+    return paid+'/'+total;
+  }
+  getChartData(){
+    this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => this.secondsToDateFormat(x.invoiceDate)).reverse();
+    this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
+  }
+  getExpenseChartData(data:any){
+    var chartData :any={};
+    for(var i = 0;i<data.length;i++){
+      console.log(data[i]);
+      if(!chartData.hasOwnProperty(data[i].category)){
+        chartData[data[i].category] = data[i].total;
+      }else{
+        chartData[data[i].category] += data[i].total;
+      }
+    }
+    for(var z in chartData){
+      this.pieChartData.datasets[0].data.push(chartData[z]);
+
+      this.pieChartData.labels?.push(z);
+      console.log(chartData[z]);
+    }
+    console.log('expensedata',chartData,this.pieChartData);
+  }
   fetchDashboardData(){
     console.log('getting invoice data');
     var colRef = collection(this.db,'Invoices');
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
     var q = query(colRef,orderBy('invoiceDate','desc'),where('invoiceDate', '>=', thirtyDaysAgo));
+
+    var invoicesColRef = collection(this.db,'Invoices');
+    var invoicesQuery = query(invoicesColRef,orderBy('invoiceDate','desc'),where('invoiceDate', '>=', thirtyDaysAgoSecs));
+
+    var expensesColRef = collection(this.db,'Expenses');
+    var expenseQuery = query(expensesColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
+
+    var fuelColRef = collection(this.db,'Fuels');
+    var fuelQuery = query(fuelColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
     
-    onSnapshot(q,(snapshot: { docs: any[]; }) => {
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.invoices = [];
       snapshot.docs.forEach( (doc) => {
         this.invoices.push({...doc.data(), id:doc.id});
         this.getChartData();
       });
-      this.getRevenueData();
+      // this.getRevenueData();
+      this.last30DayData.invoices = this.getLast30DaysTotal(this.invoices);
+      this.last30DayData.invoicesPaid = this.getPaidInvoices(this.invoices);
       this.saveToLocalStorage('invoices',this.invoices);
-      console.log(this.invoices);
+      console.log('this.invoices',this.invoices);
     });
 
 
-    // console.log('getting exprenses data');
-    // onSnapshot(this.expensesQuery,(snapshot: { docs: any[]; }) => {
-    // this.expenses = [];
-    //   snapshot.docs.forEach( (doc) => {
-    //     this.expenses.push({...doc.data(), id:doc.id})
-    //   });
-    //   this.getExpenseData();
-    //   this.saveToLocalStorage('expenses',this.expenses);
-    // });
+    console.log('getting exprenses data');
+    onSnapshot(expenseQuery,(snapshot: { docs: any[]; }) => {
+      this.expenses = [];
+      snapshot.docs.forEach( (doc) => {
+        this.expenses.push({...doc.data(), id:doc.id})
+        // this.getExpenseChartData(this.expenses);
+      });
+      this.saveToLocalStorage('expenses',this.expenses);
+      console.log('this.expenses',this.expenses);
+
+      this.last30DayData.expenses = this.getLast30DaysTotal(this.expenses);
+      this.getExpenseChartData(this.expenses);
+    });
+
+    onSnapshot(fuelQuery,(snapshot: { docs: any[]; }) => {
+      this.fuel = [];
+      snapshot.docs.forEach( (doc) => {
+        this.fuel.push({...doc.data(), id:doc.id})
+      });
+      this.last30DayData.fuel = this.getLast30DaysTotal(this.fuel);
+      this.saveToLocalStorage('fuel',this.fuel);
+      console.log('this.fuel',this.fuel);
+    });
+
+    
 
 
     // console.log('getting fuel data');

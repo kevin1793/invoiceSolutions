@@ -9,7 +9,7 @@ interface Record {
   item: string,
   description:string,
   date: string,
-  modified :string,
+  modified :number,
   category: string,
   quantity:number,
   id:string
@@ -128,6 +128,7 @@ export class InventoryComponent implements OnInit {
     const invoiceCollection = this.afs.collection<Record>(this.collectionName);
     var updatedRec  = rec;
     updatedRec.quantity = this.editItem.get('quantity')?.value;
+    updatedRec.modified = Date.now();
     invoiceCollection.doc(updatedRec.id).update(updatedRec);
   }
   compare(a: any, b: any, propName: string) {
@@ -187,7 +188,6 @@ export class InventoryComponent implements OnInit {
   addUnitClicked(){
     this.unitItem.reset();
   }
-
   addCategoryClicked(){
     this.categoryItem.reset();
   }

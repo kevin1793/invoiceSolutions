@@ -42,6 +42,7 @@ export class FuelComponent implements OnInit {
   fuels:any;
   vehicles:any;
   fuelEdit = null;
+  addingFuel = false;
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
@@ -60,7 +61,8 @@ export class FuelComponent implements OnInit {
       this.fuels = []
       snapshot.docs.forEach( (doc) => {
         this.fuels.push({...doc.data(), id:doc.id})
-      })
+      });
+      console.log('fuel',this.fuels);
     });
     onSnapshot(this.qVehicles,(snapshot: { docs: any[]; }) => {
       this.vehicles = []
@@ -98,6 +100,13 @@ export class FuelComponent implements OnInit {
     (this.fuelItem,this.fuelItem.value);
     const invoiceCollection = this.afs.collection<Item>('Fuels');
     var fuelItem = this.fuelItem.value;
+    console.log('fuel Item date',fuelItem.date);
+    if(typeof fuelItem.date == 'string'){
+      var days = new Date(fuelItem.date);
+      days.setDate(days.getDate()+1);
+      fuelItem.date = Date.parse(days.toISOString());
+    }
+    console.log('fuel Item',fuelItem);
     var t = invoiceCollection.add(fuelItem);
     this.fuelItem.reset();
     if(this.fuelEdit){
@@ -112,13 +121,24 @@ export class FuelComponent implements OnInit {
   }
 
   addFuelClicked(){
+    this.addingFuel =true;
     this.fuelItem.reset();
+  }
+  secondsToDateFormat(secs:any){
+    var month = new Date(secs).getMonth()+1;
+    var day = new Date(secs).getDate();
+    return new Date(secs).getFullYear()+'-'+
+    (month<10?'0'+month:month)+
+    '-'+(day<10?'0'+day:day);
   }
   
   editFuel(e:any){
+    this.addingFuel = false;
     var thisAll =this;
     this.fuelItem.get('vehicle_number')?.setValue(e.vehicle_number);
-    this.fuelItem.get('date')?.setValue(e.date);
+    var formatDate = typeof e.date == 'string'?e.date:this.secondsToDateFormat(e.date);
+      
+    this.fuelItem.get('date')?.setValue(formatDate);
     this.fuelItem.get('mileage')?.setValue(e.mileage);
     this.fuelItem.get('gallons')?.setValue(e.gallons);
     this.fuelItem.get('total')?.setValue(e.total);

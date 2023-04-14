@@ -114,7 +114,7 @@
         <div class="listItem">{{rec.category || '-' }}</div>
         <div class="listItem">{{rec.quantity |  number}}</div>
         <div class="listItem">{{rec.unit || '-'}}</div>
-        <div class="listItem">{{rec.modified | date: 'mediumDate'  }}</div>
+        <div class="listItem">{{rec.modified | date: 'short'  }}</div>
         <div  class="listItem actionItems">
           <div (click)='deleteRecord(rec)'  class=" fa fa-remove actionBtn" ></div>
           <div (click)='editRecordClicked(rec)' class="fa fa-edit actionBtn" ></div>

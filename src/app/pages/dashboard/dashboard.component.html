@@ -10,35 +10,51 @@
       text-align: center;
     }
     .cardBox{
-      background:#3d70fc;
+      background:#fff;
       border:none;
       border-radius: 5px;
       min-width:315px;
-      height:125px;
+      height:160px;
       padding:15px 10px;
       text-align: center;
       margin-right: 20px;
-      /* box-shadow: #333 2px 2px 2px; */
+      box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     }
     .graphBox{
       background:#fff;
       border:none;
       border-radius: 5px;
-      width:1320px;
-      height:325px;
+      width:100%;
+      height:auto;
       padding:15px 10px;
       text-align: center;
       margin-right: 20px;
       /* box-shadow: #333 2px 2px 2px; */
+    }
+    .graphBox canvas{
+      width: 100%;
     }
     .cardTitle{
       font-size: 20px;
       padding-bottom:25px;
       padding-top:10px;
       font-weight: 700;
+      color: #333;
+      /* text-align: left; */
+      /* padding-left:30px; */
+    }
+    .cardTitleExtra{
+      font-size: 14px;
+      padding-bottom:25px;
+      padding-top:10px;
+      font-weight: 700;
+      color: #c3c3c3;
+      /* text-align: left; */
+      /* padding-left:30px; */
     }
     .cardInfo{
       font-size: 50px;
+      color:#333;
     }
     .cardInfo2{
       padding-left:20px;
@@ -47,10 +63,12 @@
       font-size: 20px;
     }
     .cardsRow{
+      font-family: 'Source Sans Pro', sans-serif;
       display: flex;
       margin-bottom: 30px;;
     }
     .rowTitle{
+      
       font-size:25px;
       color:#222;
       margin-bottom: 10px;;
@@ -66,12 +84,52 @@
       Dashboard
       
     </div>
-    <div *ngIf="cachedData" style="background:white;border-radius:5px;height: 35px; width:50px;text-align: center;padding-top:5px;margin-left: auto; box-shadow: #222 2px 2px 2px; cursor:pointer;">
+    <!-- <div *ngIf="cachedData" style="background:white;border-radius:5px;height: 35px; width:50px;text-align: center;padding-top:5px;margin-left: auto; box-shadow: #222 2px 2px 2px; cursor:pointer;">
       <img (click)="refreshClicked();" style="height:30px;width: auto;" src='../../../assets/images/refresh.png'>
-      <!-- <span class="fa fa-refresh fa-2x"></span> -->
-    </div>
+    </div> -->
     <div class="cardsCont">
-      <div class="rowTitle">Invoices</div>
+      <div class="cardsRow">
+        <div class="cardBox">
+          <div class="cardTitle">Total Invoiced<span class="cardTitleExtra"><br>Last 30 Days</span></div>
+          <div class="cardInfo">{{last30DayData.invoices | currency}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Invoices Paid<span class="cardTitleExtra"><br>Last 30 Days</span></div>
+          <div class="cardInfo">{{last30DayData.invoicesPaid }}</div>
+        </div>
+        <div  *ngIf="lineChartData.datasets[0].data.length > 1" class="graphBox"><canvas  height="160" baseChart
+          [data]="lineChartData"
+          [options]="lineChartOptions"
+          [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- <div class="cardsRow">
+        
+      </div> -->
+
+      <div class="cardsRow">
+        <div class="cardBox">
+          <div class="cardTitle">Fuel<span class="cardTitleExtra"><br>Last 30 Days</span></div>
+          <div class="cardInfo">{{last30DayData.fuel  | currency}}</div>
+        </div>
+        <div class="cardBox">
+          <div class="cardTitle">Expenses <span class="cardTitleExtra"><br>Last 30 Days</span></div>
+          <div class="cardInfo">{{last30DayData.expenses | currency}}</div>
+        </div>
+        <div  *ngIf="pieChartData.datasets[0].data.length > 1" class="graphBox"><canvas  height="450" baseChart
+          [data]="pieChartData"
+          [options]="pieChartOptions"
+          type="doughnut">
+          </canvas>
+        </div>
+      </div>
+      <div class="cardsRow">
+        
+      </div>
+      
+      <!-- <div class="rowTitle">Invoices</div>
       <div class="cardsRow">
         <div class="cardBox">
           <div class="cardTitle">Invoices Paid This Month</div>
@@ -89,9 +147,9 @@
           <div class="cardTitle">Invoices Last Year</div>
           <div class="cardInfo">{{invoicesLastYear}}</div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="rowTitle">Profit</div>
+      <!-- <div class="rowTitle">Profit</div>
       <div class="cardsRow">
         <div class="cardBox">
           <div class="cardTitle">Profit This Month</div>
@@ -160,7 +218,6 @@
         </div>
       </div>
 
-      <!-- GAS -->
       <div class="rowTitle">Fuel Expenses</div>
       <div class="cardsRow">
         <div class="cardBox">
@@ -193,7 +250,7 @@
             {{vehicle.mileage | number}} Miles
           </div>
         </div>
-      </div>
+      </div> -->
 
       
   </div>

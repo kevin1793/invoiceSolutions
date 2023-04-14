@@ -137,6 +137,12 @@
           <div class="addRecordInputItem"><label>Quantity</label>
             <input  type='number' formControlName='quantity' placeholder="Quantity">
           </div>
+          <div class="addRecordInputItem"><label>Unit</label>
+            <select  formControlName='unit' placeholder="Unit">
+              <option></option>
+              <option *ngFor="let u of units;" value="{{u.unit}}">{{u.unit}}</option>
+            </select>
+          </div>
           <div class="addRecordInputItem"><label>Total</label>
             <input type='number' formControlName='total' placeholder="Total">
           </div>
@@ -147,8 +153,9 @@
         </div>
       </form>
       <div>
-        <button (click)="addExpense()" [disabled]=expenseItem.invalid class="greenBtn margin10  width150">Add Expense</button>
-        <button (click)="showAddExpenseBox = !showAddExpenseBox" class="redBtn margin10 width150">Cancel</button>
+        <button *ngIf="editRecord" (click)="updateRecord()" [disabled]=expenseItem.invalid class="greenBtn margin10  width150">Edit Expense</button>
+        <button *ngIf="!editRecord" (click)="addExpense()" [disabled]=expenseItem.invalid class="greenBtn margin10  width150">Add Expense</button>
+        <button  (click)="showAddExpenseBox = !showAddExpenseBox" class="redBtn margin10 width150">Cancel</button>
       </div>
     </div>
     <div class="addRecordCont" *ngIf='showAddCategoryBox'>
@@ -169,12 +176,33 @@
         </div>
       </div>
     </div>
-    <div  *ngIf='!showAddExpenseBox && !showAddCategoryBox' class="btnRow">
+    <div class="addRecordCont" *ngIf='showAddUnitBox'>
+      <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='unitItem'>
+        <div class="formRow">
+          <div class="addRecordInputItem"><label>Unit</label>
+            <input  type='text' formControlName='unit' placeholder="Unit">
+          </div>
+        </div>
+      </form>
+      <div>
+        <button (click)="addUnit()" [disabled]=unitItem.invalid class="greenBtn margin10  width100">Add Unit</button>
+        <button (click)="showAddUnitBox = !showAddUnitBox" class="redBtn margin10 width100">Cancel</button>
+      </div>
+      <div class="tagCont">
+        <div *ngFor="let u of units">
+          <div class="tagItem" (click)="removeUnit(u)"><span class="fa fa-close" style="padding-right:10px;"></span>{{u.unit}}</div>
+        </div>
+      </div>
+    </div>
+    <div  *ngIf='!showAddExpenseBox && !showAddCategoryBox && !showAddUnitBox' class="btnRow">
       <button  class="greenBtn width150 mb20" (click)="addItemClicked();showAddExpenseBox = !showAddExpenseBox">
         + Add Expense
       </button>
       <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addCategoryClicked();showAddCategoryBox = !showAddCategoryBox">
         + Add Category
+      </button>
+      <button   style="margin-right: 15px;" class="greenBtn width150 mb20"  (click)="addUnitClicked();showAddUnitBox = !showAddUnitBox">
+        + Add Unit
       </button>
     </div>
     <div class="searchCont">
@@ -184,7 +212,7 @@
         <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
           <option selected value="item">Item</option>
           <option value="category">Category</option>
-          <!-- <option value="unit">Unit</option> -->
+          <option value="unit">Unit</option>
         </select>
       </span>
     </div>
@@ -202,7 +230,7 @@
       <div class="listItemCont2">
         <td class="listItem" style="width: 250px;">{{rec.item}}</td>
         <td class="listItem">{{rec.category }}</td>
-        <td class="listItem">{{rec.quantity}}</td>
+        <td class="listItem">{{rec.quantity}} {{rec.unit || ''}}</td>
         <td class="listItem">{{rec.total | currency}}</td>
         <td class="listItem">{{rec.date |date: 'mediumDate'  }}</td>
         <td class="listItem actionItems">
