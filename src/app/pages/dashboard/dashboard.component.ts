@@ -22,13 +22,12 @@ export class DashboardComponent implements OnInit {
 
   invoices:any;
   expenses:any;
+  vehicles:any;
+  tasks:any;
   fuel:any;
+  lastUpdated:any;
   db = getFirestore();
   
-  
-  // colRef = collection(this.db,'Invoices');
-  // q = query(this.colRef,orderBy('invoiceDate','desc'));
-
   colRefExpenses = collection(this.db,'Expenses');
   expensesQuery = query(this.colRefExpenses,orderBy('date','desc'));
 
@@ -38,37 +37,8 @@ export class DashboardComponent implements OnInit {
   colRefFuel = collection(this.db,'Fuels');
   fuelQuery = query(this.colRefFuel,orderBy('date','desc'));
 
-  revenueLastYear = 0;
-  revenueLastMonth = 0;
-  revenueThisMonth = 0;
-  revenueThisYear = 0;
-
-  profitLastYear = 0;
-  profitLastMonth = 0;
-  profitThisMonth = 0;
-  profitThisYear = 0;
-
-  vehicles:any;
-
-  expensesThisMonth = 0;
-  expensesLastMonth = 0;
-  expensesLastYear = 0;
-  expensesThisYear = 0;
-
-  gasExpenseThisMonth = 0;
-  gasExpenseLastMonth = 0;
-  gasExpenseThisYear = 0;
-  gasExpenseLastYear: number = 0;
-
-  invoicesPaidThisMonth = 0;
-  invoicesPaidLastMonth = 0;
-
-  invoicesLastMonth = 0;
-  invoicesThisMonth = 0;
-  invoicesThisYear = 0;
-  invoicesLastYear = 0;
-  last30DayData = {expenses:0,invoices:0,invoicesPaid:'',fuel:0,};
-
+  last30DayData = {expenses:0,invoices:0,invoicesPaid:'',fuel:0,tasks:0,vehicles:'',lastUpdated:new Date()};
+  localData = [];
   cachedData = true;
   
 
@@ -100,7 +70,7 @@ export class DashboardComponent implements OnInit {
     plugins: {
       title: {
           display: true,
-          text: 'Expenses By Category'
+          text: 'Invoice Totals By Day'
       },
       legend:{
         display:false,
@@ -151,34 +121,26 @@ export class DashboardComponent implements OnInit {
   // START FUNCTIONS //
 
   ngOnInit(): void {
-    this.fetchDashboardData();
-    return;
-    var userAuth = localStorage.getItem('user');
-    if(!userAuth){
-      this.router.navigate(['/login']);
-    }
     var localDataPresent = this.checkLocalStorageData();
     if(localDataPresent){
-      console.log('dashboard is getting local data');
-      this.setLocalStorageData(); 
-      this.getRevenueData();
-      this.getExpenseData();
-      this.getGasExpenseData();
-      this.getChartData();
-    }
-
-    if(!localDataPresent){
-      console.log('GETTING LIVE DATA');
-      return;
+      this.setDashboardLocalData();
+    }else{
       this.fetchDashboardData();
     }
   }
-
+  setDashboardLocalData(){
+    console.log('localStorage',localStorage);
+    this.invoices = JSON.parse(localStorage.getItem('invoices') || '');
+    this.fuel = JSON.parse(localStorage.getItem('fuel') || '');
+    this.expenses = JSON.parse(localStorage.getItem('expenses') || '');
+    this.last30DayData = JSON.parse(localStorage.getItem('last30DayData') || '');
+    this.getChartData();
+    this.setExpenseChartData(this.expenses);
+  }
   refreshClicked(){
     this.fetchDashboardData();
     this.cachedData = false;
   }
-
   secondsToDateFormat(secs:any){
     var month = new Date(secs).getMonth()+1;
     var day = new Date(secs).getDate();
@@ -186,9 +148,6 @@ export class DashboardComponent implements OnInit {
     (month<10?'0'+month:month)+
     '-'+(day<10?'0'+day:day);
   }
-
-  
-
   getLast30DaysTotal(data:any){
     var total = 0;
     for(var i =0;i<data.length;i++){
@@ -208,13 +167,13 @@ export class DashboardComponent implements OnInit {
         paid++;
       }
     }
-    return paid+'/'+total;
+    return paid+' of '+total;
   }
   getChartData(){
     this.lineChartData.labels = this.invoices.map( (x: { invoiceDate: any; }) => this.secondsToDateFormat(x.invoiceDate)).reverse();
     this.lineChartData.datasets[0].data = this.invoices.map( (x: { totalBilled: any; } ) => x.totalBilled).reverse();
   }
-  getExpenseChartData(data:any){
+  setExpenseChartData(data:any){
     var chartData :any={};
     for(var i = 0;i<data.length;i++){
       console.log(data[i]);
@@ -248,6 +207,12 @@ export class DashboardComponent implements OnInit {
 
     var fuelColRef = collection(this.db,'Fuels');
     var fuelQuery = query(fuelColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
+
+    var taskColRef = collection(this.db,'Tasks');
+    var taskQuery = query(taskColRef);
+
+    var vehicleColRef = collection(this.db,'Vehicles');
+    var vehicleQuery = query(vehicleColRef);
     
     onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.invoices = [];
@@ -255,11 +220,9 @@ export class DashboardComponent implements OnInit {
         this.invoices.push({...doc.data(), id:doc.id});
         this.getChartData();
       });
-      // this.getRevenueData();
       this.last30DayData.invoices = this.getLast30DaysTotal(this.invoices);
       this.last30DayData.invoicesPaid = this.getPaidInvoices(this.invoices);
-      this.saveToLocalStorage('invoices',this.invoices);
-      console.log('this.invoices',this.invoices);
+      this.saveToLocalStorage('last30DayData',this.last30DayData);
     });
 
 
@@ -268,13 +231,11 @@ export class DashboardComponent implements OnInit {
       this.expenses = [];
       snapshot.docs.forEach( (doc) => {
         this.expenses.push({...doc.data(), id:doc.id})
-        // this.getExpenseChartData(this.expenses);
       });
       this.saveToLocalStorage('expenses',this.expenses);
-      console.log('this.expenses',this.expenses);
-
       this.last30DayData.expenses = this.getLast30DaysTotal(this.expenses);
-      this.getExpenseChartData(this.expenses);
+      this.setExpenseChartData(this.expenses);
+      this.saveToLocalStorage('last30DayData',this.last30DayData);
     });
 
     onSnapshot(fuelQuery,(snapshot: { docs: any[]; }) => {
@@ -282,59 +243,30 @@ export class DashboardComponent implements OnInit {
       snapshot.docs.forEach( (doc) => {
         this.fuel.push({...doc.data(), id:doc.id})
       });
-      this.last30DayData.fuel = this.getLast30DaysTotal(this.fuel);
       this.saveToLocalStorage('fuel',this.fuel);
-      console.log('this.fuel',this.fuel);
+      this.last30DayData.fuel = this.getLast30DaysTotal(this.fuel);
+      this.saveToLocalStorage('last30DayData',this.last30DayData);
     });
-
-    
-
-
-    // console.log('getting fuel data');
-    // onSnapshot(this.fuelQuery,(snapshot: { docs: any[]; }) => {
-    //   this.fuel = []
-    //   snapshot.docs.forEach( (doc) => {
-    //     this.fuel.push({...doc.data(), id:doc.id})
-    //   });
-    //   this.getGasExpenseData();
-    //   this.saveToLocalStorage('fuel',this.fuel);
-    // });
-
-
-    // console.log('getting vehicle data');
-    // onSnapshot(this.vehiclesQuery,(snapshot: { docs: any[]; }) => {
-    //   this.vehicles = [];
-    //   snapshot.docs.forEach( (doc) => {
-    //     this.vehicles.push({...doc.data(), id:doc.id})
-    //   });
-    //   this.saveToLocalStorage('vehicles',this.vehicles);
-    // });
-  }
-
-  getExpenseData(){
-    this.getExpensesLastMonth();
-    this.getExpensesThisMonth();
-    this.getExpensesThisYear();
-    this.getExpensesLastYear();
-  }
-
-  getGasExpenseData(){
-    this.getGasExpenseLastMonth();
-    this.getGasExpenseThisMonth();
-    this.getGasExpenseThisYear();
-    this.getGasExpenseLastYear();
-    this.getProfitData();
-  }
-
-  getRevenueData(){
-    this.getInvoicesPaidThisMonth();
-    this.getInvoicesPaidLastMonth();
-    this.getInvoicesLastYear();
-    this.getInvoicesThisYear();
-    this.getRevenueLastMonth();
-    this.getRevenueThisMonth();
-    this.getRevenueThisYear();
-    this.getRevenueLastYear();
+    onSnapshot(taskQuery,(snapshot: { docs: any[]; }) => {
+      this.tasks = [];
+      snapshot.docs.forEach( (doc) => {
+        this.tasks.push({...doc.data(), id:doc.id})
+      });
+      this.last30DayData.tasks = this.tasks.length;
+      this.saveToLocalStorage('last30DayData',this.last30DayData);
+      this.saveToLocalStorage('tasks',this.tasks);
+    });
+    onSnapshot(vehicleQuery,(snapshot: { docs: any[]; }) => {
+      this.vehicles = [];
+      snapshot.docs.forEach( (doc) => {
+        this.vehicles.push({...doc.data(), id:doc.id})
+      });
+      this.last30DayData.vehicles = this.vehicles.filter((x:any) => x.status == 'Operational').length+' of '+this.vehicles.length;
+      this.saveToLocalStorage('last30DayData',this.last30DayData);
+      this.saveToLocalStorage('vehicles',this.vehicles);
+    });
+    this.last30DayData.lastUpdated = new Date();
+    this.saveToLocalStorage('last30DayData',this.last30DayData);
   }
 
   checkLocalStorageData(){
@@ -363,9 +295,9 @@ export class DashboardComponent implements OnInit {
     if(cachedInvoicesData?.length){
       this.invoices = JSON.parse(cachedInvoicesData);
     }
-    if(cachedVehiclesData?.length){
-      this.vehicles = JSON.parse(cachedVehiclesData);
-    }
+    // if(cachedVehiclesData?.length){
+    //   this.vehicles = JSON.parse(cachedVehiclesData);
+    // }
   }
 
   saveToLocalStorage(id: string,data: any){
@@ -373,10 +305,10 @@ export class DashboardComponent implements OnInit {
   }
 
   getProfitData(){
-    this.profitThisYear = this.revenueThisYear - (this.gasExpenseThisYear+this.expensesThisYear);
-    this.profitThisMonth = this.revenueThisMonth - (this.gasExpenseThisMonth+this.expensesThisMonth);
-    this.profitLastMonth = this.revenueLastMonth - (this.gasExpenseLastMonth+this.expensesLastMonth);
-    this.profitLastYear = this.revenueLastYear - (this.gasExpenseLastYear+this.expensesLastYear);
+    // this.profitThisYear = this.revenueThisYear - (this.gasExpenseThisYear+this.expensesThisYear);
+    // this.profitThisMonth = this.revenueThisMonth - (this.gasExpenseThisMonth+this.expensesThisMonth);
+    // this.profitLastMonth = this.revenueLastMonth - (this.gasExpenseLastMonth+this.expensesLastMonth);
+    // this.profitLastYear = this.revenueLastYear - (this.gasExpenseLastYear+this.expensesLastYear);
   }
 
   reloadChart(chart:any){
@@ -384,272 +316,6 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       chart.datasets[0].data.pop();
     },1100);
-  }
-
-  getGasExpenseLastYear(){
-    this.gasExpenseLastYear = 0;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear-1;
-    this.fuel.forEach((x: any) => {
-      if(x.date.includes(dateSearch) ){
-        this.gasExpenseLastYear+=parseInt(x.total);
-      }
-    });
-  }
-
-  getGasExpenseThisYear(){
-    this.gasExpenseThisYear = 0;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear;
-    this.fuel.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.gasExpenseThisYear+=parseInt(x.total);
-      }
-    });
-  }
-
-  getExpensesThisMonth(){
-    this.expensesThisMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.expensesThisMonth+=parseInt(x.total);
-      }
-    });
-  }
-
-  getGasExpenseLastMonth(){
-    this.gasExpenseLastMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth == 1){
-      thisYear--;
-      thisMonth = 12;
-    }else{
-      thisMonth--;
-    }
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.fuel.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.gasExpenseLastMonth+=parseInt(x.total);
-      }
-    });
-  }
-
-  getGasExpenseThisMonth(){
-    this.gasExpenseThisMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.fuel.forEach((x: any) => {
-      if(x.date.includes(dateSearch) ){
-        this.gasExpenseThisMonth+=parseInt(x.total);
-      }
-    });
-  }
-
-  getExpensesThisYear(){
-    this.expensesThisYear = 0;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.expensesThisYear+=parseInt(x.total);
-      }
-    });
-  }
-
-  getExpensesLastYear(){
-    this.expensesLastYear = 0;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear-1;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.expensesLastYear+=parseInt(x.total);
-      }
-    });
-  }
-  
-  getExpensesLastMonth(){
-    this.expensesLastMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth == 1){
-      thisYear--;
-      thisMonth = 12;
-    }else{
-      thisMonth--;
-    }
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.expenses.forEach((x: any) => {
-      if(x.date.includes(dateSearch)){
-        this.expensesLastMonth+=parseInt(x.total);
-      }
-    });
-  }
-
-  getInvoicesPaidLastMonth(){
-    this.invoicesThisMonth = 0;
-    this.invoicesPaidThisMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.invoicesThisMonth++;
-        if(x.paidDate){
-          this.invoicesPaidThisMonth++;
-        }
-      }
-    });
-  }
-
-  getInvoicesPaidThisMonth(){
-    this.invoicesLastMonth = 0;
-    this.invoicesPaidLastMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth == 1){
-      thisYear--;
-      thisMonth = 12;
-    }else{
-      thisMonth--;
-    }
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.invoicesLastMonth++;
-        if(x.paidDate){
-          this.invoicesPaidLastMonth++;
-        }
-      }
-    });
-  }
-
-  getInvoicesThisYear(){
-    this.invoicesThisYear = 0;;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.invoicesThisYear++;
-      }
-    });
-  }
-
-  getInvoicesLastYear(){
-    this.invoicesLastYear = 0;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear-1;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.invoicesLastYear++;
-      }
-    });
-  }
-
-  getRevenueThisMonth(){
-    this.revenueThisMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.revenueThisMonth+=parseInt(x.totalBilled);
-      }
-    });
-  }
-
-  getRevenueThisYear(){
-    this.revenueThisYear = 0;
-    var thisYear = new Date().getFullYear();
-    var dateSearch = thisYear;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.revenueThisYear+=parseInt(x.totalBilled);
-      }
-    });
-  }
-
-  getRevenueLastMonth(){
-    this.revenueLastMonth = 0;
-    var thisYear = new Date().getFullYear();
-    var thisMonth = new Date().getMonth()+1;
-    var strMonth = '';
-    if(thisMonth == 1){
-      thisYear--;
-      thisMonth = 12;
-    }else{
-      thisMonth--;
-    }
-    if(thisMonth<10){
-      strMonth = '0'+thisMonth.toString();
-    }else{
-      strMonth = thisMonth.toString();
-    }
-    var dateSearch = thisYear+'-'+strMonth;
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes(dateSearch)){
-        this.revenueLastMonth+=parseInt(x.totalBilled);
-      }
-    });
-  }
-
-  getRevenueLastYear(){
-    this.revenueLastYear = 0;
-    var thisYear = new Date().getFullYear();
-    this.invoices.forEach((x: any) => {
-      if(x.invoiceDate.includes((thisYear-1).toString())){
-        this.revenueLastYear+=parseInt(x.totalBilled);
-      }
-    });
-  }
-
-  test(){
   }
 
   currentFeatureChanged(x:any){

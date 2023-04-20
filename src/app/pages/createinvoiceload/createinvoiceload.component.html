@@ -119,18 +119,15 @@
       margin: 10px;
       justify-content: space-around;
     }
-  
     .invoiceDateLine {
       justify-content: space-evenly;
     }
-  
     .workDayLine {
       margin-left:15px;
       margin-right:15px;
       justify-content: left;
     }
     .workDayHeader{
-      
       position:relative;
     }
 
@@ -166,30 +163,20 @@
       margin-top:30px;
       padding-left:30px;
       margin-right:-30px;
-      background:#4e7df8;
+      background:#333;
       border-radius: 10px;
       padding-bottom: 30px;;
-      box-shadow: #333 3px 3px 6px;
+      /* box-shadow: #333 3px 3px 6px; */
     }
-
     .inputRow{
       width: 100%;
       justify-content: space-evenly;
     }
     .formEndBlock{
       margin-top:30px;
-      background:#4e7df8;
+      background:#333;
       border-radius: 10px;
       width:100%;
-      padding-bottom: 30px;;
-      box-shadow: #333 3px 3px 6px;
-    }
-  
-    .formEndBlock{
-      background:#4e7df8;
-      box-shadow: #333 2px 2px 6px;
-      border-radius: 10px;
-      padding-left:30px;
       padding-bottom:30px;
       padding-top:10px;
       justify-content: center;
@@ -365,12 +352,11 @@
           </div>
         </div>
         <!-- ==================ADDITIONAL CHARGES================== -->
-        <div  class="formEndBlock" >
-          <button class="buttonStyle" style=" min-width:100px;margin-top:25px;margin-left:15px;margin-right:40px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addCharge()">
-            Add Additional Charge
-          </button>
+        <button class="buttonStyle" style=" min-width:100px;margin-top:25px;;margin-right:40px;background: green;box-shadow: #2d2d2d 2px 2px 2px;color:white;font-weight: 25;" (click)="addCharge()">
+          Add Additional Charge
+        </button>
+        <div *ngIf="additionalCharges().controls.length"  class="formEndBlock" >
           <div *ngFor="let charge of additionalCharges().controls;let i=index" formArrayName="additionalCharges">
-          
           <div style="display:flex;" class="inputRow" [formGroupName]="i" >
             <div class="labelInput">
               <div><label>Date</label></div><input class="block-input-smedium" type="text" formControlName="date">
@@ -389,7 +375,7 @@
       </div>
         <!-- ==================TOTALS================== -->
         <div class="formEndBlock" style="margin-top:30px;">
-          <div style="display:flex;" >
+          <div style="display:flex;justify-content: center;" >
             <div class="labelInput">
               <div><label>Bill To</label></div><input class="block-input-smedium" type="text" formControlName="bill_to">
             </div>

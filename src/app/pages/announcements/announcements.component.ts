@@ -26,10 +26,10 @@ export class AnnouncementsComponent {
   }
 
   recordItem: UntypedFormGroup = this.fb.group({
-    subject: [''],
-    message: [''],
+    subject: ['',Validators.required],
+    message: ['',Validators.required],
     createdDate: [''],
-    type: [''],
+    type: ['',Validators.required],
     notes: [''],
   });
 
@@ -42,7 +42,6 @@ export class AnnouncementsComponent {
   dashboardData = 'Y';
   showAddRecordBox = false;
   collectionName = 'Announcements';
-  // filterProperty = 'item';
 
   db = getFirestore();
   colRef = collection(this.db,this.collectionName);
@@ -69,7 +68,7 @@ export class AnnouncementsComponent {
   addRecord(){
     const invoiceCollection = this.afs.collection<Record>(this.collectionName);
     var recordItem = this.recordItem.value;
-    var d = Date();
+    var d = Date.now();
     recordItem.createdDate = d;
     var t = invoiceCollection.add(recordItem);
     this.recordItem.reset();

@@ -214,9 +214,8 @@ body {
   padding-top: 100px;
   padding-bottom: 20px;
   font-size: 60px;
-  ;
   color: #222;
-  text-shadow: #333 1px 1px 3px;
+  /* text-shadow: #333 1px 1px 3px; */
 }
 
 .mainCont {
@@ -329,6 +328,7 @@ body {
   max-width: 170px;
   min-width: 120px;
   color: #222;
+  font-weight:600;
 }
 
 .btnRow button {

@@ -19,6 +19,7 @@
       text-align: center;
       margin-right: 20px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+      margin-top:20px;
     }
     .graphBox{
       background:#fff;
@@ -29,6 +30,8 @@
       padding:15px 10px;
       text-align: center;
       margin-right: 20px;
+      margin-top: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
       /* box-shadow: #333 2px 2px 2px; */
     }
     .graphBox canvas{
@@ -65,7 +68,7 @@
     .cardsRow{
       font-family: 'Source Sans Pro', sans-serif;
       display: flex;
-      margin-bottom: 30px;;
+      /* margin-bottom: 30px;; */
     }
     .rowTitle{
       
@@ -84,9 +87,13 @@
       Dashboard
       
     </div>
-    <!-- <div *ngIf="cachedData" style="background:white;border-radius:5px;height: 35px; width:50px;text-align: center;padding-top:5px;margin-left: auto; box-shadow: #222 2px 2px 2px; cursor:pointer;">
-      <img (click)="refreshClicked();" style="height:30px;width: auto;" src='../../../assets/images/refresh.png'>
-    </div> -->
+    <div style="display:flex;">
+      <div *ngIf="cachedData" style="background:white;border-radius:5px;height: 35px; width:50px;text-align: center;padding-top:5px;margin-right: auto; box-shadow: #222 2px 2px 6px; cursor:pointer;margin-bottom:10px;">
+        <img (click)="fetchDashboardData();" style="height:30px;width: auto;" src='../../../assets/images/refresh.png'>
+      </div>
+      <div style="color:#333;font-weight: 600;opacity:.7">Last Updated: {{last30DayData.lastUpdated | date: 'short'}}</div>
+    </div>
+
     <div class="cardsCont">
       <div class="cardsRow">
         <div class="cardBox">
@@ -110,15 +117,28 @@
       </div> -->
 
       <div class="cardsRow">
-        <div class="cardBox">
-          <div class="cardTitle">Fuel<span class="cardTitleExtra"><br>Last 30 Days</span></div>
-          <div class="cardInfo">{{last30DayData.fuel  | currency}}</div>
+        <div class="cardColumn">
+          <div class="cardBox">
+            <div class="cardTitle">Fuel<span class="cardTitleExtra"><br>Last 30 Days</span></div>
+            <div class="cardInfo">{{last30DayData.fuel  | currency}}</div>
+          </div>
+          <div class="cardBox">
+            <div class="cardTitle">Open Tasks<span class="cardTitleExtra"><br>All</span></div>
+            <div class="cardInfo">{{last30DayData.tasks  }}</div>
+          </div>
         </div>
-        <div class="cardBox">
-          <div class="cardTitle">Expenses <span class="cardTitleExtra"><br>Last 30 Days</span></div>
-          <div class="cardInfo">{{last30DayData.expenses | currency}}</div>
+        <div class="cardColumn">
+          <div class="cardBox">
+            <div class="cardTitle">Expenses <span class="cardTitleExtra"><br>Last 30 Days</span></div>
+            <div class="cardInfo">{{last30DayData.expenses | currency}}</div>
+          </div>
+          <div class="cardBox">
+            <div class="cardTitle">Operational Vehicles<span class="cardTitleExtra"><br>All</span></div>
+            <div class="cardInfo">{{last30DayData.vehicles  }}</div>
+          </div>
         </div>
-        <div  *ngIf="pieChartData.datasets[0].data.length > 1" class="graphBox"><canvas  height="450" baseChart
+        
+        <div  *ngIf="pieChartData.datasets[0].data.length > 1" class="graphBox"><canvas  height="370" baseChart
           [data]="pieChartData"
           [options]="pieChartOptions"
           type="doughnut">
