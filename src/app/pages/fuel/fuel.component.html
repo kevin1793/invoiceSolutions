@@ -150,14 +150,14 @@
       </button>
     </div>
     <div class="listHeaderCont2">
-      <div class="headerItem">Vehicle Number</div>
-      <div class="headerItem">Mileage</div>
-      <div class="headerItem">Gallons</div>
-      <div class="headerItem">Total</div>
-      <div class="headerItem">Date</div>
-      <div class="headerItem">Actions</div>
+      <div (click)="sortPropertyChanged('vehicle_number')" class="headerItem">Vehicle Number&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('mileage')" class="headerItem">Mileage&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('gallons')" class="headerItem">Gallons&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('total')" class="headerItem">Total&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('date')" class="headerItem">Date&nbsp;<span class="fa fa-sort"></span></div>
+      <div class="headerItem" style="cursor:unset;">Actions</div>
     </div>
-    <div *ngFor="let fuel of fuels">
+    <div *ngFor="let fuel of records">
       <div class="listItemCont2">
         <div class="listItem">{{fuel.vehicle_number}}</div>
         <div class="listItem">{{fuel.mileage }}</div>

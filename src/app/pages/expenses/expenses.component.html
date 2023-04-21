@@ -1,46 +1,9 @@
 <style>
-  .pageWrapper{
-    margin: 0 auto;
-    color:white;
-    justify-content: center;
-    padding-bottom: 200px;
-    min-height: 100vh;
-  }
   .mainCont{
     max-width: 1400px;
     margin: 0 auto;
     width: 100%;
     position: relative;
-  }
-  .listHeaderCont{
-    display: flex;
-    justify-content: space-around;
-    padding:10px 20px;
-    background-color: white;
-    border-radius: 5px;
-    min-width: 50px;
-    color:#1976d2;
-    font-weight: bold;
-    text-align: center;
-  }
-  .listItemCont{
-    justify-content: space-around;
-    padding:10px 20px;
-    font-weight: bold;
-    display: flex;
-    /* border-bottom: 1px solid white; */
-    text-align: center;
-  }
-  .headerItem, .listItem{
-    text-align: center;
-    max-width: 250px;
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .listItem{
-    justify-content: space-evenly;
   }
   .btnRow button{
     margin-right:10px;
@@ -58,63 +21,9 @@
   .formRow div{
     margin-right: 10px;;
   }
-  .addExpenseInputBox input{
-    border:none;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    width: auto;
-  }
-
-  .addExpenseInputBox select{
-    border:none;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    width: auto;
-  }
-
-  .addExpenseInputBox option{
-    border:none;
-    padding: 10px;
-    /* margin: 10px; */
-    border-radius: 5px;
-    width: auto;
-  }
-
-  .addExpenseInputBox textarea{
-    border:none;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 5px;
-    width: auto;
-    width: 400px;
-    height: 100px;
-  }
-  .addExpenseInputItem{
-    display: inline-grid;
-    width: auto;
-  }
-  .addExpenseInputItem label{
-    margin-left: 10px;
-  }
-  .modalBox{
-    background-color: white;
-    padding:20px;
-    position: absolute;
-    top:50%;
-    left:40%;
-    box-shadow: 2px 2px 2px #222;
-    border:none;
-    border-radius: 5px;
-  }
-  .modalTitle{
-    color: black;
-    padding-bottom: 30px;;
-  }
 </style>
 
-<div class="pageWrapper">
+<div class="pageWrapper2">
   <app-navbar></app-navbar>
   <app-sidemenu [dashboardData]="dashboardData" ></app-sidemenu>
   <div class="mainCont">
@@ -219,12 +128,12 @@
     
     <!-- START EXPENSE LIST -->
     <div class="listHeaderCont2">
-      <div class="headerItem"  style="width: 250px;">Item</div>
-      <div class="headerItem">Category</div>
-      <div class="headerItem">Quantity</div>
-      <div class="headerItem">Total</div>
-      <div class="headerItem">Date</div>
-      <div class="headerItem">Actions</div>
+      <div (click)="sortPropertyChanged('item')" class="headerItem"  style="width: 250px;">Item&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('category')" class="headerItem">Category&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('qunatity')" class="headerItem">Quantity&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('total')" class="headerItem">Total&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('date')" class="headerItem">Date&nbsp;<span class="fa fa-sort"></span></div>
+      <div class="headerItem"  style="cursor:unset;">Actions</div>
     </div>
     <div *ngFor="let rec of records">
       <div class="listItemCont2">

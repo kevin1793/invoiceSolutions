@@ -1,32 +1,7 @@
 <style>
-  .pageWrapper{
-    margin: 0 auto;
-    color:white;
-    justify-content: center;
-    padding-bottom: 200px;
-    min-height: 100vh;
-  }
-  .toolbar{
-    background:#333;
-    padding:20px 10px;
-  }
-
-  .toolbar span{
-    padding-left:10px;
-  }
   .content{
     margin: 0 auto;
     text-align: center;
-  }
-  .homeTitle{
-    padding:100px 0px;
-    font-size:60px;
-    text-shadow: #333 3px 3px 3px;
-  }
-  .homeSubtitle{
-    font-size: 20px;
-    padding-bottom: 10px;
-    text-shadow: #333 3px 3px 3px;
   }
   .inputCont{
     display: block;
@@ -38,16 +13,6 @@
     border-radius: 5px;
     width: 250px;
     box-shadow: #333 2px 2px 2px;
-  }
-  .loginBtn{
-    border: none;
-    background-color: #1d1d1d;
-    color: white;
-    margin-top:30px;
-    border-radius: 5px;
-    padding: 10px 20px;
-    box-shadow: #333 2px 2px 2px;
-    cursor: pointer;
   }
   .mainCont{
     max-width: 1400px;
@@ -69,16 +34,6 @@
     min-width: 50px;
     color:#1976d2;
     font-weight: bold;
-    text-align: center;
-  }
-  .listItemCont{
-    justify-content: space-around;
-    padding:10px 20px;
-    padding-top:12px;
-    padding-bottom:8px;
-    font-weight: bold;
-    display: flex;
-    /* border-bottom: 1px solid white; */
     text-align: center;
   }
   .headerItem, .listItem{
@@ -148,7 +103,7 @@
   }
 </style>
 <!-- Toolbar -->
-<div class="pageWrapper">
+<div class="pageWrapper2">
   <app-navbar></app-navbar>
   <app-sidemenu   [dashboardData]="dashboardData"></app-sidemenu>
   <!-- MAIN CONTENT -->
@@ -176,10 +131,6 @@
       <button  *ngIf='!showAddInvoiceBox' class="greenBtn width200 mb20" (click)="showAddInvoiceBox = !showAddInvoiceBox">
         Add Invoice<br>(Quick)
       </button>
-      <div *ngIf="cachedData" style="background:white;border-radius:5px;height: 35px; width:50px;text-align: center;padding-top:5px;margin-left: auto; box-shadow: #222 2px 2px 2px; cursor:pointer;">
-        <img (click)="refreshClicked();" style="height:30px;width: auto;" src='../../../assets/images/refresh.png'>
-        <!-- <span (click)="refreshClicked();"  style="height:30px;width: auto;color:black;"  class="fa fa-refresh fa-2x"></span> -->
-      </div>
     </div>
     <div class="searchCont " style="display:flex;">
       <div>
@@ -226,15 +177,15 @@
       </div>
     </div>
     <div class="listHeaderCont2">
-      <div class="headerItem" style="width:150px">Invoice #</div>
-      <div class="headerItem">Invoice Date</div>
-      <div class="headerItem"  style="width:310px;">Billed To</div>
-      <div class="headerItem">Total Billed</div>
-      <div class="headerItem">Paid Date</div>
-      <div class="headerItem">Invoice Paid</div>
-      <div class="headerItem"  style="width:300px;">Actions</div>
+      <div (click)="sortPropertyChanged('invoiceNumber')" class="headerItem" style="width:150px">Invoice #&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('invoiceDate')" class="headerItem">Invoice Date&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('billedTo')" class="headerItem"  style="width:310px;">Billed To&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('totalBilled')" class="headerItem">Total Billed&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('paidDate')" class="headerItem">Paid Date&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('paidDate')" class="headerItem">Invoice Paid&nbsp;<span class="fa fa-sort"></span></div>
+      <div class="headerItem"  style="cursor:unset !important;width:250px;" >Actions</div>
     </div>
-    <div *ngFor="let invoice of invoices">
+    <div *ngFor="let invoice of records">
       <div class="listItemCont2">
         <div class="listItem listItemText"  style="width:150px">{{invoice.invoiceNumber}}</div>
         <div class="listItem listItemText">{{invoice.invoiceDate | date: 'mediumDate' }}</div>
@@ -245,7 +196,7 @@
           <div *ngIf='invoice.paidDate'  style='background:#b3f7cf; border-radius: 5px;padding:4px;color:#2f916c;font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
           <div *ngIf='!invoice.paidDate' style='background:#ffe7ef; border-radius: 5px;padding:4px;color:rgb(131, 44, 44);font-size: 13px;font-weight: 800;' >{{invoice.paidDate?'PAID':'UNPAID'}}</div>
         </div>
-        <div  class="listItem actionItems" style="width:300px;">
+        <div  class="listItem actionItems" style="width:250px;">
           <div class="actionBtn" *ngIf='!invoice.paidDate' (click)='editPaidDate(invoice)' class="fa-solid fa-dollar-sign actionBtn"  ></div>
           <div class="actionBtn"  style="cursor: unset;"  *ngIf='invoice.paidDate' style='width: 40px;'></div>
           <div class="actionBtn" (click)='deleteInvoice(invoice)'  class="fa fa-remove actionBtn" ></div>

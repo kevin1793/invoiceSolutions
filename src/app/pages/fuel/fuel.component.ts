@@ -39,10 +39,14 @@ export class FuelComponent implements OnInit {
     total:[null,Validators.required],
   });
   
-  fuels:any;
+  records:any;
   vehicles:any;
   fuelEdit = null;
   addingFuel = false;
+
+  currentSortDirection = true;
+  sortProperty = 'item';
+  currentPropDirection = '';
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
@@ -58,11 +62,11 @@ export class FuelComponent implements OnInit {
     }
     //load in previous fuels
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
-      this.fuels = []
+      this.records = []
       snapshot.docs.forEach( (doc) => {
-        this.fuels.push({...doc.data(), id:doc.id})
+        this.records.push({...doc.data(), id:doc.id})
       });
-      console.log('fuel',this.fuels);
+      console.log('fuel',this.records);
     });
     onSnapshot(this.qVehicles,(snapshot: { docs: any[]; }) => {
       this.vehicles = []
@@ -74,6 +78,25 @@ export class FuelComponent implements OnInit {
   }
 
   //NEW FUNCTIONs DOWN BELOW
+  compare(a: any, b: any, propName: string) {
+    let result = 0;
+    if (a[propName] < b[propName]) {
+      result = -1;
+    } else if (a[propName] > b[propName]) {
+      result = 1;
+    }
+    if (this.currentSortDirection) {
+      result = -result;
+    }
+    return result;
+  }
+  sortPropertyChanged(prop:string){
+    console.log('sortProperty',prop);
+    this.currentSortDirection = !this.currentSortDirection;
+    this.sortProperty = prop;
+    this.records = this.records.sort((a:any, b:any) => this.compare(a, b, this.sortProperty));
+    console.log(this.records);
+  }
 
   async deleteFuel(item:any){
     const invoiceCollection = this.afs.collection<Item>('Fuels');

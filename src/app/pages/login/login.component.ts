@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         this.loggedIn = true;
         var userData = {email:email};
         localStorage.setItem('user',JSON.stringify(userData))
-        this.router.navigate(['/expenses'], { state: { loggedIn: true  } });
+        this.router.navigate(['/dashboard'], { state: { loggedIn: true  } });
         this.elementRef.nativeElement.parent.destroy();
         // ...
         

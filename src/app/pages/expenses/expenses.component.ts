@@ -69,6 +69,10 @@ export class ExpensesComponent implements OnInit {
   units:any;
   editRecord:any;
 
+  currentSortDirection = true;
+  sortProperty = 'item';
+  currentPropDirection = '';
+
   db = getFirestore();
   colRef = collection(this.db,'Expenses');
   q = query(this.colRef,orderBy('date','desc'));
@@ -106,6 +110,25 @@ export class ExpensesComponent implements OnInit {
       })
       console.log('UNITS',this.units);
     });
+  }
+  compare(a: any, b: any, propName: string) {
+    let result = 0;
+    if (a[propName] < b[propName]) {
+      result = -1;
+    } else if (a[propName] > b[propName]) {
+      result = 1;
+    }
+    if (this.currentSortDirection) {
+      result = -result;
+    }
+    return result;
+  }
+  sortPropertyChanged(prop:string){
+    console.log('sortProperty',prop);
+    this.currentSortDirection = !this.currentSortDirection;
+    this.sortProperty = prop;
+    this.records = this.records.sort((a:any, b:any) => this.compare(a, b, this.sortProperty));
+    console.log(this.records);
   }
   filterChange(e:any){
     console.log('filterCHange',e);

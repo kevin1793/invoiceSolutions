@@ -1,9 +1,8 @@
 import { Component, OnInit,Output ,Input } from '@angular/core';
 import { AngularFirestore,AngularFirestoreDocument} from '@angular/fire/compat/firestore';
 import { orderBy, query,onSnapshot,where, getFirestore } from 'firebase/firestore';
-import { Firestore, deleteDoc ,collectionData, collection } from '@angular/fire/firestore';
-import { ChartConfiguration, ChartData, ChartOptions, ScatterDataPoint } from 'chart.js';
-import { TemplateBindingParseResult } from '@angular/compiler';
+import { Firestore, collection } from '@angular/fire/firestore';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { Router } from '@angular/router';
 
 
@@ -43,27 +42,33 @@ export class DashboardComponent implements OnInit {
   
 
   public lineChartData: ChartConfiguration<'bar'>['data'] = {
-    // labels: ['white'],
     datasets: [
       {
         data: [],
         label: 'Invoice Totals By Day (Last 30 Days)',
-        // fill: true,
-        // tension: 0.5,
         borderColor: 'white',
+        hoverBackgroundColor:'green',
+        backgroundColor:'#1fb141'
       }
     ]
   };
   public lineChartOptions: ChartOptions<'bar'> = {
     responsive: false,
     color:'#222',
+    
     scales: {
       y: {
-        ticks: { color: '#222'},
-        grid:{display:false}
+        ticks: { color: '#222',
+          callback: function(value, index, ticks) {
+            return '$'+value;
+        }
+      },
+        grid:{display:false},
+        
       },
       x: {
-        ticks: { color: '#22'},
+        ticks: { color: '#22',
+      },
         grid:{display:false}
       }
     },
@@ -75,6 +80,22 @@ export class DashboardComponent implements OnInit {
       legend:{
         display:false,
 
+      },
+      tooltip: {
+        callbacks: {
+            label: function(context) {
+              console.log('context',context);
+                let label = context.dataset.label || '';
+
+                if (label) {
+                    label += ': ';
+                }
+                if (context !== null) {
+                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                }
+                return label;
+            }
+        }
       }
     },
     
@@ -93,38 +114,40 @@ export class DashboardComponent implements OnInit {
       }
     ],
   };
-  // public pieChartData: any = [10,20];
-  // public pieChartLabels: string[] = [];
   public pieChartOptions: ChartOptions<'doughnut'> = {
     responsive: false,
     plugins: {
       title: {
           display: true,
           text: 'Expenses By Category'
+      },
+      tooltip: {
+        callbacks: {
+            label: function(context) {
+                let label = context.dataset.label || '';
+
+                if (label) {
+                    label += ': ';
+                }
+                if (context.parsed !== null) {
+                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed);
+                }
+                return label;
+            }
+        }
       }
     },
     color:'#222',
-    // scales: {
-    //   y: {
-    //     ticks: { color: '#222'},
-    //     grid:{display:false}
-    //   },
-    //   x: {
-    //     ticks: { color: '#22'},
-    //     grid:{display:false}
-    //   }
-    // }
   };
-  
   public lineChartLegend = true;
-
   // START FUNCTIONS //
 
   ngOnInit(): void {
-    var localDataPresent = this.checkLocalStorageData();
-    if(localDataPresent){
+    if(localStorage.getItem('last30DayData')){
+      console.log('GETTING LOCAL DATA');
       this.setDashboardLocalData();
     }else{
+      console.log('REFETCHING DB');
       this.fetchDashboardData();
     }
   }
@@ -144,9 +167,8 @@ export class DashboardComponent implements OnInit {
   secondsToDateFormat(secs:any){
     var month = new Date(secs).getMonth()+1;
     var day = new Date(secs).getDate();
-    return new Date(secs).getFullYear()+'-'+
-    (month<10?'0'+month:month)+
-    '-'+(day<10?'0'+day:day);
+    return (month<10?'0'+month:month)+
+    '-'+(day<10?'0'+day:day)+'-'+new Date(secs).getFullYear();
   }
   getLast30DaysTotal(data:any){
     var total = 0;
@@ -209,7 +231,7 @@ export class DashboardComponent implements OnInit {
     var fuelQuery = query(fuelColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
 
     var taskColRef = collection(this.db,'Tasks');
-    var taskQuery = query(taskColRef);
+    var taskQuery = query(taskColRef,where('completed', '==', false));
 
     var vehicleColRef = collection(this.db,'Vehicles');
     var vehicleQuery = query(vehicleColRef);
@@ -223,6 +245,7 @@ export class DashboardComponent implements OnInit {
       this.last30DayData.invoices = this.getLast30DaysTotal(this.invoices);
       this.last30DayData.invoicesPaid = this.getPaidInvoices(this.invoices);
       this.saveToLocalStorage('last30DayData',this.last30DayData);
+      this.saveToLocalStorage('invoices',this.invoices);
     });
 
 
@@ -269,53 +292,25 @@ export class DashboardComponent implements OnInit {
     this.saveToLocalStorage('last30DayData',this.last30DayData);
   }
 
-  checkLocalStorageData(){
-    var cachedInvoiceData = localStorage.getItem('invoices');
-    var cachedFuelData = localStorage.getItem('fuel');
-    if(cachedInvoiceData && JSON.parse(cachedInvoiceData).length > 0){
-      this.invoices = JSON.parse(cachedInvoiceData);
-      return true;
-    }else{
-      return false;
-    }
-  }
+  // setLocalStorageData(){
+  //   var cachedVehiclesData = localStorage.getItem('vehicles');
+  //   var cachedInvoicesData = localStorage.getItem('invoices');
+  //   var cachedFuelData = localStorage.getItem('fuel');
+  //   var cachedExpensesData = localStorage.getItem('expenses');
 
-  setLocalStorageData(){
-    var cachedVehiclesData = localStorage.getItem('vehicles');
-    var cachedInvoicesData = localStorage.getItem('invoices');
-    var cachedFuelData = localStorage.getItem('fuel');
-    var cachedExpensesData = localStorage.getItem('expenses');
-
-    if(cachedExpensesData?.length){
-      this.expenses = JSON.parse(cachedExpensesData);
-    }
-    if(cachedFuelData?.length){
-      this.fuel = JSON.parse(cachedFuelData);
-    }
-    if(cachedInvoicesData?.length){
-      this.invoices = JSON.parse(cachedInvoicesData);
-    }
-    // if(cachedVehiclesData?.length){
-    //   this.vehicles = JSON.parse(cachedVehiclesData);
-    // }
-  }
+  //   if(cachedExpensesData?.length){
+  //     this.expenses = JSON.parse(cachedExpensesData);
+  //   }
+  //   if(cachedFuelData?.length){
+  //     this.fuel = JSON.parse(cachedFuelData);
+  //   }
+  //   if(cachedInvoicesData?.length){
+  //     this.invoices = JSON.parse(cachedInvoicesData);
+  //   }
+  // }
 
   saveToLocalStorage(id: string,data: any){
     localStorage.setItem(id,JSON.stringify(data));
-  }
-
-  getProfitData(){
-    // this.profitThisYear = this.revenueThisYear - (this.gasExpenseThisYear+this.expensesThisYear);
-    // this.profitThisMonth = this.revenueThisMonth - (this.gasExpenseThisMonth+this.expensesThisMonth);
-    // this.profitLastMonth = this.revenueLastMonth - (this.gasExpenseLastMonth+this.expensesLastMonth);
-    // this.profitLastYear = this.revenueLastYear - (this.gasExpenseLastYear+this.expensesLastYear);
-  }
-
-  reloadChart(chart:any){
-    chart.datasets[0].data.push(1);
-    setTimeout(() => {
-      chart.datasets[0].data.pop();
-    },1100);
   }
 
   currentFeatureChanged(x:any){

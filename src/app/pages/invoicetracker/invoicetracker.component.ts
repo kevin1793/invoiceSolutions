@@ -47,15 +47,18 @@ export class InvoicetrackerComponent implements OnInit {
   });
 
   pdfDoc = new jsPDF;
-  invoices:any;
+  records:any;
   allRecords:any;
   cachedData = true;
   invoicesSub:any;
-  db = getFirestore()
+  db = getFirestore();
   colRef = collection(this.db,'Invoices')
   q = query(this.colRef,orderBy('invoiceDate','desc'));
   filterProperty = 'invoiceNumber';
 
+  currentSortDirection = true;
+  sortProperty = 'item';
+  currentPropDirection = '';
 
   ngOnInit(): void {
     var userAuth = localStorage.getItem('user');
@@ -65,29 +68,48 @@ export class InvoicetrackerComponent implements OnInit {
     var cachedInvoices = localStorage.getItem('invoices');
     if(cachedInvoices && cachedInvoices.length > 0){
       this.cachedData = true;
-      this.invoices = JSON.parse(cachedInvoices);
-      console.log('Invoices: Getting local data.',this.invoices);
-      this.allRecords = this.invoices;
+      this.records = JSON.parse(cachedInvoices);
+      console.log('Invoices: Getting local data.',this.records);
+      this.allRecords = this.records;
     }else{
       this.cachedData = false;
       this.getInvoiceData();
     }
   }
+  compare(a: any, b: any, propName: string) {
+    let result = 0;
+    if (a[propName] < b[propName]) {
+      result = -1;
+    } else if (a[propName] > b[propName]) {
+      result = 1;
+    }
+    if (this.currentSortDirection) {
+      result = -result;
+    }
+    return result;
+  }
+  sortPropertyChanged(prop:string){
+    console.log('sortProperty',prop);
+    this.currentSortDirection = !this.currentSortDirection;
+    this.sortProperty = prop;
+    this.records = this.records.sort((a:any, b:any) => this.compare(a, b, this.sortProperty));
+    console.log(this.records);
+  }
   filterTasks(e:any){
     console.log('filterCHange',e);
     var val = e.target.value;
     if(val == 'Paid'){
-      this.invoices = this.allRecords.filter((item:any) => 
+      this.records = this.allRecords.filter((item:any) => 
       item.paidDate
         )
       .map((item:any) => (item));
     }else if(val == 'Not Paid'){
-      this.invoices = this.allRecords.filter((item:any) => 
+      this.records = this.allRecords.filter((item:any) => 
         !item.paidDate
         )
       .map((item:any) => (item));
     }else{
-      this.invoices = this.allRecords;
+      this.records = this.allRecords;
     }
   }
   filterPropertyChanged(e:any){
@@ -97,12 +119,12 @@ export class InvoicetrackerComponent implements OnInit {
   filterChange(e:any){
     console.log('filterCHange',e);
     if(e.srcElement.value.length){
-      this.invoices = this.allRecords.filter((item:any) => 
+      this.records = this.allRecords.filter((item:any) => 
         item[this.filterProperty].toLowerCase().includes((e.srcElement.value).toLowerCase())
         )
       .map((item:any) => (item));
     }else{
-      this.invoices = this.allRecords;
+      this.records = this.allRecords;
     }
   }
 
@@ -113,14 +135,14 @@ export class InvoicetrackerComponent implements OnInit {
 
   getInvoiceData(){
     onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
-      this.invoices = [];
+      this.records = [];
       snapshot.docs.forEach( (doc) => {
-        this.invoices.push({...doc.data(), id:doc.id})
+        this.records.push({...doc.data(), id:doc.id})
       });
-      this.allRecords = this.invoices;
-    console.log('GETTING NEW INVOICES!!!',this.invoices);
+      this.allRecords = this.records;
+    console.log('GETTING NEW INVOICES!!!',this.records);
 
-      localStorage.setItem('invoices',JSON.stringify(this.invoices));
+      localStorage.setItem('invoices',JSON.stringify(this.records));
     });
   }
 
@@ -477,7 +499,7 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    // this.invoicesSub.unsubscribe();
+    // this.recordsSub.unsubscribe();
   }
 
   async deleteInvoice(item:any){
@@ -505,7 +527,7 @@ export class InvoicetrackerComponent implements OnInit {
     console.log(invoiceItem);
     this.invoiceItem.reset();
     if(this.cachedData == true){
-      this.invoices = [invoiceItem].concat(this.invoices);
+      this.records = [invoiceItem].concat(this.records);
     }
   }
 }
