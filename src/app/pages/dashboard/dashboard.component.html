@@ -104,7 +104,7 @@
           <div class="cardTitle">Invoices Paid<span class="cardTitleExtra"><br>Last 30 Days</span></div>
           <div class="cardInfo">{{last30DayData.invoicesPaid }}</div>
         </div>
-        <div  *ngIf="lineChartData.datasets[0].data.length > 1" class="graphBox"><canvas  height="160" baseChart
+        <div  *ngIf="lineChartData.datasets[0].data.length > 0" class="graphBox"><canvas  height="160" baseChart
           [data]="lineChartData"
           [options]="lineChartOptions"
           [type]="'bar'">
@@ -138,7 +138,7 @@
           </div>
         </div>
         
-        <div  *ngIf="pieChartData.datasets[0].data.length > 1" class="graphBox"><canvas  height="370" baseChart
+        <div  *ngIf="pieChartData.datasets[0].data.length > 0" class="graphBox"><canvas  height="370" baseChart
           [data]="pieChartData"
           [options]="pieChartOptions"
           type="doughnut">
@@ -148,130 +148,5 @@
       <div class="cardsRow">
         
       </div>
-      
-      <!-- <div class="rowTitle">Invoices</div>
-      <div class="cardsRow">
-        <div class="cardBox">
-          <div class="cardTitle">Invoices Paid This Month</div>
-          <div class="cardInfo">{{invoicesPaidThisMonth}}/{{invoicesThisMonth}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Invoices Paid Last Month</div>
-          <div class="cardInfo">{{invoicesPaidLastMonth}}/{{invoicesLastMonth}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Invoices This Year</div>
-          <div class="cardInfo">{{invoicesThisYear}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Invoices Last Year</div>
-          <div class="cardInfo">{{invoicesLastYear}}</div>
-        </div>
-      </div> -->
-
-      <!-- <div class="rowTitle">Profit</div>
-      <div class="cardsRow">
-        <div class="cardBox">
-          <div class="cardTitle">Profit This Month</div>
-          <div class="cardInfo">{{profitThisMonth?(profitThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Profit Last Month</div>
-          <div class="cardInfo">{{profitLastMonth?(profitLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Profit This Year</div>
-          <div class="cardInfo">{{profitThisYear?(profitThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Profit Last Year</div>
-          <div class="cardInfo">{{profitLastYear?(profitLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-      </div>
-      
-      <div class="rowTitle">Revenue</div>
-
-      <div class="cardsRow">
-        <div class="cardBox">
-          <div class="cardTitle">Revenue This Month</div>
-          <div class="cardInfo">{{revenueThisMonth?(revenueThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Revenue Last Month</div>
-          <div class="cardInfo">{{revenueLastMonth?(revenueLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Revenue This Year</div>
-          <div class="cardInfo">{{revenueThisYear?(revenueThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Revenue Last Year</div>
-          <div class="cardInfo">{{revenueLastYear?(revenueLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-      </div>
-      <div class="cardsRow">
-        <div  *ngIf="lineChartData.datasets[0].data.length > 1" class="graphBox"><canvas width="1290" height="320" baseChart
-          [data]="lineChartData"
-          [options]="lineChartOptions"
-          [type]="'line'">
-          </canvas>
-        </div>
-      </div>
-
-      <div class="rowTitle">Expenses</div>
-      <div class="cardsRow">
-        <div class="cardBox">
-          <div class="cardTitle">Expenses This Month</div>
-          <div class="cardInfo">{{expensesThisMonth?(expensesThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Expenses Last Month</div>
-          <div class="cardInfo">{{expensesLastMonth?(expensesLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Expenses This Year</div>
-          <div class="cardInfo">{{expensesThisYear?(expensesThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Expenses Last Year</div>
-          <div class="cardInfo">{{expensesLastYear?(expensesLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-      </div>
-
-      <div class="rowTitle">Fuel Expenses</div>
-      <div class="cardsRow">
-        <div class="cardBox">
-          <div class="cardTitle">Fuel Expense This Month</div>
-          <div class="cardInfo">{{gasExpenseThisMonth?(gasExpenseThisMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Fuel Expense Last Month</div>
-          <div class="cardInfo">{{gasExpenseLastMonth?(gasExpenseLastMonth| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Fuel Expense This Year</div>
-          <div class="cardInfo">{{gasExpenseThisYear?(gasExpenseThisYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-        <div class="cardBox">
-          <div class="cardTitle">Fuel Expense Last Year</div>
-          <div class="cardInfo">{{gasExpenseLastYear?(gasExpenseLastYear| currency:'USD':'symbol':'1.0'):'...'}}</div>
-        </div>
-      </div>
-    </div>
-
-      <div class="rowTitle">Vehicles</div>
-      <div class="cardsRow" *ngFor="let vehicle of vehicles" >
-        <div class="cardBox">
-          <div class="cardTitle">vehicle Number: {{vehicle.vehicle_number}}</div>
-          <div class="cardInfo2">
-            {{vehicle.status}}
-          </div>
-          <div class="cardInfo2">
-            {{vehicle.mileage | number}} Miles
-          </div>
-        </div>
-      </div> -->
-
-      
   </div>
 </div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { orderBy,limit, query,onSnapshot, getFirestore } from 'firebase/firestore';
+import { orderBy,limit, query,onSnapshot,where, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
 interface Item {
@@ -32,13 +32,14 @@ export class FuelComponent implements OnInit {
   constructor(firestore: Firestore,private fb:UntypedFormBuilder,public afs:AngularFirestore,private router:Router) { }
 
   fuelItem: UntypedFormGroup = this.fb.group({
-    vehicle_number: ['',Validators.required],
+    vehicle_number: [''],
     date: ['',Validators.required],
     mileage:[null,Validators.required],
     gallons:[null,Validators.required],
     total:[null,Validators.required],
   });
   
+  collectionName = 'Fuels';
   records:any;
   vehicles:any;
   fuelEdit = null;
@@ -50,7 +51,7 @@ export class FuelComponent implements OnInit {
 
   db = getFirestore();
   colRef = collection(this.db,'Fuels');
-  q = query(this.colRef,orderBy('date','desc'));
+  q = query(this.colRef,orderBy('date','desc'),limit(10));
 
   colRefVehicles = collection(this.db,'Vehicles');
   qVehicles = query(this.colRefVehicles,orderBy('vehicle_number','desc'));
@@ -61,20 +62,41 @@ export class FuelComponent implements OnInit {
       this.router.navigate(['/login']);
     }
     //load in previous fuels
-    onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
+    var invoicesColRef = collection(this.db,'Fuels');
+    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.records = []
       snapshot.docs.forEach( (doc) => {
-        this.records.push({...doc.data(), id:doc.id})
+        this.records.push({...doc.data(), id:doc.id});
       });
       console.log('fuel',this.records);
+      if(this.records && typeof this.records[0].date == 'string'){
+        this.convertStringDateToInt(this.records);
+      }
     });
     onSnapshot(this.qVehicles,(snapshot: { docs: any[]; }) => {
       this.vehicles = []
       snapshot.docs.forEach( (doc) => {
-        this.vehicles.push({...doc.data(), id:doc.id})
+        this.vehicles.push({...doc.data(), id:doc.id});
+        
       })
     })
     return;
+  }
+  convertStringDateToInt(data:any){
+    const invoiceCollection = this.afs.collection<Item>(this.collectionName);
+    for(var i =0;i<data.length;i++){
+      if(typeof data[i].date == 'string'){
+        var newDate = Date.parse(data[i].date);
+        console.log('new date',data[i],newDate,new Date(newDate));
+        var updatedRec = data[i];
+        updatedRec.date = newDate;
+        invoiceCollection.doc(updatedRec.id).update(updatedRec);
+      }
+    }
   }
 
   //NEW FUNCTIONs DOWN BELOW

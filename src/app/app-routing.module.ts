@@ -21,7 +21,7 @@ import { WorkordersComponent } from './pages/workorders/workorders.component';
 import { MarkpavingComponent } from './pages/markpaving/markpaving.component';
 
 const routes:Routes=[
-  { path : '', component: HomeComponent, canActivate: [AuthGuardService] },
+  { path : '', component: MarkpavingComponent, canActivate: [AuthGuardService] },
   { path : 'home',component:LoginComponent },
   { path : 'workorders',component:WorkordersComponent },
   { path : 'login',component:LoginComponent },
@@ -36,7 +36,7 @@ const routes:Routes=[
   { path : 'announcements',component:AnnouncementsComponent },
   { path : 'tasks',component:TasksComponent },
   { path : 'vehicles',component:VehiclesComponent },
-  { path : '',component:HomeComponent },
+  // { path : '',component:HomeComponent },
   { path : 'dashboard' ,component:DashboardComponent },
   { path : '404', component: NotfoundComponent },
   { path : '**', redirectTo: '/404' }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { orderBy, query,onSnapshot, getFirestore } from 'firebase/firestore';
+import { orderBy, query,onSnapshot,limit,where, getFirestore } from 'firebase/firestore';
 import jsPDF from 'jspdf';
 import { Router } from '@angular/router';
 
@@ -51,9 +51,9 @@ export class InvoicetrackerComponent implements OnInit {
   allRecords:any;
   cachedData = true;
   invoicesSub:any;
+  collectionName = 'Invoices';
   db = getFirestore();
-  colRef = collection(this.db,'Invoices')
-  q = query(this.colRef,orderBy('invoiceDate','desc'));
+  colRef = collection(this.db,'Invoices');
   filterProperty = 'invoiceNumber';
 
   currentSortDirection = true;
@@ -61,19 +61,46 @@ export class InvoicetrackerComponent implements OnInit {
   currentPropDirection = '';
 
   ngOnInit(): void {
+    
+
     var userAuth = localStorage.getItem('user');
     if(!userAuth){
       this.router.navigate(['/login']);
     }
-    var cachedInvoices = localStorage.getItem('invoices');
+    this.getInvoiceData();
+    return;
+    // var cachedInvoices = localStorage.getItem('invoices');
+    var cachedInvoices = '';
     if(cachedInvoices && cachedInvoices.length > 0){
       this.cachedData = true;
       this.records = JSON.parse(cachedInvoices);
       console.log('Invoices: Getting local data.',this.records);
       this.allRecords = this.records;
+      if(this.records && typeof this.records[0].invoiceDate == 'string'){
+        // this.convertStringDateToInt(this.records);
+      }
     }else{
       this.cachedData = false;
       this.getInvoiceData();
+    }
+  }
+  convertStringDateToInt(data:any){
+    const invoiceCollection = this.afs.collection<Item>(this.collectionName);
+    for(var i =0;i<data.length;i++){
+      if(typeof data[i].invoiceDate == 'string'){
+        var newInvoiceDate = Date.parse(data[i].invoiceDate);
+        var updatedRec = data[i];
+        updatedRec.invoiceDate = newInvoiceDate;
+        if(typeof data[i].paidDate == 'string'){
+          var newPaidDate = Date.parse(data[i].paidDate);
+          updatedRec.paidDate = newPaidDate;
+        console.log('new paidDate',data[i],newPaidDate,new Date(newPaidDate));
+
+        }
+        console.log('new invoiceDate',data[i],newInvoiceDate,new Date(newInvoiceDate));
+
+        invoiceCollection.doc(updatedRec.id).update(updatedRec);
+      }
     }
   }
   compare(a: any, b: any, propName: string) {
@@ -134,14 +161,21 @@ export class InvoicetrackerComponent implements OnInit {
   }
 
   getInvoiceData(){
-    onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
+    var invoicesColRef = collection(this.db,'Invoices');
+    var invoicesQuery = query(invoicesColRef,orderBy('invoiceDate','desc'),where('invoiceDate', '>=', thirtyDaysAgoSecs));
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.records = [];
       snapshot.docs.forEach( (doc) => {
         this.records.push({...doc.data(), id:doc.id})
       });
       this.allRecords = this.records;
-    console.log('GETTING NEW INVOICES!!!',this.records);
-
+      console.log('GETTING NEW INVOICES!!!',this.records);
+      if(this.records && typeof this.records[0].invoiceDate == 'string'){
+        this.convertStringDateToInt(this.records);
+      }
       localStorage.setItem('invoices',JSON.stringify(this.records));
     });
   }

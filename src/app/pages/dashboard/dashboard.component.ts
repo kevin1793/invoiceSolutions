@@ -157,6 +157,7 @@ export class DashboardComponent implements OnInit {
     this.fuel = JSON.parse(localStorage.getItem('fuel') || '');
     this.expenses = JSON.parse(localStorage.getItem('expenses') || '');
     this.last30DayData = JSON.parse(localStorage.getItem('last30DayData') || '');
+    console.log('this',this);
     this.getChartData();
     this.setExpenseChartData(this.expenses);
   }

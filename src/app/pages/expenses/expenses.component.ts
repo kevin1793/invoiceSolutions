@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore} from '@angular/fire/compat/firestore';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { orderBy, limit ,query,onSnapshot, getFirestore } from 'firebase/firestore';
+import { orderBy, limit ,query,onSnapshot,where, getFirestore } from 'firebase/firestore';
 import { Router } from '@angular/router';
 
 interface Item {
@@ -75,7 +75,7 @@ export class ExpensesComponent implements OnInit {
 
   db = getFirestore();
   colRef = collection(this.db,'Expenses');
-  q = query(this.colRef,orderBy('date','desc'));
+  q = query(this.colRef,orderBy('date','desc'),limit(10));
 
   colCategoryRef = collection(this.db,this.collectionName+'Category');
   qCategory = query(this.colCategoryRef,orderBy('name','asc'));
@@ -88,13 +88,21 @@ export class ExpensesComponent implements OnInit {
     if(!userAuth){
       this.router.navigate(['/login']);
     }
-    onSnapshot(this.q,(snapshot: { docs: any[]; }) => {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
+    var invoicesColRef = collection(this.db,'Expenses');
+    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.records = []
       snapshot.docs.forEach( (doc) => {
         this.records.push({...doc.data(), id:doc.id})
       })
       console.log('EXPENSES',this.records);
       this.allRecords = this.records;
+      if(this.records && typeof this.records[0].date == 'string'){
+        this.convertStringDateToInt(this.records);
+      }
     });
     onSnapshot(this.qCategory,(snapshot: { docs: any[]; }) => {
       this.categories = []
@@ -110,6 +118,18 @@ export class ExpensesComponent implements OnInit {
       })
       console.log('UNITS',this.units);
     });
+  }
+  convertStringDateToInt(data:any){
+    const invoiceCollection = this.afs.collection<Item>(this.collectionName);
+    for(var i =0;i<data.length;i++){
+      if(typeof data[i].date == 'string'){
+        var newDate = Date.parse(data[i].date);
+        console.log('new date',data[i],newDate,new Date(newDate));
+        var updatedRec = data[i];
+        updatedRec.date = newDate;
+        invoiceCollection.doc(updatedRec.id).update(updatedRec);
+      }
+    }
   }
   compare(a: any, b: any, propName: string) {
     let result = 0;

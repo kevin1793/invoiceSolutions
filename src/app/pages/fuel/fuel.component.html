@@ -159,7 +159,7 @@
     </div>
     <div *ngFor="let fuel of records">
       <div class="listItemCont2">
-        <div class="listItem">{{fuel.vehicle_number}}</div>
+        <div class="listItem">{{fuel.vehicle_number || '-'}}</div>
         <div class="listItem">{{fuel.mileage }}</div>
         <div class="listItem">{{fuel.gallons}}</div>
         <div class="listItem">{{fuel.total | currency}}</div>
