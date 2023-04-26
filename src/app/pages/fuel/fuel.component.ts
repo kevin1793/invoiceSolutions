@@ -62,11 +62,16 @@ export class FuelComponent implements OnInit {
       this.router.navigate(['/login']);
     }
     //load in previous fuels
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
+    // const thirtyDaysAgo = new Date();
+    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    // var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
+
+    var d = new Date()
+    var thisYear = new Date(d.getFullYear()+'-1-1');
+    var thisYearSecs = Date.parse(thisYear.toString());
+
     var invoicesColRef = collection(this.db,'Fuels');
-    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
+    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thisYearSecs));
     onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.records = []
       snapshot.docs.forEach( (doc) => {

@@ -88,11 +88,16 @@ export class ExpensesComponent implements OnInit {
     if(!userAuth){
       this.router.navigate(['/login']);
     }
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
+    // const thirtyDaysAgo = new Date();
+    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    // var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
     var invoicesColRef = collection(this.db,'Expenses');
-    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thirtyDaysAgoSecs));
+    var d = new Date()
+    var thisYear = new Date(d.getFullYear()+'-1-1');
+    var thisYearSecs = Date.parse(thisYear.toString());
+    
+    // var invoicesQuery = query(invoicesColRef,orderBy('date','desc'));
+    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thisYearSecs));
     onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
       this.records = []
       snapshot.docs.forEach( (doc) => {
@@ -212,7 +217,7 @@ export class ExpensesComponent implements OnInit {
   addExpense(){
     const invoiceCollection = this.afs.collection<Item>('Expenses');
     var expenseItem = this.expenseItem.value;
-    var date = Date.parse(expenseItem.date);
+    var date = this.getDatePickerSeconds(expenseItem.date);
     expenseItem.date = date;
     var t = invoiceCollection.add(expenseItem);
     console.log(expenseItem);
@@ -224,9 +229,15 @@ export class ExpensesComponent implements OnInit {
   addItemClicked(){
     this.expenseItem.reset();
   }
+  getDatePickerSeconds(datePickerValue:any){
+    var d = new Date(datePickerValue);
+    d.setDate(d.getDate()+1);
+    return Date.parse(d.toString());
+  }
   addUnit(){
     const invoiceCollection = this.afs.collection<Unit>(this.collectionName+'Unit');
     var unitItem = this.unitItem.value;
+    unitItem.date = this.getDatePickerSeconds(unitItem.date);
     var t = invoiceCollection.add(unitItem);
     this.unitItem.reset();
   }
