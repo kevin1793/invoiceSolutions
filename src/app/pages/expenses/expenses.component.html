@@ -67,6 +67,7 @@
         <button  (click)="showAddExpenseBox = !showAddExpenseBox" class="redBtn margin10 width150">Cancel</button>
       </div>
     </div>
+    <!-- ADD CONT -->
     <div class="addRecordCont" *ngIf='showAddCategoryBox'>
       <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='categoryItem'>
         <div class="formRow">
@@ -85,6 +86,7 @@
         </div>
       </div>
     </div>
+    <!-- ADD RECORD -->
     <div class="addRecordCont" *ngIf='showAddUnitBox'>
       <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='unitItem'>
         <div class="formRow">
@@ -114,21 +116,41 @@
         + Add Unit
       </button>
     </div>
-    <div class="searchCont">
-      <span class="fa fa-search fa-1x" style="color:black;"></span>
-      <input (input)="filterChange($event)" placeholder='Filter Expenses...' type='text'>
-      <span class="addRecordInputItem addRecordInputBox">
-        <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
-          <option selected value="item">Item</option>
-          <option value="category">Category</option>
-          <option value="unit">Unit</option>
-        </select>
-      </span>
+    <!-- SEARCH BOX -->
+    <div class="searchCont"  style="display:flex;">
+      <div class="addRecordInputItem addRecordInputBox"  style="display: flex;">
+        <!-- <span class="fa fa-search fa-1x" style="color:black;"></span> -->
+        <div class="addRecordInputItem"><label>Search</label>
+          <input (input)="filterChange($event)" placeholder='Filter Expenses...' type='text' style="width:250px">
+        </div>
+        <!-- <input (input)="filterChange($event)" placeholder='Filter Expenses...' type='text'> -->
+        <div class="addRecordInputItem">
+          <span class="addRecordInputItem addRecordInputBox"><label>Filter By</label>
+            <select (change)="filterPropertyChanged($event)" placeholder="Category"  >
+              <option selected value="item">Item</option>
+              <option value="category">Category</option>
+              <option value="unit">Unit</option>
+            </select>
+          </span>
+        </div>
+      </div>
+      <div class="addRecordInputItem addRecordInputBox" style="margin-left:auto;display: flex;">
+        <div class="addRecordInputItem"><label>View Records From</label>
+          <select (change)="viewFromChanged($event)"  value="All" style="width: 150px;">
+            <option selected value="Last 30 Days">Last 30 Days</option>
+              <option value="This Year">This Year</option>
+              <option value="Last Year">Last Year</option>
+          </select>
+        </div>
+      </div>
     </div>
-    
+    <!-- COUNT/TOTALS -->
+    <div style="padding:5px;padding-bottom:10px;width: 100%;">
+      <div style="text-align:center;color:#222;font-family: 'Source Sans Pro', sans-serif !important;font-weight: 600;font-size: 20px;">Expenses Count: {{records.length}} | Total: {{total | currency}}</div>
+    </div>
     <!-- START EXPENSE LIST -->
     <div class="listHeaderCont2">
-      <div (click)="sortPropertyChanged('item')" class="headerItem"  style="width: 250px;">Item&nbsp;<span class="fa fa-sort"></span></div>
+      <div (click)="sortPropertyChanged('item')" class="headerItem"  style="width: 350px !important;">Item&nbsp;<span class="fa fa-sort"></span></div>
       <div (click)="sortPropertyChanged('category')" class="headerItem">Category&nbsp;<span class="fa fa-sort"></span></div>
       <div (click)="sortPropertyChanged('qunatity')" class="headerItem">Quantity&nbsp;<span class="fa fa-sort"></span></div>
       <div (click)="sortPropertyChanged('total')" class="headerItem">Total&nbsp;<span class="fa fa-sort"></span></div>
@@ -137,7 +159,7 @@
     </div>
     <div *ngFor="let rec of records">
       <div class="listItemCont2">
-        <td class="listItem" style="width: 250px;">{{rec.item}}</td>
+        <td class="listItem" style="width: 350px !important;">{{rec.item}}</td>
         <td class="listItem">{{rec.category }}</td>
         <td class="listItem">{{rec.quantity}} {{rec.unit || ''}}</td>
         <td class="listItem">{{rec.total | currency}}</td>
