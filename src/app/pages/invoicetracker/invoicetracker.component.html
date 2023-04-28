@@ -132,25 +132,41 @@
         Add Invoice<br>(Quick)
       </button>
     </div>
+    <!-- SEARCH BOX -->
     <div class="searchCont " style="display:flex;">
-      <div>
-        <span class="fa fa-search fa-1x" style="color:black;"></span>
-        <input (input)="filterChange($event)" placeholder='Filter Invoices...' type='text'>
-        <span class="addRecordInputItem addRecordInputBox">
+      <div  class="addRecordInputItem addRecordInputBox"  style="display: flex;">
+        <!-- <span class="fa fa-search fa-1x" style="color:black;"></span> -->
+        <div class="addRecordInputItem "><label>Search</label>
+          <input (input)="filterChange($event)" placeholder='Filter Invoices...' type='text'>
+        </div>
+        <span class="addRecordInputItem "><label>Filter By</label>
           <select (change)="filterPropertyChanged($event)" >
             <option selected value="invoiceNumber">Invoice #</option>
             <option value="billedTo">Billed To</option>
           </select>
         </span>
       </div>
-      <div class="addRecordInputItem addRecordInputBox" style="margin-left:auto;">
-        <select (change)="filterTasks($event)"  value="All" style="margin-top:10px;margin-bottom: 15px;width: 100px;">
-          <option value="All">All</option>
-          <option value="Paid">Paid</option>
-          <option value="Not Paid">Not Paid</option>
-        </select>
+      <div class="addRecordInputItem addRecordInputBox" style="margin-left:auto;display: flex;">
+        <div class="addRecordInputItem"><label>Paid Status</label>
+          <select (change)="filterTasks($event)"  value="All" style="width: 150px;">
+            <option value="All">All</option>
+            <option value="Paid">Paid</option>
+            <option value="Not Paid">Not Paid</option>
+          </select>
+        </div>
+        <div class="addRecordInputItem"><label>View Records From</label>
+          <select (change)="viewFromChanged($event)"  value="All" style="width: 150px;">
+            <option selected value="Last 30 Days">Last 30 Days</option>
+              <option value="This Year">This Year</option>
+              <option value="Last Year">Last Year</option>
+          </select>
+        </div>
+
       </div>
       
+    </div>
+    <div style="padding:5px;padding-bottom:10px;width: 100%;">
+      <div style="text-align:center;color:#222;font-family: 'Source Sans Pro', sans-serif !important;font-weight: 600;font-size: 20px;">Invoices Count: {{records.length}} | Total: {{total | currency}}</div>
     </div>
     <div class="addRecordCont" *ngIf='showAddInvoiceBox'>
       <form (ngSubmit)="onSubmit()" class="addRecordInputBox" [formGroup]='invoiceItem'>

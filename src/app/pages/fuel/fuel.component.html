@@ -149,6 +149,25 @@
         Add Fuel Purchase
       </button>
     </div>
+    <!-- SEARCH BOX -->
+    <div class="searchCont " style="display:flex;">
+      <div  class="addRecordInputItem addRecordInputBox"  style="display: flex;">
+      </div>
+      <div class="addRecordInputItem addRecordInputBox" style="margin-left:auto;display: flex;">
+        <div class="addRecordInputItem"><label>View Records From</label>
+          <select (change)="viewFromChanged($event)"  value="All" style="width: 150px;">
+            <option selected value="Last 30 Days">Last 30 Days</option>
+              <option value="This Year">This Year</option>
+              <option value="Last Year">Last Year</option>
+          </select>
+        </div>
+
+      </div>
+      
+    </div>
+    <div style="padding:5px;padding-bottom:10px;width: 100%;">
+      <div style="text-align:center;color:#222;font-family: 'Source Sans Pro', sans-serif !important;font-weight: 600;font-size: 20px;">Invoices Count: {{records.length}} | Total: {{total | currency}}</div>
+    </div>
     <div class="listHeaderCont2">
       <div (click)="sortPropertyChanged('vehicle_number')" class="headerItem">Vehicle Number&nbsp;<span class="fa fa-sort"></span></div>
       <div (click)="sortPropertyChanged('mileage')" class="headerItem">Mileage&nbsp;<span class="fa fa-sort"></span></div>

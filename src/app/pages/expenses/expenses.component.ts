@@ -68,6 +68,7 @@ export class ExpensesComponent implements OnInit {
   expensesSub:any;
   units:any;
   editRecord:any;
+  total:any = 0;
 
   currentSortDirection = true;
   sortProperty = 'item';
@@ -88,27 +89,7 @@ export class ExpensesComponent implements OnInit {
     if(!userAuth){
       this.router.navigate(['/login']);
     }
-    // const thirtyDaysAgo = new Date();
-    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    // var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
-    var invoicesColRef = collection(this.db,'Expenses');
-    var d = new Date()
-    var thisYear = new Date(d.getFullYear()+'-1-1');
-    var thisYearSecs = Date.parse(thisYear.toString());
-    
-    // var invoicesQuery = query(invoicesColRef,orderBy('date','desc'));
-    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thisYearSecs));
-    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
-      this.records = []
-      snapshot.docs.forEach( (doc) => {
-        this.records.push({...doc.data(), id:doc.id})
-      })
-      console.log('EXPENSES',this.records);
-      this.allRecords = this.records;
-      if(this.records && typeof this.records[0].date == 'string'){
-        this.convertStringDateToInt(this.records);
-      }
-    });
+    this.viewFromChanged('');
     onSnapshot(this.qCategory,(snapshot: { docs: any[]; }) => {
       this.categories = []
       snapshot.docs.forEach( (doc) => {
@@ -123,6 +104,69 @@ export class ExpensesComponent implements OnInit {
       })
       console.log('UNITS',this.units);
     });
+  }
+  calculateTotal(recs:any){
+    var recs = recs;
+    this.total = 0;
+    for(var i =0;i<recs.length;i++){
+      this.total +=recs[i].total;
+    }
+  }
+  viewFromChanged(e:any){
+    console.log('viewFromChanged',e);
+    var queryDate = 0;
+    if(e.target?.value == 'This Year'){
+      var d = new Date()
+      var thisYear = new Date(d.getFullYear()+'-1-1');
+      queryDate = Date.parse(thisYear.toString());
+    }else if(e.target?.value == 'Last Year'){
+      var d = new Date()
+      var thisYear = new Date((d.getFullYear()-1)+'-1-1');
+      queryDate = Date.parse(thisYear.toString());
+    }else{
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      queryDate = Date.now() - (86400*30*1000);
+    }
+
+    var invoicesColRef = collection(this.db,'Expenses');
+    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', queryDate));
+    if(e.target?.value == 'Last Year'){
+      var d = new Date()
+      var thisYear = new Date(d.getFullYear()+'-1-1');
+      var endDate = Date.parse(thisYear.toString());
+      invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', queryDate),where('date', '<', endDate));
+    }
+    
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
+      this.records = []
+      snapshot.docs.forEach( (doc) => {
+        this.records.push({...doc.data(), id:doc.id})
+      })
+      console.log('EXPENSES',this.records);
+      this.allRecords = this.records;
+      this.calculateTotal(this.records);
+      if(this.records && typeof this.records[0].date == 'string'){
+        this.convertStringDateToInt(this.records);
+      }
+    });
+  }
+  filterTasks(e:any){
+    console.log('filterCHange',e);
+    var val = e.target.value;
+    if(val == 'Paid'){
+      this.records = this.allRecords.filter((item:any) => 
+      item.paidDate
+        )
+      .map((item:any) => (item));
+    }else if(val == 'Not Paid'){
+      this.records = this.allRecords.filter((item:any) => 
+        !item.paidDate
+        )
+      .map((item:any) => (item));
+    }else{
+      this.records = this.allRecords;
+    }
   }
   convertStringDateToInt(data:any){
     const invoiceCollection = this.afs.collection<Item>(this.collectionName);
@@ -165,6 +209,7 @@ export class ExpensesComponent implements OnInit {
     }else{
       this.records = this.allRecords;
     }
+    this.calculateTotal(this.records);
   }
   filterPropertyChanged(e:any){
     console.log('filterPropertyChanged',e);

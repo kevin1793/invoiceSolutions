@@ -47,10 +47,11 @@ export class InvoicetrackerComponent implements OnInit {
   });
 
   pdfDoc = new jsPDF;
-  records:any;
+  records:any = [];
   allRecords:any;
   cachedData = true;
   invoicesSub:any;
+  total:any = 0;
   collectionName = 'Invoices';
   db = getFirestore();
   colRef = collection(this.db,'Invoices');
@@ -67,23 +68,9 @@ export class InvoicetrackerComponent implements OnInit {
     if(!userAuth){
       this.router.navigate(['/login']);
     }
-    this.getInvoiceData();
-    return;
-    // var cachedInvoices = localStorage.getItem('invoices');
-    var cachedInvoices = '';
-    if(cachedInvoices && cachedInvoices.length > 0){
-      this.cachedData = true;
-      this.records = JSON.parse(cachedInvoices);
-      console.log('Invoices: Getting local data.',this.records);
-      this.allRecords = this.records;
-      if(this.records && typeof this.records[0].invoiceDate == 'string'){
-        // this.convertStringDateToInt(this.records);
-      }
-    }else{
-      this.cachedData = false;
-      this.getInvoiceData();
-    }
+    this.viewFromChanged('');
   }
+  
   convertStringDateToInt(data:any){
     const invoiceCollection = this.afs.collection<Item>(this.collectionName);
     for(var i =0;i<data.length;i++){
@@ -102,6 +89,53 @@ export class InvoicetrackerComponent implements OnInit {
         invoiceCollection.doc(updatedRec.id).update(updatedRec);
       }
     }
+  }
+  calculateTotal(recs:any){
+    var recs = recs;
+    this.total = 0;
+    for(var i =0;i<recs.length;i++){
+      this.total +=typeof this.records[i].totalBilled == 'string'?parseFloat(this.records[i].totalBilled):this.records[i].totalBilled;
+
+    }
+  }
+  viewFromChanged(e:any){
+    console.log('viewFromChanged',e);
+    var queryDate = 0;
+    if(e.target?.value == 'This Year'){
+      var d = new Date()
+      var thisYear = new Date(d.getFullYear()+'-1-1');
+      queryDate = Date.parse(thisYear.toString());
+    }else if(e.target?.value == 'Last Year'){
+      var d = new Date()
+      var thisYear = new Date((d.getFullYear()-1)+'-1-1');
+      queryDate = Date.parse(thisYear.toString());
+    }else{
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      queryDate = Date.now() - (86400*30*1000);
+    }
+
+    var invoicesColRef = collection(this.db,'Invoices');
+    var invoicesQuery = query(invoicesColRef,orderBy('invoiceDate','desc'),where('invoiceDate', '>=', queryDate));
+    if(e.target?.value == 'Last Year'){
+      var d = new Date()
+      var thisYear = new Date(d.getFullYear()+'-1-1');
+      var endDate = Date.parse(thisYear.toString());
+      invoicesQuery = query(invoicesColRef,orderBy('invoiceDate','desc'),where('invoiceDate', '>=', queryDate),where('invoiceDate', '<', endDate));
+    }
+    
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
+      this.records = []
+      snapshot.docs.forEach( (doc) => {
+        this.records.push({...doc.data(), id:doc.id})
+      })
+      console.log('Invoices',this.records);
+      this.allRecords = this.records;
+      this.calculateTotal(this.records);
+      if(this.records && typeof this.records[0].date == 'string'){
+        this.convertStringDateToInt(this.records);
+      }
+    });
   }
   compare(a: any, b: any, propName: string) {
     let result = 0;
@@ -138,6 +172,7 @@ export class InvoicetrackerComponent implements OnInit {
     }else{
       this.records = this.allRecords;
     }
+    this.calculateTotal(this.records);
   }
   filterPropertyChanged(e:any){
     console.log('filterPropertyChanged',e);
@@ -153,6 +188,7 @@ export class InvoicetrackerComponent implements OnInit {
     }else{
       this.records = this.allRecords;
     }
+    this.calculateTotal(this.records);
   }
 
   refreshClicked(){

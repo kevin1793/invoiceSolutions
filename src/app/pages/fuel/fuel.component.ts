@@ -41,7 +41,9 @@ export class FuelComponent implements OnInit {
   
   collectionName = 'Fuels';
   records:any;
+  allRecords:any;
   vehicles:any;
+  total:any = 0;
   fuelEdit = null;
   addingFuel = false;
 
@@ -61,27 +63,7 @@ export class FuelComponent implements OnInit {
     if(!userAuth){
       this.router.navigate(['/login']);
     }
-    //load in previous fuels
-    // const thirtyDaysAgo = new Date();
-    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    // var thirtyDaysAgoSecs = Date.now() - (86400*30*1000);
-
-    var d = new Date()
-    var thisYear = new Date(d.getFullYear()+'-1-1');
-    var thisYearSecs = Date.parse(thisYear.toString());
-
-    var invoicesColRef = collection(this.db,'Fuels');
-    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', thisYearSecs));
-    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
-      this.records = []
-      snapshot.docs.forEach( (doc) => {
-        this.records.push({...doc.data(), id:doc.id});
-      });
-      console.log('fuel',this.records);
-      if(this.records && typeof this.records[0].date == 'string'){
-        this.convertStringDateToInt(this.records);
-      }
-    });
+    this.viewFromChanged('');
     onSnapshot(this.qVehicles,(snapshot: { docs: any[]; }) => {
       this.vehicles = []
       snapshot.docs.forEach( (doc) => {
@@ -90,6 +72,51 @@ export class FuelComponent implements OnInit {
       })
     })
     return;
+  }
+  calculateTotal(){
+    this.total = 0;
+    for(var i =0;i<this.records.length;i++){
+      this.total +=typeof this.records[i].total == 'string'?parseFloat(this.records[i].total):this.records[i].total;
+    }
+  }
+  viewFromChanged(e:any){
+    console.log('viewFromChanged',e);
+    var queryDate = 0;
+    if(e.target?.value == 'This Year'){
+      var d = new Date()
+      var thisYear = new Date(d.getFullYear()+'-1-1');
+      queryDate = Date.parse(thisYear.toString());
+    }else if(e.target?.value == 'Last Year'){
+      var d = new Date()
+      var thisYear = new Date((d.getFullYear()-1)+'-1-1');
+      queryDate = Date.parse(thisYear.toString());
+    }else{
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      queryDate = Date.now() - (86400*30*1000);
+    }
+
+    var invoicesColRef = collection(this.db,'Fuels');
+    var invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', queryDate));
+    if(e.target?.value == 'Last Year'){
+      var d = new Date()
+      var thisYear = new Date(d.getFullYear()+'-1-1');
+      var endDate = Date.parse(thisYear.toString());
+      invoicesQuery = query(invoicesColRef,orderBy('date','desc'),where('date', '>=', queryDate),where('date', '<', endDate));
+    }
+    
+    onSnapshot(invoicesQuery,(snapshot: { docs: any[]; }) => {
+      this.records = []
+      snapshot.docs.forEach( (doc) => {
+        this.records.push({...doc.data(), id:doc.id})
+      })
+      console.log('Fuel',this.records);
+      this.allRecords = this.records;
+      this.calculateTotal();
+      if(this.records && typeof this.records[0].date == 'string'){
+        this.convertStringDateToInt(this.records);
+      }
+    });
   }
   convertStringDateToInt(data:any){
     const invoiceCollection = this.afs.collection<Item>(this.collectionName);
@@ -137,15 +164,6 @@ export class FuelComponent implements OnInit {
   onSubmit(){
     //
   }
-
-  calculateTotal(){
-    (this.fuelItem.value);
-    if(this.fuelItem.get('gallons')?.value && this.fuelItem.get('cost_per_gallon')?.value ){
-      var total = (parseFloat(this.fuelItem.get('gallons')?.value)*parseFloat(this.fuelItem.get('cost_per_gallon')?.value)).toFixed(2);
-      this.fuelItem.get('total')?.setValue(total); 
-    }
-  }
-
   addFuel(){
     (this.fuelItem,this.fuelItem.value);
     const invoiceCollection = this.afs.collection<Item>('Fuels');
